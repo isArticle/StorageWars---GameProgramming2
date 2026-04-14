@@ -8,6 +8,7 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private GameState _currentState;
 
     public Game1()
     {
@@ -16,9 +17,10 @@ public class Game1 : Game
         IsMouseVisible = true;
     }
 
+
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
+        _currentState = GameState.MainMenu;
 
         base.Initialize();
     }
@@ -32,20 +34,30 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
-
-        // TODO: Add your update logic here
+        switch(_currentState)
+        {
+            case GameState.MainMenu:
+                if(Keyboard.GetState().IsKeyDown(Keys.Space))
+                _currentState = GameState.AuctionPhase;
+                break;
+            
+            case GameState.AuctionPhase:
+                break;
+        }
 
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        // Sahneye göre renk değişimi (Color.Rengi yazarak Yapabiliyoruz)
+        GraphicsDevice.Clear(_currentState == GameState.MainMenu ? Color.Cyan : Color.CornflowerBlue);
 
-        // TODO: Add your drawing code here
+        _spriteBatch.Begin();
+        // Çizimler
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }
 }
+
