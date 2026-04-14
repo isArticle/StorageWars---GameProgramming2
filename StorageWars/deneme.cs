@@ -1,3 +1,0 @@
-//selam yakısıklı
-
-//selam fıstık
