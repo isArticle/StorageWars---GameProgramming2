@@ -1,17 +1,15 @@
 namespace StorageWars
 {
-    // oyunun hangi ekranda olduğunu tutan liste
-    public enum GameState
+    public enum GameState //Sahneler
     {
-        MainMenu,
-        AuctionPhase, // sabah açık arttırma
-        InvertoryPhase, // öğle satış ve borç yönetimi
-        ShopPhase, // akşam yetenek alma
-        GameOver // final boss savaşı
+        MainMenu, //AnaMenu
+        AuctionPhase, //AçıkArttırma
+        InventoryPhase, //Inventory
+        ShopPhase, //Shop
+        BossPhase, //Boss 15.tur / 3 aşama
+        GameOver //OyunSonu
     }
-
-    // eşyaların değer sıralaması
-    public enum ItemTier
+    public enum ItemTier //İtemlerinDeğerleri
     {
         F, E, D, C, B, A, S
     }
