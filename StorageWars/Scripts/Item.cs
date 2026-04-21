@@ -1,16 +1,16 @@
-// Eşya sınıfları (F'den S'ye)
-public enum ItemTier { F, E, D, C, B, A, S }
-
-public class Item
+namespace StorageWars
 {
-    public string Name { get; set; }
-    public ItemTier Tier { get; set; }
-    public int BaseValue { get; set; }
-
-    public Item(string name, ItemTier tier, int baseValue)
+    public class Item
     {
-        Name = name;
-        Tier = tier;
-        BaseValue = baseValue;
+        public string Name { get; set; }
+        public ItemTier Tier { get; set; }
+        public int BaseValue { get; set; }
+
+        public Item(string name, ItemTier tier, int baseValue)
+        {
+            Name = name;
+            Tier = tier;
+            BaseValue = baseValue;
+        }
     }
 }

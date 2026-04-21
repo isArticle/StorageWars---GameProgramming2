@@ -17,35 +17,32 @@ namespace StorageWars
             IsAuctionActive = true;
             _auctionTimer = 0f;
         }
+
         public bool PlaceBid(string bidderName, int bidAmount)
         {
             if (!IsAuctionActive) return false;
 
-            // Eğer verilen teklif, anlık tekliften büyükse kabul et
             if (bidAmount > CurrentHighestBid)
             {
                 CurrentHighestBid = bidAmount;
                 HighestBidder = bidderName;
-                _auctionTimer = 0f; // Biri teklif verince "Satıldı" sayacını başa sar
+                _auctionTimer = 0f; 
                 return true;
             }
             return false;
         }
+
         public void Update(GameTime gameTime)
         {
             if (!IsAuctionActive) return;
 
-            // Eğer birisi teklif verdiyse, süreyi saymaya başla
             if (HighestBidder != "Kimse")
             {
-                // Geçen saniyeyi sayaca ekle
                 _auctionTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                // 3 saniye boyunca yeni teklif gelmediyse
                 if (_auctionTimer >= TIME_OUT)
                 {
                     IsAuctionActive = false;
-                    // TODO: İleride buraya "Depoyu kazananın envanterine ekle" kodunu yazacağız.
                 }
             }
         }
