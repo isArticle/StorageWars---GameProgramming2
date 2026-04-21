@@ -9,9 +9,8 @@ namespace StorageWars
         public bool IsAuctionActive; // Açık arttırmanın o an devam edip etmediğini kontrol eder
         private float _auctionTimer; // Son tekliften bu yana geçen süreyi tutan arka plan sayacı
         private const float TIME_OUT = 3f;
-        // Biri teklif verdikten sonra 3 saniye boyunca yeni teklif gelmezse açık arttırma biter.
 
-        public void StartNewAuction(int startingPrice) // Yeni bir depo/eşya için açık arttırmayı başlatan metot.
+        public void StartNewAuction(int startingPrice) 
         {
             CurrentHighestBid = startingPrice; 
             HighestBidder = "Kimse"; 
@@ -20,10 +19,8 @@ namespace StorageWars
         }
 
         public bool PlaceBid(string bidderName, int bidAmount)
-        // Oyuncu veya Yapay Zeka (AI) tarafından yeni bir teklif yapıldığında çağrılan metot.
-        // Eğer teklif kurala uygunsa 'true' döner ve işlenir.
         {
-            if (!IsAuctionActive) return false; // Eğer süre dolmuşsa ve açık arttırma kapandıysa teklifleri reddet
+            if (!IsAuctionActive) return false; 
 
             if (bidAmount > CurrentHighestBid) 
             {
@@ -36,9 +33,6 @@ namespace StorageWars
         }
 
         public void Update(GameTime gameTime)
-        // MonoGame'in saniyede 60 kere çalışan ana Update döngüsüne bağlanacak olan metot.
-        // Zamanın akışını burada kontrol ediyoruz.
-
         {
             if (!IsAuctionActive) return; 
 
