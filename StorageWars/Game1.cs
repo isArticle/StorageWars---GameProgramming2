@@ -10,8 +10,6 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch; 
     private GameState _currentState; 
     private KeyboardState _oldKeyState;
-
-    // 1. OYUNCULARI VE SİSTEMLERİ TANIMLIYORUZ
     private Player player1;
     private Player player2;
     private AuctionManager auctionManager;
@@ -24,11 +22,10 @@ public class Game1 : Game
         IsMouseVisible = true;
     }
 
-    protected override void Initialize()
+    protected override void Initialize() //Oyun açıldığı anda aktif olanlar.
     {
         _currentState = GameState.MainMenu;
 
-        // 2. KUTULARIN İÇİNİ DOLDURUYORUZ (Fabrikadan Çıkarıyoruz)
         player1 = new Player();
         player2 = new Player();
         auctionManager = new AuctionManager();
@@ -37,23 +34,21 @@ public class Game1 : Game
         base.Initialize();
     }
 
-    protected override void LoadContent()
+    protected override void LoadContent() //Asset yükleme sistemi.
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
     }
 
-    protected override void Update(GameTime gameTime)
+    protected override void Update(GameTime gameTime) //Genel oyun.
     {
-        // ÇIKIŞ KONTROLÜ
-        if(GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        if(GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) //esc basarsak oyun kapanıyor.
         {
             Exit();
         }
         
         KeyboardState newKeyState = Keyboard.GetState();
 
-        // SAHNE GEÇİŞİ (Space ile)
-        if (newKeyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space))
+        if (newKeyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space)) //Her space basışımızda ekran değişiyor.
         {
             switch (_currentState)
             {
@@ -65,19 +60,14 @@ public class Game1 : Game
                 case GameState.GameOver: _currentState = GameState.MainMenu; break;
             }
         }
-
-        // --- AŞAMA 2 VE 3 TEST MERKEZİ ---
         switch (_currentState)
         {
             case GameState.MainMenu:
-                Window.Title = "ANA MENU - Baslamak Icin SPACE'e Bas!";
+                Window.Title = "MAIN MENU - Press SPACE to Start!";
                 break;
 
             case GameState.AuctionPhase: // LACİVERT EKRAN (Açık Arttırma)
-                // Hakemi başlat
                 if (!auctionManager.IsAuctionActive) auctionManager.StartNewAuction(1000);
-
-                // AI ve Hakemi güncelle
                 aiBot.Update(gameTime, auctionManager);
                 auctionManager.Update(gameTime);
 
@@ -91,17 +81,16 @@ public class Game1 : Game
 
                 // Sonucu Ekrana Yazdır
                 if (auctionManager.IsAuctionActive)
-                    Window.Title = $"ACIK ARTTIRMA | Lider: {auctionManager.HighestBidder} | Teklif: {auctionManager.CurrentHighestBid}$";
+                    Window.Title = $"LIVE AUCTİON | Winning: {auctionManager.HighestBidder} | Current Offer: {auctionManager.CurrentHighestBid}$";
                 else
-                    Window.Title = $"SATILDI!!! Depoyu {auctionManager.HighestBidder} Kazandi!";
+                    Window.Title = $"SOLDD!!! {auctionManager.HighestBidder} Win the Storage!";
                 break;
 
             case GameState.InventoryPhase: // YEŞİL EKRAN (Borç Testi)
-                // Player 1 Borç Al (T Tuşu)
                 if (newKeyState.IsKeyDown(Keys.T) && _oldKeyState.IsKeyUp(Keys.T))
                     player1.TakeDebt(500);
 
-                Window.Title = $"ENVANTER | T'ye Bas! | P1 Para: {player1.Money}$ | P1 Borc: {player1.Debt}$ | P1 MaxHP: {player1.MaxHP}";
+                Window.Title = $"INVENTORY | Press T! | P1 Para: {player1.Money}$ | P1 Dept: {player1.Debt}$ | P1 MaxHP: {player1.MaxHP}";
                 break;
         }
 
@@ -109,7 +98,7 @@ public class Game1 : Game
         base.Update(gameTime);
     }
 
-    protected override void Draw(GameTime gameTime)
+    protected override void Draw(GameTime gameTime) //Ekrana çağırma sistemi.
     {
         switch (_currentState)
         {

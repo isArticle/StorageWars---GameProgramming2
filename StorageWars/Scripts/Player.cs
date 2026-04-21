@@ -7,14 +7,12 @@ namespace StorageWars
         public int CurrentHP { get; set; } = 1000;
         public int Debt { get; set; } = 0;
 
-        // Oyuncuya borç verir fakat kalıcı can limitini düşürür.
-        public void TakeDebt(int amount)
+        public void TakeDebt(int amount) //Borç alma sistemi.
         {
             Money += amount;
             Debt += amount;
             MaxHP -= amount; 
             
-            // Eğer maksimum can anlık candan aşağı düştüyse, anlık canı da eşitliyoruz
             if (CurrentHP > MaxHP)
             {
                 CurrentHP = MaxHP;
@@ -23,11 +21,11 @@ namespace StorageWars
             CheckBankruptcy();
         }
 
-        private void CheckBankruptcy()
+        private void CheckBankruptcy() //Kaybetme Koşulu.
         {
             if (MaxHP <= 0 || CurrentHP <= 0)
             {
-                // TODO: Aşama 5 için Game Over State'ine geçişi tetikle
+                
             }
         }
     }
