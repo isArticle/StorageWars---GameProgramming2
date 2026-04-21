@@ -9,6 +9,7 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch; //AssetTutucu
     private GameState _currentState; //SahneGeçişleri
+    private KeyboardState _oldKeyState;
 
     public Game1()
     {
@@ -33,25 +34,34 @@ public class Game1 : Game
             Exit();
         }
         
-        switch(_currentState)
+        KeyboardState newKeyState = Keyboard.GetState();
+
+        if (newKeyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space))
+    {
+        switch (_currentState)
         {
             case GameState.MainMenu:
-                if(Keyboard.GetState().IsKeyDown(Keys.Space))
-                {
-                    _currentState = GameState.AuctionPhase;
-                }
+                _currentState = GameState.AuctionPhase; // Lacivert
                 break;
-            
             case GameState.AuctionPhase:
+                _currentState = GameState.InventoryPhase; // Yeşil
                 break;
             case GameState.InventoryPhase:
+                _currentState = GameState.ShopPhase; // Sarı
                 break;
             case GameState.ShopPhase:
+                _currentState = GameState.BossPhase; // Kırmızı
                 break;
             case GameState.BossPhase:
+                _currentState = GameState.GameOver; // Gri
+                break;
+            case GameState.GameOver:
+                _currentState = GameState.MainMenu; // Başa dön (Siyah)
                 break;
         }
+    }
 
+        _oldKeyState = newKeyState;
         base.Update(gameTime);
     }
 
