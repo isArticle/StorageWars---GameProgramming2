@@ -3,6 +3,8 @@ namespace StorageWars
     public enum GameState //Sahneler
     {
         MainMenu, //AnaMenu
+        HowToPlay,  // NasılOynanır
+        Credits, // Credits
         AuctionPhase, //AçıkArttırma
         InventoryPhase, //Inventory
         ShopPhase, //Shop

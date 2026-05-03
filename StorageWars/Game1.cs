@@ -10,11 +10,15 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch; 
     private GameState _currentState; 
     private KeyboardState _oldKeyState;
+    
     private Player player1;
     private Player player2;
     private AuctionManager auctionManager;
     private AIBot aiBot;
     
+    // UI Yöneticimiz (Çizimler için)
+    private UIManager uiManager;
+
     // Aşama 5 Boss Değişkenleri
     private Boss boss;
     private bool bossTurnStarted = false;
@@ -28,9 +32,17 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
+        _graphics.PreferredBackBufferWidth = 1920;
+        _graphics.PreferredBackBufferHeight = 1080;
+        
+        // Oyun artık ilk açıldığında doğrudan TAM EKRAN başlayacak
+        _graphics.IsFullScreen = true; 
+        
+        _graphics.ApplyChanges();
     }
 
-    protected override void Initialize() //Oyun açıldığı anda aktif olanlar.
+    protected override void Initialize() 
     {
         _currentState = GameState.MainMenu;
 
@@ -40,25 +52,30 @@ public class Game1 : Game
         aiBot = new AIBot(10000);
         boss = new Boss();
         shopManager = new ShopManager();
+        
+        uiManager = new UIManager();
 
         base.Initialize();
     }
 
-    protected override void LoadContent() //Asset yükleme sistemi.
+    protected override void LoadContent() 
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        uiManager.LoadContent(Content);
     }
 
-    protected override void Update(GameTime gameTime) //Genel oyun.
+    protected override void Update(GameTime gameTime) 
     {
-        if(GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) //esc basarsak oyun kapanıyor.
+        KeyboardState newKeyState = Keyboard.GetState();
+
+        // 1. KESİN ÇIKIŞ (ESC her zaman oyunu kapatır)
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || newKeyState.IsKeyDown(Keys.Escape)) 
         {
             Exit();
         }
-        
-        KeyboardState newKeyState = Keyboard.GetState();
 
-        if (newKeyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space)) //Her space basışımızda ekran değişiyor.
+        // Geliştirici Test Tuşu (Space)
+        if (newKeyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space)) 
         {
             switch (_currentState)
             {
@@ -71,56 +88,69 @@ public class Game1 : Game
             }
         }
         
-        // --- SAHNE YÖNETİMİ VE TEST MERKEZİ ---
+        // --- SAHNE YÖNETİMİ ---
         switch (_currentState)
         {
             case GameState.MainMenu:
-                Window.Title = "MAIN MENU - Press SPACE to Start!";
+                Window.Title = "MAIN MENU - Press ENTER to Start, H for How To Play, C for Credits";
+                
+                if (newKeyState.IsKeyDown(Keys.Enter) && _oldKeyState.IsKeyUp(Keys.Enter))
+                    _currentState = GameState.AuctionPhase;
+                else if (newKeyState.IsKeyDown(Keys.H) && _oldKeyState.IsKeyUp(Keys.H))
+                    _currentState = GameState.HowToPlay;
+                else if (newKeyState.IsKeyDown(Keys.C) && _oldKeyState.IsKeyUp(Keys.C))
+                    _currentState = GameState.Credits;
                 break;
 
-            case GameState.AuctionPhase: // LACİVERT EKRAN (Açık Arttırma)
+            case GameState.HowToPlay: 
+                Window.Title = "HOW TO PLAY - Press BACKSPACE to return to Main Menu";
+                // Geri dönmek için Backspace
+                if (newKeyState.IsKeyDown(Keys.Back) && _oldKeyState.IsKeyUp(Keys.Back))
+                    _currentState = GameState.MainMenu;
+                break;
+
+            case GameState.Credits: 
+                Window.Title = "CREDITS - A Nexus Studio Game - Press BACKSPACE to return";
+                // Geri dönmek için Backspace
+                if (newKeyState.IsKeyDown(Keys.Back) && _oldKeyState.IsKeyUp(Keys.Back))
+                    _currentState = GameState.MainMenu;
+                break;
+
+            case GameState.AuctionPhase: 
                 if (!auctionManager.IsAuctionActive) auctionManager.StartNewAuction(1000);
                 aiBot.Update(gameTime, auctionManager);
                 auctionManager.Update(gameTime);
 
-                // Player 1 Teklif (W Tuşu)
                 if (newKeyState.IsKeyDown(Keys.W) && _oldKeyState.IsKeyUp(Keys.W))
                     auctionManager.PlaceBid("Player 1", auctionManager.CurrentHighestBid + 100);
 
-                // Player 2 Teklif (I Tuşu)
                 if (newKeyState.IsKeyDown(Keys.I) && _oldKeyState.IsKeyUp(Keys.I))
                     auctionManager.PlaceBid("Player 2", auctionManager.CurrentHighestBid + 100);
 
-                // Sonucu Ekrana Yazdır
                 if (auctionManager.IsAuctionActive)
                     Window.Title = $"LIVE AUCTION | Winning: {auctionManager.HighestBidder} | Current Offer: {auctionManager.CurrentHighestBid}$";
                 else
                     Window.Title = $"SOLD!!! {auctionManager.HighestBidder} Wins the Storage!";
                 break;
 
-            case GameState.InventoryPhase: // YEŞİL EKRAN (Borç Testi ve Eşya Satışı)
+            case GameState.InventoryPhase: 
                 if (newKeyState.IsKeyDown(Keys.T) && _oldKeyState.IsKeyUp(Keys.T))
                     player1.TakeDebt(500);
 
-                // AŞAMA 4: S tuşuna basınca sanki 1000 dolarlık eşya satmış gibi P1 para kazanır
                 if (newKeyState.IsKeyDown(Keys.S) && _oldKeyState.IsKeyUp(Keys.S))
                     player1.Money += 1000;
 
                 Window.Title = $"INVENTORY | T(Debt) S(Sell) | P1 Money: {player1.Money}$ | P1 Debt: {player1.Debt}$";
-                
-                // Yeşilden çıkarken mağaza yenileme iznini aç
                 shopRolledThisTurn = false; 
                 break;
                 
-            case GameState.ShopPhase: // SARI EKRAN (Yetenek Mağazası)
-                // Sadece bu sahneye ilk girdiğimizde mağazayı yenile
+            case GameState.ShopPhase: 
                 if (!shopRolledThisTurn)
                 {
                     shopManager.RollDailySkills();
                     shopRolledThisTurn = true;
                 }
 
-                // 'B' tuşuna basınca Player 1, mağazadaki İLK yeteneği satın alsın
                 if (newKeyState.IsKeyDown(Keys.B) && _oldKeyState.IsKeyUp(Keys.B))
                 {
                     if(shopManager.DailySkills.Count > 0)
@@ -129,57 +159,51 @@ public class Game1 : Game
                     }
                 }
 
-                // Ekrana mağaza verilerini yazdır
                 if (shopManager.DailySkills.Count > 0)
                 {
                     Window.Title = $"SHOP | B: Buy {shopManager.DailySkills[0].Name} ({shopManager.DailySkills[0].Price}$) | P1 Money: {player1.Money}$ | Skills: {player1.ActiveSkills.Count}/3";
                 }
                 break;
 
-            case GameState.BossPhase: // KIRMIZI EKRAN (Final Boss Savaşı)
+            case GameState.BossPhase: 
                 if (!bossTurnStarted)
                 {
-                    boss.StartNewAttack(1); // Test için 1. seviye zorluk
+                    boss.StartNewAttack(1);
                     bossTurnStarted = true;
                 }
 
-                // P1 (W Tuşu) ile havuza 1000$ atsın
                 if (newKeyState.IsKeyDown(Keys.W) && _oldKeyState.IsKeyUp(Keys.W) && player1.Money >= 1000)
                 {
                     player1.Money -= 1000;
                     boss.Contribute(1000);
                 }
 
-                // P2 (I Tuşu) ile havuza 1000$ atsın
                 if (newKeyState.IsKeyDown(Keys.I) && _oldKeyState.IsKeyUp(Keys.I) && player2.Money >= 1000)
                 {
                     player2.Money -= 1000;
                     boss.Contribute(1000);
                 }
 
-                // Enter tuşuna basınca tur bitsin ve hesaplaşma yapılsın
                 if (newKeyState.IsKeyDown(Keys.Enter) && _oldKeyState.IsKeyUp(Keys.Enter))
                 {
                     bool success = boss.ResolveAttack();
                     if (!success) 
                     {
-                        // Eğer para yetmediyse ikisi de 500 can kaybeder
                         player1.MaxHP -= 500;
                         player2.MaxHP -= 500;
                     }
-                    bossTurnStarted = false; // Yeni tur başlasın diye sıfırla
+                    bossTurnStarted = false; 
                 }
 
                 Window.Title = $"BOSS FIGHT | Boss HP: {boss.HP} | Demand: {boss.CurrentDemand}$ | Pool: {boss.PooledMoney}$ | W/I to pool, ENTER to resolve";
                 
-                // Eğer Boss ölürse veya oyuncular ölürse oyunu bitir
                 if (boss.HP <= 0 || player1.MaxHP <= 0 || player2.MaxHP <= 0)
                 {
                     _currentState = GameState.GameOver;
                 }
                 break;
 
-            case GameState.GameOver: // GRİ EKRAN (Oyun Sonu ve Kazanan)
+            case GameState.GameOver: 
                 if (boss.HP <= 0)
                 {
                     if (player1.Money > player2.Money)
@@ -200,11 +224,13 @@ public class Game1 : Game
         base.Update(gameTime);
     }
 
-    protected override void Draw(GameTime gameTime) //Ekrana çağırma sistemi.
+    protected override void Draw(GameTime gameTime) 
     {
         switch (_currentState)
         {
             case GameState.MainMenu: GraphicsDevice.Clear(Color.Black); break;
+            case GameState.HowToPlay: GraphicsDevice.Clear(Color.DarkSlateGray); break;
+            case GameState.Credits: GraphicsDevice.Clear(Color.DarkSlateGray); break;
             case GameState.AuctionPhase: GraphicsDevice.Clear(Color.DarkBlue); break;
             case GameState.InventoryPhase: GraphicsDevice.Clear(Color.DarkGreen); break;
             case GameState.ShopPhase: GraphicsDevice.Clear(Color.DarkGoldenrod); break;
@@ -214,6 +240,20 @@ public class Game1 : Game
         }
 
         _spriteBatch.Begin();
+
+        if (_currentState == GameState.MainMenu)
+        {
+            uiManager.DrawMainMenu(_spriteBatch);
+        }
+        else if (_currentState == GameState.HowToPlay)
+        {
+            uiManager.DrawHowToPlay(_spriteBatch);
+        }
+        else if (_currentState == GameState.Credits)
+        {
+            uiManager.DrawCredits(_spriteBatch);
+        }
+
         _spriteBatch.End();
 
         base.Draw(gameTime);
