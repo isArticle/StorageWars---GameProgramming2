@@ -8,20 +8,17 @@ namespace StorageWars
     {
         // 1. Materyaller
         private Texture2D bgMainMenu;
-        private Texture2D bgHowToPlay; // Yeni Eklendi
-        private Texture2D bgCredits;   // Yeni Eklendi
+        private Texture2D bgHowToPlay;
+        private Texture2D bgCredits;
+        private Texture2D bgAuction;
 
         // ContentManager ile resimleri yükleme
         public void LoadContent(ContentManager content)
         {
-            // Ana Menü Yükleme
-            try { bgMainMenu = content.Load<Texture2D>("bg_mainmenu"); } catch { }
-
-            // Nasıl Oynanır Yükleme
-            try { bgHowToPlay = content.Load<Texture2D>("bg_howtoplay"); } catch { }
-
-            // Credits Yükleme
-            try { bgCredits = content.Load<Texture2D>("bg_credits"); } catch { }
+            bgMainMenu = content.Load<Texture2D>("bg_mainmenu");
+            bgHowToPlay = content.Load<Texture2D>("bg_howtoplay");
+            bgCredits = content.Load<Texture2D>("bg_credits");
+            bgAuction = content.Load<Texture2D>("bg_auction");
         }
 
         // 2. Çizim Metotları
@@ -29,17 +26,19 @@ namespace StorageWars
         {
             if (bgMainMenu != null) spriteBatch.Draw(bgMainMenu, Vector2.Zero, Color.White);
         }
-
         public void DrawHowToPlay(SpriteBatch spriteBatch)
         {
             // Eğer resim yüklendiyse ekrana bas
             if (bgHowToPlay != null) spriteBatch.Draw(bgHowToPlay, Vector2.Zero, Color.White);
         }
-
         public void DrawCredits(SpriteBatch spriteBatch)
         {
             // Eğer resim yüklendiyse ekrana bas
             if (bgCredits != null) spriteBatch.Draw(bgCredits, Vector2.Zero, Color.White);
+        }
+        public void DrawAuctionPhase(SpriteBatch spriteBatch)
+        {
+            if (bgAuction != null) spriteBatch.Draw(bgAuction, Vector2.Zero, Color.White);
         }
     }
 }

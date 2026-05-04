@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using Microsoft.Xna.Framework.Audio;
 namespace StorageWars;
 
 public class Game1 : Game
@@ -18,6 +18,8 @@ public class Game1 : Game
     
     // UI Yöneticimiz (Çizimler için)
     private UIManager uiManager;
+    // Ses Efektleri
+    private SoundEffect uiClickSound;
 
     // Aşama 5 Boss Değişkenleri
     private Boss boss;
@@ -62,6 +64,7 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         uiManager.LoadContent(Content);
+        uiClickSound = Content.Load<SoundEffect>("ui_click");
     }
 
     protected override void Update(GameTime gameTime) 
@@ -95,25 +98,38 @@ public class Game1 : Game
                 Window.Title = "MAIN MENU - Press ENTER to Start, H for How To Play, C for Credits";
                 
                 if (newKeyState.IsKeyDown(Keys.Enter) && _oldKeyState.IsKeyUp(Keys.Enter))
+                {
+                    uiClickSound.Play();
                     _currentState = GameState.AuctionPhase;
+                }
                 else if (newKeyState.IsKeyDown(Keys.H) && _oldKeyState.IsKeyUp(Keys.H))
+                {
+                    uiClickSound.Play();
                     _currentState = GameState.HowToPlay;
+                }
                 else if (newKeyState.IsKeyDown(Keys.C) && _oldKeyState.IsKeyUp(Keys.C))
+                {
+                    uiClickSound.Play();
                     _currentState = GameState.Credits;
+                }
                 break;
 
             case GameState.HowToPlay: 
                 Window.Title = "HOW TO PLAY - Press BACKSPACE to return to Main Menu";
-                // Geri dönmek için Backspace
                 if (newKeyState.IsKeyDown(Keys.Back) && _oldKeyState.IsKeyUp(Keys.Back))
+                {
+                    uiClickSound.Play();
                     _currentState = GameState.MainMenu;
+                }
                 break;
 
             case GameState.Credits: 
                 Window.Title = "CREDITS - A Nexus Studio Game - Press BACKSPACE to return";
-                // Geri dönmek için Backspace
                 if (newKeyState.IsKeyDown(Keys.Back) && _oldKeyState.IsKeyUp(Keys.Back))
+                {
+                    uiClickSound.Play();
                     _currentState = GameState.MainMenu;
+                }
                 break;
 
             case GameState.AuctionPhase: 
@@ -252,6 +268,10 @@ public class Game1 : Game
         else if (_currentState == GameState.Credits)
         {
             uiManager.DrawCredits(_spriteBatch);
+        }
+        else if (_currentState == GameState.AuctionPhase)
+        {
+            uiManager.DrawAuctionPhase(_spriteBatch);
         }
 
         _spriteBatch.End();
