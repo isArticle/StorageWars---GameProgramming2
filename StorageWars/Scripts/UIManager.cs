@@ -6,13 +6,11 @@ namespace StorageWars
 {
     public class UIManager
     {
-        // 1. Materyaller
         private Texture2D bgMainMenu;
         private Texture2D bgHowToPlay;
         private Texture2D bgCredits;
         private Texture2D bgAuction;
 
-        // ContentManager ile resimleri yükleme
         public void LoadContent(ContentManager content)
         {
             bgMainMenu = content.Load<Texture2D>("bg_mainmenu");
@@ -28,12 +26,10 @@ namespace StorageWars
         }
         public void DrawHowToPlay(SpriteBatch spriteBatch)
         {
-            // Eğer resim yüklendiyse ekrana bas
             if (bgHowToPlay != null) spriteBatch.Draw(bgHowToPlay, Vector2.Zero, Color.White);
         }
         public void DrawCredits(SpriteBatch spriteBatch)
         {
-            // Eğer resim yüklendiyse ekrana bas
             if (bgCredits != null) spriteBatch.Draw(bgCredits, Vector2.Zero, Color.White);
         }
         public void DrawAuctionPhase(SpriteBatch spriteBatch)

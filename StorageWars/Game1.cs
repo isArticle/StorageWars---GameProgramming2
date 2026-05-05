@@ -37,8 +37,6 @@ public class Game1 : Game
 
         _graphics.PreferredBackBufferWidth = 1920;
         _graphics.PreferredBackBufferHeight = 1080;
-        
-        // Oyun artık ilk açıldığında doğrudan TAM EKRAN başlayacak
         _graphics.IsFullScreen = true; 
         
         _graphics.ApplyChanges();
@@ -70,14 +68,11 @@ public class Game1 : Game
     protected override void Update(GameTime gameTime) 
     {
         KeyboardState newKeyState = Keyboard.GetState();
-
-        // 1. KESİN ÇIKIŞ (ESC her zaman oyunu kapatır)
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || newKeyState.IsKeyDown(Keys.Escape)) 
         {
             Exit();
         }
 
-        // Geliştirici Test Tuşu (Space)
         if (newKeyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space)) 
         {
             switch (_currentState)
