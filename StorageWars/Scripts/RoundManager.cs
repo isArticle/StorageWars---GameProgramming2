@@ -1,21 +1,22 @@
 namespace StorageWars
 {
-    public class RoundManager //Maç roundları sistemi.
+    public class RoundManager 
     {
         public int CurrentRound { get; private set; } = 1;
         public const int MaxRounds = 15;
+        public bool IsBossRound => CurrentRound >= MaxRounds;
 
-        public float GetInflationMultiplier() //Tur başına eşya ve depo fiyatları enflasyonu.
+        public float GetInflationMultiplier() 
         {
             return 1.0f + (CurrentRound * 0.15f);
         }
 
-        public int CalculateCurrentItemValue(Item item) //Tur başına eşya ve depo fiyatları.
+        public int CalculateCurrentItemValue(Item item) 
         {
             return (int)(item.BaseValue * GetInflationMultiplier());
         }
 
-        public void AdvanceRound() //Round arttırma.
+        public void AdvanceRound() 
         {
             if (CurrentRound < MaxRounds) CurrentRound++;
         }

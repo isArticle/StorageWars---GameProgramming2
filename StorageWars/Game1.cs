@@ -69,31 +69,11 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime) 
     {
-<<<<<<< HEAD
         inputManager.Update();
 
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || inputManager.IsKeyDown(Keys.Escape)) Exit();
-
-        if (inputManager.IsKeyPressed(Keys.Space)) 
-=======
-        KeyboardState newKeyState = Keyboard.GetState();
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || newKeyState.IsKeyDown(Keys.Escape)) 
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || inputManager.IsKeyDown(Keys.Escape)) 
         {
             Exit();
-        }
-
-        if (newKeyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space)) 
->>>>>>> 664bcb3e6016b60d15b1380f26214c6d693aa019
-        {
-            switch (_currentState)
-            {
-                case GameState.MainMenu: _currentState = GameState.AuctionPhase; break;
-                case GameState.AuctionPhase: _currentState = GameState.InventoryPhase; break;
-                case GameState.InventoryPhase: _currentState = GameState.ShopPhase; break;
-                case GameState.ShopPhase: _currentState = GameState.BossPhase; break;
-                case GameState.BossPhase: _currentState = GameState.GameOver; break;
-                case GameState.GameOver: _currentState = GameState.MainMenu; break;
-            }
         }
         
         switch (_currentState)
@@ -173,14 +153,38 @@ public class Game1 : Game
             case GameState.InventoryPhase: 
                 if (inputManager.IsKeyPressed(Keys.T)) player1.TakeDebt(500);
                 if (inputManager.IsKeyPressed(Keys.S)) player1.Money += 1000;
-                Window.Title = $"INVENTORY | T(Debt) S(Sell) | P1 Money: {player1.Money}$ | P1 Debt: {player1.Debt}$ | SPACE to bypass";
+                Window.Title = $"INVENTORY | T(Debt) S(Sell) | P1 Money: {player1.Money}$ | P1 Debt: {player1.Debt}$ | SPACE to Next";
                 shopRolledThisTurn = false; 
+
+                // YENİ: Envanter işleri bitince Space tuşuyla Markete geçiyoruz
+                if (inputManager.IsKeyPressed(Keys.Space))
+                {
+                    // audioManager.PlayPageTurn(); // Sayfa çevirme sesi
+                    _currentState = GameState.ShopPhase;
+                }
                 break;
-                
+    
             case GameState.ShopPhase: 
                 if (!shopRolledThisTurn) { shopManager.RollDailySkills(); shopRolledThisTurn = true; }
                 if (inputManager.IsKeyPressed(Keys.B)) { if(shopManager.DailySkills.Count > 0) player1.BuySkill(shopManager.DailySkills[0]); }
-                if (shopManager.DailySkills.Count > 0) Window.Title = $"SHOP | B: Buy {shopManager.DailySkills[0].Name} ({shopManager.DailySkills[0].Price}$) | P1 Money: {player1.Money}$ | Skills: {player1.ActiveSkills.Count}/3";
+                if (shopManager.DailySkills.Count > 0) Window.Title = $"SHOP | B: Buy {shopManager.DailySkills[0].Name} ({shopManager.DailySkills[0].Price}$) | P1 Money: {player1.Money}$ | SPACE to Next Round";
+                
+                if (inputManager.IsKeyPressed(Keys.Space))
+                {
+                    roundManager.AdvanceRound();
+                
+                    if (roundManager.IsBossRound)
+                    {
+                        _currentState = GameState.BossPhase; // Kırmızı alarm, Boss geldi!
+                    }
+                    else
+                    {
+                        // Boss değilse, yeni bir standart depo müzayedesi başlat
+                        auctionManager.StartNewAuction(100);
+                        aiBot.ResetForNewAuction();
+                        _currentState = GameState.AuctionPhase;
+                    }
+                }
                 break;
 
             case GameState.BossPhase: 
