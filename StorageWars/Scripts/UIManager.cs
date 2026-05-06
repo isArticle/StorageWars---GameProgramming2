@@ -6,9 +6,16 @@ namespace StorageWars
 {
     public class UIManager
     {
+<<<<<<< HEAD
         private Texture2D bgMainMenu, bgHowToPlay, bgCredits, bgAuction;
         private SpriteFont gameFont;
         private float _displayedPrice = 100f;
+=======
+        private Texture2D bgMainMenu;
+        private Texture2D bgHowToPlay;
+        private Texture2D bgCredits;
+        private Texture2D bgAuction;
+>>>>>>> 664bcb3e6016b60d15b1380f26214c6d693aa019
 
         public void LoadContent(ContentManager content)
         {
@@ -19,11 +26,28 @@ namespace StorageWars
             gameFont = content.Load<SpriteFont>("GameFont");
         }
 
+<<<<<<< HEAD
         public void DrawMainMenu(SpriteBatch sb) { if (bgMainMenu != null) sb.Draw(bgMainMenu, Vector2.Zero, Color.White); }
         public void DrawHowToPlay(SpriteBatch sb) { if (bgHowToPlay != null) sb.Draw(bgHowToPlay, Vector2.Zero, Color.White); }
         public void DrawCredits(SpriteBatch sb) { if (bgCredits != null) sb.Draw(bgCredits, Vector2.Zero, Color.White); }
 
         public void DrawAuctionPhase(SpriteBatch spriteBatch, AuctionManager auctionManager, Player p1, Player p2, RoundManager roundManager, AIBot bot)
+=======
+        // 2. Çizim Metotları
+        public void DrawMainMenu(SpriteBatch spriteBatch)
+        {
+            if (bgMainMenu != null) spriteBatch.Draw(bgMainMenu, Vector2.Zero, Color.White);
+        }
+        public void DrawHowToPlay(SpriteBatch spriteBatch)
+        {
+            if (bgHowToPlay != null) spriteBatch.Draw(bgHowToPlay, Vector2.Zero, Color.White);
+        }
+        public void DrawCredits(SpriteBatch spriteBatch)
+        {
+            if (bgCredits != null) spriteBatch.Draw(bgCredits, Vector2.Zero, Color.White);
+        }
+        public void DrawAuctionPhase(SpriteBatch spriteBatch)
+>>>>>>> 664bcb3e6016b60d15b1380f26214c6d693aa019
         {
             if (bgAuction != null) spriteBatch.Draw(bgAuction, Vector2.Zero, Color.White);
 

@@ -69,11 +69,21 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime) 
     {
+<<<<<<< HEAD
         inputManager.Update();
 
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || inputManager.IsKeyDown(Keys.Escape)) Exit();
 
         if (inputManager.IsKeyPressed(Keys.Space)) 
+=======
+        KeyboardState newKeyState = Keyboard.GetState();
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || newKeyState.IsKeyDown(Keys.Escape)) 
+        {
+            Exit();
+        }
+
+        if (newKeyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space)) 
+>>>>>>> 664bcb3e6016b60d15b1380f26214c6d693aa019
         {
             switch (_currentState)
             {
