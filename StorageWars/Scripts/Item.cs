@@ -1,16 +1,14 @@
 namespace StorageWars
 {
-    public class Item //İtem belirleme yeri.
+    public class Item
     {
-        public string Name { get; set; }
-        public ItemTier Tier { get; set; }
-        public int BaseValue { get; set; }
+        public string Name;
+        public int Value;
 
-        public Item(string name, ItemTier tier, int baseValue) //Şuanlık sadece 3 içeriği var ilerde eklermiyiz bilemem.
+        public Item(string name, int value)
         {
             Name = name;
-            Tier = tier;
-            BaseValue = baseValue;
+            Value = value;
         }
     }
 }

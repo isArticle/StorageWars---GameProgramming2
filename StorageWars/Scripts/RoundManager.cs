@@ -4,6 +4,7 @@ namespace StorageWars
     {
         public int CurrentRound { get; private set; } = 1;
         public const int MaxRounds = 15;
+
         public bool IsBossRound => CurrentRound >= MaxRounds;
 
         public float GetInflationMultiplier() 
@@ -13,7 +14,7 @@ namespace StorageWars
 
         public int CalculateCurrentItemValue(Item item) 
         {
-            return (int)(item.BaseValue * GetInflationMultiplier());
+            return (int)(item.Value * GetInflationMultiplier());
         }
 
         public void AdvanceRound() 

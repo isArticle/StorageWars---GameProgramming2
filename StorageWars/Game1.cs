@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -63,7 +64,7 @@ public class Game1 : Game
     protected override void LoadContent() 
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        uiManager.LoadContent(Content);
+        uiManager.LoadContent(Content, GraphicsDevice);
         audioManager.LoadContent(Content);
     }
 
@@ -140,6 +141,22 @@ public class Game1 : Game
                     {
                         _soldTimer = 0f; 
                         _moneyDeducted = false; 
+
+                        Random rnd = new Random();
+                        int lootCount = rnd.Next(2, 5); 
+                        Player winner = null;
+
+                        if (auctionManager.HighestBidder == "Player 1") winner = player1;
+                        else if (auctionManager.HighestBidder == "Player 2") winner = player2;
+
+                        if (winner != null)
+                        {
+                            for (int i = 0; i < lootCount; i++)
+                            {
+                                winner.AddItem(new Item($"Loot {rnd.Next(10, 99)}", rnd.Next(150, 600))); 
+                            }
+                        }
+
                         _currentState = GameState.InventoryPhase; 
                     }
                 }
@@ -151,39 +168,79 @@ public class Game1 : Game
                 break;
 
             case GameState.InventoryPhase: 
-                if (inputManager.IsKeyPressed(Keys.T)) player1.TakeDebt(500);
-                if (inputManager.IsKeyPressed(Keys.S)) player1.Money += 1000;
-                Window.Title = $"INVENTORY | T(Debt) S(Sell) | P1 Money: {player1.Money}$ | P1 Debt: {player1.Debt}$ | SPACE to Next";
+                if (inputManager.IsKeyPressed(Keys.W)) player1.MoveCursor(0, -1);
+                if (inputManager.IsKeyPressed(Keys.S)) player1.MoveCursor(0, 1);
+                if (inputManager.IsKeyPressed(Keys.A)) player1.MoveCursor(-1, 0);
+                if (inputManager.IsKeyPressed(Keys.D)) player1.MoveCursor(1, 0);
+                
+                if (inputManager.IsKeyPressed(Keys.Q)) player1.SellSelectedItem(); 
+                if (inputManager.IsKeyPressed(Keys.E)) player1.TakeDebt(500);      
+
+                if (inputManager.IsKeyPressed(Keys.Up)) player2.MoveCursor(0, -1);
+                if (inputManager.IsKeyPressed(Keys.Down)) player2.MoveCursor(0, 1);
+                if (inputManager.IsKeyPressed(Keys.Left)) player2.MoveCursor(-1, 0);
+                if (inputManager.IsKeyPressed(Keys.Right)) player2.MoveCursor(1, 0);
+                
+                if (inputManager.IsKeyPressed(Keys.I)) player2.SellSelectedItem();
+                if (inputManager.IsKeyPressed(Keys.O)) player2.TakeDebt(500);
+
+                Window.Title = $"INVENTORY | P1: Q(Sell)/E(Debt) | P2: I(Sell)/O(Debt) | SPACE to Next";
                 shopRolledThisTurn = false; 
 
-                // YENİ: Envanter işleri bitince Space tuşuyla Markete geçiyoruz
                 if (inputManager.IsKeyPressed(Keys.Space))
                 {
-                    // audioManager.PlayPageTurn(); // Sayfa çevirme sesi
                     _currentState = GameState.ShopPhase;
                 }
                 break;
     
             case GameState.ShopPhase: 
-                if (!shopRolledThisTurn) { shopManager.RollDailySkills(); shopRolledThisTurn = true; }
-                if (inputManager.IsKeyPressed(Keys.B)) { if(shopManager.DailySkills.Count > 0) player1.BuySkill(shopManager.DailySkills[0]); }
-                if (shopManager.DailySkills.Count > 0) Window.Title = $"SHOP | B: Buy {shopManager.DailySkills[0].Name} ({shopManager.DailySkills[0].Price}$) | P1 Money: {player1.Money}$ | SPACE to Next Round";
-                
+                if (!shopRolledThisTurn) 
+                { 
+                    shopManager.RollDailySkills(roundManager.GetInflationMultiplier()); 
+                    shopRolledThisTurn = true; 
+                }
+
+                // --- P1 KONTROLLER ---
+                if (inputManager.IsKeyPressed(Keys.W)) shopManager.MoveSelection(1, -1);
+                if (inputManager.IsKeyPressed(Keys.S)) shopManager.MoveSelection(1, 1);
+                if (inputManager.IsKeyPressed(Keys.E)) // P1 SATIN AL
+                {
+                    if (shopManager.DailySkills.Count > shopManager.P1SelectedSlot)
+                    {
+                        Skill selected = shopManager.DailySkills[shopManager.P1SelectedSlot];
+                        if (player1.Money >= selected.Price)
+                        {
+                            player1.BuySkill(selected);
+                            audioManager.PlayClick();
+                        }
+                        else audioManager.PlayError();
+                    }
+                }
+
+                // --- P2 KONTROLLER ---
+                if (inputManager.IsKeyPressed(Keys.Up)) shopManager.MoveSelection(2, -1);
+                if (inputManager.IsKeyPressed(Keys.Down)) shopManager.MoveSelection(2, 1);
+                if (inputManager.IsKeyPressed(Keys.O)) // P2 SATIN AL
+                {
+                    if (shopManager.DailySkills.Count > shopManager.P2SelectedSlot)
+                    {
+                        Skill selected = shopManager.DailySkills[shopManager.P2SelectedSlot];
+                        if (player2.Money >= selected.Price)
+                        {
+                            player2.BuySkill(selected);
+                            audioManager.PlayClick();
+                        }
+                        else audioManager.PlayError();
+                    }
+                }
+
+                Window.Title = $"SHOP | P1: Q(Sell)/E(Buy) | P2: I(Sell)/O(Buy) | SPACE: Next Round";
+
                 if (inputManager.IsKeyPressed(Keys.Space))
                 {
                     roundManager.AdvanceRound();
-                
-                    if (roundManager.IsBossRound)
-                    {
-                        _currentState = GameState.BossPhase; // Kırmızı alarm, Boss geldi!
-                    }
-                    else
-                    {
-                        // Boss değilse, yeni bir standart depo müzayedesi başlat
-                        auctionManager.StartNewAuction(100);
-                        aiBot.ResetForNewAuction();
-                        _currentState = GameState.AuctionPhase;
-                    }
+                    if (roundManager.IsBossRound) _currentState = GameState.BossPhase; 
+                    else { auctionManager.StartNewAuction(100); _currentState = GameState.AuctionPhase; }
                 }
                 break;
 
@@ -231,6 +288,10 @@ public class Game1 : Game
         else if (_currentState == GameState.HowToPlay) uiManager.DrawHowToPlay(_spriteBatch);
         else if (_currentState == GameState.Credits) uiManager.DrawCredits(_spriteBatch);
         else if (_currentState == GameState.AuctionPhase) uiManager.DrawAuctionPhase(_spriteBatch, auctionManager, player1, player2, roundManager, aiBot);
+        else if (_currentState == GameState.InventoryPhase) uiManager.DrawInventoryPhase(_spriteBatch, player1, player2);
+        
+        // YENİ: Market Çizimi
+        else if (_currentState == GameState.ShopPhase) uiManager.DrawShopPhase(_spriteBatch, player1, player2, shopManager);
 
         _spriteBatch.End();
         base.Draw(gameTime);
