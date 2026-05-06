@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
+
 namespace StorageWars;
 
 public class Game1 : Game
@@ -9,25 +9,25 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch; 
     private GameState _currentState; 
-    private KeyboardState _oldKeyState;
     
+    private InputManager inputManager;
+    private AudioManager audioManager;
+    private UIManager uiManager; 
+    private RoundManager roundManager;
+
     private Player player1;
     private Player player2;
     private AuctionManager auctionManager;
     private AIBot aiBot;
     
-    // UI Yöneticimiz (Çizimler için)
-    private UIManager uiManager;
-    // Ses Efektleri
-    private SoundEffect uiClickSound;
-
-    // Aşama 5 Boss Değişkenleri
     private Boss boss;
     private bool bossTurnStarted = false;
 
-    // Aşama 4 Market Değişkenleri
     private ShopManager shopManager;
     private bool shopRolledThisTurn = false;
+    
+    private float _soldTimer = 0f;
+    private bool _moneyDeducted = false;
 
     public Game1()
     {
@@ -37,16 +37,18 @@ public class Game1 : Game
 
         _graphics.PreferredBackBufferWidth = 1920;
         _graphics.PreferredBackBufferHeight = 1080;
-        
-        // Oyun artık ilk açıldığında doğrudan TAM EKRAN başlayacak
         _graphics.IsFullScreen = true; 
-        
         _graphics.ApplyChanges();
     }
 
     protected override void Initialize() 
     {
         _currentState = GameState.MainMenu;
+
+        inputManager = new InputManager();
+        audioManager = new AudioManager();
+        uiManager = new UIManager();
+        roundManager = new RoundManager();
 
         player1 = new Player();
         player2 = new Player();
@@ -55,8 +57,6 @@ public class Game1 : Game
         boss = new Boss();
         shopManager = new ShopManager();
         
-        uiManager = new UIManager();
-
         base.Initialize();
     }
 
@@ -64,21 +64,16 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         uiManager.LoadContent(Content);
-        uiClickSound = Content.Load<SoundEffect>("ui_click");
+        audioManager.LoadContent(Content);
     }
 
     protected override void Update(GameTime gameTime) 
     {
-        KeyboardState newKeyState = Keyboard.GetState();
+        inputManager.Update();
 
-        // 1. KESİN ÇIKIŞ (ESC her zaman oyunu kapatır)
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || newKeyState.IsKeyDown(Keys.Escape)) 
-        {
-            Exit();
-        }
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || inputManager.IsKeyDown(Keys.Escape)) Exit();
 
-        // Geliştirici Test Tuşu (Space)
-        if (newKeyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space)) 
+        if (inputManager.IsKeyPressed(Keys.Space)) 
         {
             switch (_currentState)
             {
@@ -91,152 +86,113 @@ public class Game1 : Game
             }
         }
         
-        // --- SAHNE YÖNETİMİ ---
         switch (_currentState)
         {
             case GameState.MainMenu:
                 Window.Title = "MAIN MENU - Press ENTER to Start, H for How To Play, C for Credits";
-                
-                if (newKeyState.IsKeyDown(Keys.Enter) && _oldKeyState.IsKeyUp(Keys.Enter))
-                {
-                    uiClickSound.Play();
-                    _currentState = GameState.AuctionPhase;
-                }
-                else if (newKeyState.IsKeyDown(Keys.H) && _oldKeyState.IsKeyUp(Keys.H))
-                {
-                    uiClickSound.Play();
-                    _currentState = GameState.HowToPlay;
-                }
-                else if (newKeyState.IsKeyDown(Keys.C) && _oldKeyState.IsKeyUp(Keys.C))
-                {
-                    uiClickSound.Play();
-                    _currentState = GameState.Credits;
-                }
+                if (inputManager.IsKeyPressed(Keys.Enter)) { audioManager.PlayClick(); _currentState = GameState.AuctionPhase; }
+                else if (inputManager.IsKeyPressed(Keys.H)) { audioManager.PlayClick(); _currentState = GameState.HowToPlay; }
+                else if (inputManager.IsKeyPressed(Keys.C)) { audioManager.PlayClick(); _currentState = GameState.Credits; }
                 break;
 
             case GameState.HowToPlay: 
                 Window.Title = "HOW TO PLAY - Press BACKSPACE to return to Main Menu";
-                if (newKeyState.IsKeyDown(Keys.Back) && _oldKeyState.IsKeyUp(Keys.Back))
-                {
-                    uiClickSound.Play();
-                    _currentState = GameState.MainMenu;
-                }
+                if (inputManager.IsKeyPressed(Keys.Back)) { audioManager.PlayClick(); _currentState = GameState.MainMenu; }
                 break;
 
             case GameState.Credits: 
                 Window.Title = "CREDITS - A Nexus Studio Game - Press BACKSPACE to return";
-                if (newKeyState.IsKeyDown(Keys.Back) && _oldKeyState.IsKeyUp(Keys.Back))
-                {
-                    uiClickSound.Play();
-                    _currentState = GameState.MainMenu;
-                }
+                if (inputManager.IsKeyPressed(Keys.Back)) { audioManager.PlayClick(); _currentState = GameState.MainMenu; }
                 break;
 
             case GameState.AuctionPhase: 
-                if (!auctionManager.IsAuctionActive) auctionManager.StartNewAuction(1000);
-                aiBot.Update(gameTime, auctionManager);
-                auctionManager.Update(gameTime);
-
-                if (newKeyState.IsKeyDown(Keys.W) && _oldKeyState.IsKeyUp(Keys.W))
-                    auctionManager.PlaceBid("Player 1", auctionManager.CurrentHighestBid + 100);
-
-                if (newKeyState.IsKeyDown(Keys.I) && _oldKeyState.IsKeyUp(Keys.I))
-                    auctionManager.PlaceBid("Player 2", auctionManager.CurrentHighestBid + 100);
-
                 if (auctionManager.IsAuctionActive)
-                    Window.Title = $"LIVE AUCTION | Winning: {auctionManager.HighestBidder} | Current Offer: {auctionManager.CurrentHighestBid}$";
+                {
+                    aiBot.Update(gameTime, auctionManager);
+                    auctionManager.Update(gameTime);
+
+                    if (auctionManager.IsP1Out && auctionManager.IsP2Out && aiBot.IsOut)
+                    {
+                        auctionManager.StartNewAuction(100);
+                        aiBot.ResetForNewAuction();
+                    }
+
+                    int nextBid = auctionManager.CurrentHighestBid + 100;
+
+                    if (inputManager.IsKeyPressed(Keys.LeftShift))
+                    {
+                        bool success = auctionManager.PlaceBid("Player 1", nextBid, player1.Money);
+                        if (success) audioManager.PlayClick(); else audioManager.PlayError();
+                    }
+                    if (inputManager.IsKeyPressed(Keys.LeftControl)) auctionManager.PlayerPass("Player 1");
+
+                    if (inputManager.IsKeyPressed(Keys.RightShift))
+                    {
+                        bool success = auctionManager.PlaceBid("Player 2", nextBid, player2.Money);
+                        if (success) audioManager.PlayClick(); else audioManager.PlayError();
+                    }
+                    if (inputManager.IsKeyPressed(Keys.RightControl)) auctionManager.PlayerPass("Player 2");
+                }
+                else if (!auctionManager.IsAuctionActive && auctionManager.CurrentState == AuctionManager.AuctionState.Sold)
+                {
+                    if (!_moneyDeducted)
+                    {
+                        if (auctionManager.HighestBidder == "Player 1") player1.Money -= auctionManager.CurrentHighestBid;
+                        else if (auctionManager.HighestBidder == "Player 2") player2.Money -= auctionManager.CurrentHighestBid;
+                        else if (auctionManager.HighestBidder == "AI") aiBot.Money -= auctionManager.CurrentHighestBid;
+                        
+                        _moneyDeducted = true; 
+                    }
+
+                    _soldTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    if (_soldTimer >= 1.5f)
+                    {
+                        _soldTimer = 0f; 
+                        _moneyDeducted = false; 
+                        _currentState = GameState.InventoryPhase; 
+                    }
+                }
                 else
-                    Window.Title = $"SOLD!!! {auctionManager.HighestBidder} Wins the Storage!";
+                {
+                    auctionManager.StartNewAuction(100);
+                    aiBot.ResetForNewAuction();
+                }
                 break;
 
             case GameState.InventoryPhase: 
-                if (newKeyState.IsKeyDown(Keys.T) && _oldKeyState.IsKeyUp(Keys.T))
-                    player1.TakeDebt(500);
-
-                if (newKeyState.IsKeyDown(Keys.S) && _oldKeyState.IsKeyUp(Keys.S))
-                    player1.Money += 1000;
-
-                Window.Title = $"INVENTORY | T(Debt) S(Sell) | P1 Money: {player1.Money}$ | P1 Debt: {player1.Debt}$";
+                if (inputManager.IsKeyPressed(Keys.T)) player1.TakeDebt(500);
+                if (inputManager.IsKeyPressed(Keys.S)) player1.Money += 1000;
+                Window.Title = $"INVENTORY | T(Debt) S(Sell) | P1 Money: {player1.Money}$ | P1 Debt: {player1.Debt}$ | SPACE to bypass";
                 shopRolledThisTurn = false; 
                 break;
                 
             case GameState.ShopPhase: 
-                if (!shopRolledThisTurn)
-                {
-                    shopManager.RollDailySkills();
-                    shopRolledThisTurn = true;
-                }
-
-                if (newKeyState.IsKeyDown(Keys.B) && _oldKeyState.IsKeyUp(Keys.B))
-                {
-                    if(shopManager.DailySkills.Count > 0)
-                    {
-                        player1.BuySkill(shopManager.DailySkills[0]);
-                    }
-                }
-
-                if (shopManager.DailySkills.Count > 0)
-                {
-                    Window.Title = $"SHOP | B: Buy {shopManager.DailySkills[0].Name} ({shopManager.DailySkills[0].Price}$) | P1 Money: {player1.Money}$ | Skills: {player1.ActiveSkills.Count}/3";
-                }
+                if (!shopRolledThisTurn) { shopManager.RollDailySkills(); shopRolledThisTurn = true; }
+                if (inputManager.IsKeyPressed(Keys.B)) { if(shopManager.DailySkills.Count > 0) player1.BuySkill(shopManager.DailySkills[0]); }
+                if (shopManager.DailySkills.Count > 0) Window.Title = $"SHOP | B: Buy {shopManager.DailySkills[0].Name} ({shopManager.DailySkills[0].Price}$) | P1 Money: {player1.Money}$ | Skills: {player1.ActiveSkills.Count}/3";
                 break;
 
             case GameState.BossPhase: 
-                if (!bossTurnStarted)
-                {
-                    boss.StartNewAttack(1);
-                    bossTurnStarted = true;
-                }
-
-                if (newKeyState.IsKeyDown(Keys.W) && _oldKeyState.IsKeyUp(Keys.W) && player1.Money >= 1000)
-                {
-                    player1.Money -= 1000;
-                    boss.Contribute(1000);
-                }
-
-                if (newKeyState.IsKeyDown(Keys.I) && _oldKeyState.IsKeyUp(Keys.I) && player2.Money >= 1000)
-                {
-                    player2.Money -= 1000;
-                    boss.Contribute(1000);
-                }
-
-                if (newKeyState.IsKeyDown(Keys.Enter) && _oldKeyState.IsKeyUp(Keys.Enter))
+                if (!bossTurnStarted) { boss.StartNewAttack(1); bossTurnStarted = true; }
+                if (inputManager.IsKeyPressed(Keys.W) && player1.Money >= 1000) { player1.Money -= 1000; boss.Contribute(1000); }
+                if (inputManager.IsKeyPressed(Keys.I) && player2.Money >= 1000) { player2.Money -= 1000; boss.Contribute(1000); }
+                if (inputManager.IsKeyPressed(Keys.Enter))
                 {
                     bool success = boss.ResolveAttack();
-                    if (!success) 
-                    {
-                        player1.MaxHP -= 500;
-                        player2.MaxHP -= 500;
-                    }
+                    if (!success) { player1.MaxHP -= 500; player2.MaxHP -= 500; }
                     bossTurnStarted = false; 
                 }
-
                 Window.Title = $"BOSS FIGHT | Boss HP: {boss.HP} | Demand: {boss.CurrentDemand}$ | Pool: {boss.PooledMoney}$ | W/I to pool, ENTER to resolve";
-                
-                if (boss.HP <= 0 || player1.MaxHP <= 0 || player2.MaxHP <= 0)
-                {
-                    _currentState = GameState.GameOver;
-                }
+                if (boss.HP <= 0 || player1.MaxHP <= 0 || player2.MaxHP <= 0) _currentState = GameState.GameOver;
                 break;
 
             case GameState.GameOver: 
-                if (boss.HP <= 0)
-                {
-                    if (player1.Money > player2.Money)
-                        Window.Title = $"GAME OVER - WINNER: PLAYER 1 ({player1.Money}$)!";
-                    else if (player2.Money > player1.Money)
-                        Window.Title = $"GAME OVER - WINNER: PLAYER 2 ({player2.Money}$)!";
-                    else
-                        Window.Title = $"GAME OVER - DRAW!";
-                }
-                else
-                {
-                    Window.Title = "GAME OVER - BANKRUPT! BOSS WINS.";
-                }
+                if (boss.HP <= 0) Window.Title = player1.Money > player2.Money ? $"GAME OVER - WINNER: PLAYER 1 ({player1.Money}$)" : (player2.Money > player1.Money ? $"GAME OVER - WINNER: PLAYER 2 ({player2.Money}$)" : "GAME OVER - DRAW!");
+                else Window.Title = "GAME OVER - BANKRUPT! BOSS WINS.";
                 break;
         }
 
-        _oldKeyState = newKeyState;
         base.Update(gameTime);
     }
 
@@ -257,25 +213,12 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
 
-        if (_currentState == GameState.MainMenu)
-        {
-            uiManager.DrawMainMenu(_spriteBatch);
-        }
-        else if (_currentState == GameState.HowToPlay)
-        {
-            uiManager.DrawHowToPlay(_spriteBatch);
-        }
-        else if (_currentState == GameState.Credits)
-        {
-            uiManager.DrawCredits(_spriteBatch);
-        }
-        else if (_currentState == GameState.AuctionPhase)
-        {
-            uiManager.DrawAuctionPhase(_spriteBatch);
-        }
+        if (_currentState == GameState.MainMenu) uiManager.DrawMainMenu(_spriteBatch);
+        else if (_currentState == GameState.HowToPlay) uiManager.DrawHowToPlay(_spriteBatch);
+        else if (_currentState == GameState.Credits) uiManager.DrawCredits(_spriteBatch);
+        else if (_currentState == GameState.AuctionPhase) uiManager.DrawAuctionPhase(_spriteBatch, auctionManager, player1, player2, roundManager, aiBot);
 
         _spriteBatch.End();
-
         base.Draw(gameTime);
     }
 }

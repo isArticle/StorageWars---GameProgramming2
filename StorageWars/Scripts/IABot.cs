@@ -6,39 +6,52 @@ namespace StorageWars
     public class AIBot 
     {
         public int Money;
+        public bool IsOut { get; private set; } 
+        
         private float _bidTimer;
-        private float _timeToNextBid;
         private Random _random;
 
         public AIBot(int startingMoney) 
         {
             Money = startingMoney;
             _random = new Random();
-            ResetTimer();
+            ResetForNewAuction();
+        }
+
+        public void ResetForNewAuction()
+        {
+            IsOut = false;
+            _bidTimer = 0f;
         }
 
         public void Update(GameTime gameTime, AuctionManager auctionManager) 
         {
-            if (Money <= auctionManager.CurrentHighestBid) return;
+            if (IsOut || Money <= auctionManager.CurrentHighestBid) return;
 
             _bidTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (_bidTimer >= _timeToNextBid && auctionManager.HighestBidder != "AI")
+            // YENİ: Bot artık teklif vermek için NET 2 saniye bekler. Spam engellendi!
+            if (_bidTimer >= 2.0f && auctionManager.HighestBidder != "AI")
             {
+                // %20 Pas geçme ihtimali
+                int foldChance = _random.Next(1, 101);
+                if (foldChance <= 20)
+                {
+                    IsOut = true;
+                    return; 
+                }
+
                 int bidIncrease = _random.Next(50, 201); 
                 int newBid = auctionManager.CurrentHighestBid + bidIncrease;
 
                 if (newBid <= Money) 
                 {
-                    auctionManager.PlaceBid("AI", newBid);
+                    auctionManager.PlaceBid("AI", newBid, Money);
                 }
-                ResetTimer();
+                
+                // Tekliften sonra sayacı sıfırla ki bir sonraki teklif için yine 2sn beklesin
+                _bidTimer = 0f;
             }
-        }
-        private void ResetTimer() 
-        {
-            _bidTimer = 0f;
-            _timeToNextBid = (float)(_random.NextDouble() * 2.0 + 1.0);
         }
     }
 }
