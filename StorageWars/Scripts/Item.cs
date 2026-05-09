@@ -2,8 +2,9 @@ namespace StorageWars
 {
     public class Item
     {
-        public string Name;
-        public int Value;
+        // Kapsülleme (Encapsulation) kurallarına uygun Property kullanımı
+        public string Name { get; private set; }
+        public int Value { get; private set; }
 
         public Item(string name, int value)
         {

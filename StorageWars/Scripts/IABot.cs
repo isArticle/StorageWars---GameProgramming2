@@ -5,11 +5,11 @@ namespace StorageWars
 {
     public class AIBot 
     {
-        public int Money;
+        public int Money { get; set; }
         public bool IsOut { get; private set; } 
         
         private float _bidTimer;
-        private Random _random;
+        private readonly Random _random;
 
         public AIBot(int startingMoney) 
         {

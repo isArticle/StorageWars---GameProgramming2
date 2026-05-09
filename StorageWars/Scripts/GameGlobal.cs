@@ -1,17 +1,18 @@
 namespace StorageWars
 {
-    public enum GameState //Sahneler
+    public enum GameState 
     {
-        MainMenu, //AnaMenu
-        HowToPlay,  // NasılOynanır
-        Credits, // Credits
-        AuctionPhase, //AçıkArttırma
-        InventoryPhase, //Inventory
-        ShopPhase, //Shop
-        BossPhase, //Boss 15.tur / 3 aşama
-        GameOver //OyunSonu
+        MainMenu, 
+        HowToPlay,  
+        Credits, 
+        AuctionPhase, 
+        InventoryPhase, 
+        ShopPhase, 
+        BossPhase, 
+        GameOver 
     }
-    public enum ItemTier //İtemlerinDeğerleri
+    
+    public enum ItemTier 
     {
         F, E, D, C, B, A, S
     }

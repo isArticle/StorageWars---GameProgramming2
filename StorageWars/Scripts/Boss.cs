@@ -2,31 +2,41 @@ namespace StorageWars
 {
     public class Boss
     {
-        public int HP { get; set; } = 10000;
-        public int CurrentDemand { get; set; } = 0;
-        public int PooledMoney { get; set; } = 0;
+        public int HP { get; private set; } = 10000;
+        public int CurrentDemand { get; private set; } = 0;
+        public int PooledMoney { get; private set; } = 0;
+        private const int BaseDemand = 3000;
+        private const int DemandMultiplierPerRound = 500;
 
-        // Boss'un yeni turda para istemesi
         public void StartNewAttack(int roundMultiplier)
         {
-            CurrentDemand = 3000 + (roundMultiplier * 500);
-            PooledMoney = 0; // Havuzu sıfırla
+            CurrentDemand = BaseDemand + (roundMultiplier * DemandMultiplierPerRound);
+            PooledMoney = 0; 
         }
 
         public void Contribute(int amount)
         {
-            PooledMoney += amount;
+            if (amount > 0)
+            {
+                PooledMoney += amount;
+            }
         }
+
+        private void TakeDamage(int damage)
+        {
+            HP -= damage;
+            if (HP < 0) HP = 0;
+        }
+
         public bool ResolveAttack()
         {
             if (PooledMoney >= CurrentDemand)
             {
-                int damage = PooledMoney - CurrentDemand;
-                HP -= damage;
-                return true; // Savunma başarılı
+                int damageToBoss = PooledMoney - CurrentDemand;
+                TakeDamage(damageToBoss); // Direkt HP -= yerine kontrollü metot
+                return true; 
             }
-            
-            return false;
+            return false; 
         }
     }
 }

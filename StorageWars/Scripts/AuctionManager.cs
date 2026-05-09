@@ -6,18 +6,18 @@ namespace StorageWars
     {
         public enum AuctionState { Bidding, GoingOnce, GoingTwice, Sold }
         public AuctionState CurrentState { get; private set; }
-
-        public int CurrentHighestBid; 
-        public string HighestBidder; 
-        public bool IsAuctionActive; 
-        private float _auctionTimer; 
-        
+        public int CurrentHighestBid { get; private set; }
+        public string HighestBidder { get; private set; }
+        public bool IsAuctionActive { get; private set; }
         public bool IsP1Out { get; private set; }
         public bool IsP2Out { get; private set; }
-
         public int P1LastBid { get; private set; }
         public int P2LastBid { get; private set; }
         public int AILastBid { get; private set; }
+        private float _auctionTimer; 
+        private const float TimeToSold = 5f;
+        private const float TimeToGoingTwice = 4f;
+        private const float TimeToGoingOnce = 3f;
 
         public void StartNewAuction(int startingPrice) 
         {
@@ -74,13 +74,13 @@ namespace StorageWars
             {
                 _auctionTimer += (float)gameTime.ElapsedGameTime.TotalSeconds; 
 
-                if (_auctionTimer >= 5f) 
+                if (_auctionTimer >= TimeToSold) 
                 {
                     CurrentState = AuctionState.Sold;
                     IsAuctionActive = false; 
                 }
-                else if (_auctionTimer >= 4f) CurrentState = AuctionState.GoingTwice; 
-                else if (_auctionTimer >= 3f) CurrentState = AuctionState.GoingOnce; 
+                else if (_auctionTimer >= TimeToGoingTwice) CurrentState = AuctionState.GoingTwice; 
+                else if (_auctionTimer >= TimeToGoingOnce) CurrentState = AuctionState.GoingOnce; 
                 else CurrentState = AuctionState.Bidding; 
             }
         }

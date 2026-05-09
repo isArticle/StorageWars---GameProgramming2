@@ -5,24 +5,24 @@ namespace StorageWars
 {
     public class AudioManager
     {
-        private SoundEffect uiClickSound;
-        private SoundEffect errorSound; // İleride eklenecek
-        private SoundEffect passSound;  // İleride eklenecek
+        private SoundEffect _uiClickSound;
+        private SoundEffect _errorSound; 
+        private SoundEffect _passSound;  
 
         public void LoadContent(ContentManager content)
         {
-            // UI tık sesini artık buradan yüklüyoruz
-            uiClickSound = content.Load<SoundEffect>("ui_click");
+            _uiClickSound = content.Load<SoundEffect>("ui_click");
+            // _errorSound = content.Load<SoundEffect>("ui_error");
         }
 
         public void PlayClick()
         {
-            uiClickSound?.Play();
+            _uiClickSound?.Play();
         }
 
         public void PlayError()
         {
-            // errorSound?.Play();
+            _errorSound?.Play();
         }
     }
 }

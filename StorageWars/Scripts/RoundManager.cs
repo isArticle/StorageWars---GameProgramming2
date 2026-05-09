@@ -4,12 +4,13 @@ namespace StorageWars
     {
         public int CurrentRound { get; private set; } = 1;
         public const int MaxRounds = 15;
+        private const float InflationRate = 0.15f; 
 
         public bool IsBossRound => CurrentRound >= MaxRounds;
 
         public float GetInflationMultiplier() 
         {
-            return 1.0f + (CurrentRound * 0.15f);
+            return 1.0f + (CurrentRound * InflationRate);
         }
 
         public int CalculateCurrentItemValue(Item item) 
