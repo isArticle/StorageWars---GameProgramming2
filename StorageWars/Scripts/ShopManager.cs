@@ -14,26 +14,22 @@ namespace StorageWars
         public void RollDailySkills(float inflation)
         {
             _dailySkills.Clear();
-            string[] names = { "Fast Bid", "Double Sell", "Tax Dodge", "Quick Eye", "Lucky Coin" };
             
             for (int i = 0; i < 3; i++)
             {
-                int basePrice = _rnd.Next(200, 501);
+                int basePrice = _rnd.Next(GameConstants.SkillMinPrice, GameConstants.SkillMaxPrice);
                 int finalPrice = (int)(basePrice * inflation);
-                _dailySkills.Add(new Skill(names[_rnd.Next(names.Length)], finalPrice, "Effect description here..."));
+                
+                // Verileri SkillDatabase'den çeker
+                string randomSkillName = SkillDatabase.SkillNames[_rnd.Next(SkillDatabase.SkillNames.Length)];
+                _dailySkills.Add(new Skill(randomSkillName, finalPrice, "Açıklama metni..."));
             }
         }
 
         public void MoveSelection(int playerIndex, int direction)
         {
-            if (playerIndex == 1)
-            {
-                P1SelectedSlot = (P1SelectedSlot + direction + 3) % 3;
-            }
-            else if (playerIndex == 2)
-            {
-                P2SelectedSlot = (P2SelectedSlot + direction + 3) % 3;
-            }
+            if (playerIndex == 1) P1SelectedSlot = (P1SelectedSlot + direction + 3) % 3;
+            else if (playerIndex == 2) P2SelectedSlot = (P2SelectedSlot + direction + 3) % 3;
         }
     }
 }

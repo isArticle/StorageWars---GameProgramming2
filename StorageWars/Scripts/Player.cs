@@ -4,16 +4,16 @@ namespace StorageWars
 {
     public class Player
     {
-        public int Money { get; private set; } = 1000;
-        public int Debt { get; private set; } = 0;
-        public int MaxHP { get; private set; } = 1000;
+        // Tüm başlangıç değerleri merkezi sisteme bağlandı
+        public int Money { get; private set; } = GameConstants.StartingMoney;
+        public int Debt { get; private set; } = GameConstants.StartingDebt; 
+        public int MaxHP { get; private set; } = GameConstants.MaxPlayerHP;
+        
         public Skill[] EquippedSkills { get; private set; } = new Skill[3];
-        public Item[,] InventoryGrid { get; private set; } = new Item[GridCols, GridRows];
+        public Item[,] InventoryGrid { get; private set; } = new Item[GameConstants.InventoryCols, GameConstants.InventoryRows];
+        
         public int CursorX { get; private set; } = 0;
         public int CursorY { get; private set; } = 0;
-        private const int DebtInterestRate = 10; // %10 Faiz
-        private const int GridCols = 4;
-        private const int GridRows = 4;
 
         public void TakeDamage(int damageAmount)
         {
@@ -24,61 +24,31 @@ namespace StorageWars
         public void TakeDebt(int amount) 
         { 
             Money += amount; 
-            Debt += amount + (amount / DebtInterestRate); 
+            Debt += amount + (amount / GameConstants.DebtInterestRate); 
         }
 
         public void SpendMoney(int amount)
         {
-            Money -= amount; // Sadece sınıf içinden veya kontrollü harcama
+            if (Money >= amount) Money -= amount;
         }
 
-        // --- SHOP ---
-        public bool BuySkill(Skill skill, int slotIndex) 
-        { 
-            if (Money >= skill.Price && slotIndex >= 0 && slotIndex < 3) 
-            { 
-                SpendMoney(skill.Price); // Direk Money -= yerine metot kullanıldı
-                EquippedSkills[slotIndex] = skill; 
-                return true; 
-            }
-            return false;
-        }
-
-        public bool SellSkill(int slotIndex)
-        {
-            if (slotIndex >= 0 && slotIndex < 3 && EquippedSkills[slotIndex] != null)
-            {
-                Money += EquippedSkills[slotIndex].Price / 2; 
-                EquippedSkills[slotIndex] = null;
-                return true;
-            }
-            return false;
-        }
-
-        // --- INVENTORY ---
         public void MoveCursor(int dx, int dy)
         {
             CursorX += dx;
             CursorY += dy;
-            
             if (CursorX < 0) CursorX = 0; 
-            if (CursorX >= GridCols) CursorX = GridCols - 1;
-            
+            if (CursorX >= GameConstants.InventoryCols) CursorX = GameConstants.InventoryCols - 1;
             if (CursorY < 0) CursorY = 0; 
-            if (CursorY >= GridRows) CursorY = GridRows - 1;
+            if (CursorY >= GameConstants.InventoryRows) CursorY = GameConstants.InventoryRows - 1;
         }
 
         public bool AddItem(Item item)
         {
-            for (int y = 0; y < GridRows; y++)
+            for (int y = 0; y < GameConstants.InventoryRows; y++)
             {
-                for (int x = 0; x < GridCols; x++)
+                for (int x = 0; x < GameConstants.InventoryCols; x++)
                 {
-                    if (InventoryGrid[x, y] == null)
-                    {
-                        InventoryGrid[x, y] = item;
-                        return true; 
-                    }
+                    if (InventoryGrid[x, y] == null) { InventoryGrid[x, y] = item; return true; }
                 }
             }
             return false; 
@@ -91,6 +61,29 @@ namespace StorageWars
                 Money += InventoryGrid[CursorX, CursorY].Value;
                 InventoryGrid[CursorX, CursorY] = null; 
             }
+        }
+
+        public bool BuySkill(Skill skill, int slotIndex) 
+        { 
+            if (Money >= skill.Price && slotIndex >= 0 && slotIndex < 3) 
+            { 
+                SpendMoney(skill.Price); 
+                EquippedSkills[slotIndex] = skill; 
+                return true; 
+            }
+            return false;
+        }
+
+        public bool SellSkill(int slotIndex)
+        {
+            if (slotIndex >= 0 && slotIndex < 3 && EquippedSkills[slotIndex] != null)
+            {
+                int refund = EquippedSkills[slotIndex].Price / 2;
+                this.Money += refund; // Satıştan gelen para ekleniyor
+                EquippedSkills[slotIndex] = null;
+                return true;
+            }
+            return false;
         }
     }
 }

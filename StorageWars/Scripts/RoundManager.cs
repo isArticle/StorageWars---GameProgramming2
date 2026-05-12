@@ -3,14 +3,12 @@ namespace StorageWars
     public class RoundManager 
     {
         public int CurrentRound { get; private set; } = 1;
-        public const int MaxRounds = 15;
-        private const float InflationRate = 0.15f; 
 
-        public bool IsBossRound => CurrentRound >= MaxRounds;
+        public bool IsBossRound => CurrentRound >= GameConstants.MaxRounds;
 
         public float GetInflationMultiplier() 
         {
-            return 1.0f + (CurrentRound * InflationRate);
+            return 1.0f + (CurrentRound * GameConstants.InflationRate);
         }
 
         public int CalculateCurrentItemValue(Item item) 
@@ -20,7 +18,10 @@ namespace StorageWars
 
         public void AdvanceRound() 
         {
-            if (CurrentRound < MaxRounds) CurrentRound++;
+            if (CurrentRound < GameConstants.MaxRounds) 
+            {
+                CurrentRound++;
+            }
         }
     }
 }

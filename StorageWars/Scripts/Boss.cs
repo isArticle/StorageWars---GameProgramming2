@@ -2,24 +2,19 @@ namespace StorageWars
 {
     public class Boss
     {
-        public int HP { get; private set; } = 10000;
+        public int HP { get; private set; } = GameConstants.BossMaxHP;
         public int CurrentDemand { get; private set; } = 0;
         public int PooledMoney { get; private set; } = 0;
-        private const int BaseDemand = 3000;
-        private const int DemandMultiplierPerRound = 500;
 
         public void StartNewAttack(int roundMultiplier)
         {
-            CurrentDemand = BaseDemand + (roundMultiplier * DemandMultiplierPerRound);
+            CurrentDemand = GameConstants.BossBaseDemand + (roundMultiplier * GameConstants.BossDemandMultiplier);
             PooledMoney = 0; 
         }
 
         public void Contribute(int amount)
         {
-            if (amount > 0)
-            {
-                PooledMoney += amount;
-            }
+            if (amount > 0) PooledMoney += amount;
         }
 
         private void TakeDamage(int damage)
@@ -33,7 +28,7 @@ namespace StorageWars
             if (PooledMoney >= CurrentDemand)
             {
                 int damageToBoss = PooledMoney - CurrentDemand;
-                TakeDamage(damageToBoss); // Direkt HP -= yerine kontrollü metot
+                TakeDamage(damageToBoss);
                 return true; 
             }
             return false; 

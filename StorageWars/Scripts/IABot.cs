@@ -5,7 +5,7 @@ namespace StorageWars
 {
     public class AIBot 
     {
-        public int Money { get; set; }
+        public int Money { get; set; } 
         public bool IsOut { get; private set; } 
         
         private float _bidTimer;
@@ -30,21 +30,22 @@ namespace StorageWars
 
             _bidTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (_bidTimer >= 2.0f && auctionManager.HighestBidder != "AI")
+            if (_bidTimer >= 2.0f && auctionManager.HighestBidder != BidderType.AI)
             {
                 int foldChance = _random.Next(1, 101);
-                if (foldChance <= 20)
+                if (foldChance <= GameConstants.BotFoldChance)
                 {
                     IsOut = true;
                     return; 
                 }
 
-                int bidIncrease = _random.Next(50, 201); 
+                int bidIncrease = _random.Next(GameConstants.BotMinBidIncrease, GameConstants.BotMaxBidIncrease); 
                 int newBid = auctionManager.CurrentHighestBid + bidIncrease;
 
                 if (newBid <= Money) 
                 {
-                    auctionManager.PlaceBid("AI", newBid, Money);
+                    // DÜZELTME: Enum Kullanıldı
+                    auctionManager.PlaceBid(BidderType.AI, newBid, Money);
                 }
                 
                 _bidTimer = 0f;

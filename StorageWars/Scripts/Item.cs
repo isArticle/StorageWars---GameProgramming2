@@ -2,14 +2,15 @@ namespace StorageWars
 {
     public class Item
     {
-        // Kapsülleme (Encapsulation) kurallarına uygun Property kullanımı
         public string Name { get; private set; }
         public int Value { get; private set; }
+        public ItemTier Tier { get; private set; }
 
-        public Item(string name, int value)
+        public Item(string name, int value, ItemTier tier = ItemTier.D)
         {
             Name = name;
             Value = value;
+            Tier = tier;
         }
     }
 }

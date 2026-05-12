@@ -12,7 +12,6 @@ namespace StorageWars
             _oldKeyState = _currentKeyState;
             _currentKeyState = Keyboard.GetState();
         }
-
         public bool IsKeyPressed(Keys key)
         {
             return _currentKeyState.IsKeyDown(key) && _oldKeyState.IsKeyUp(key);
