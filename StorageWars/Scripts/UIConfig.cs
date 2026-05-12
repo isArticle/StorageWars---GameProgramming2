@@ -4,9 +4,9 @@ namespace StorageWars
 {
     public static class UIConfig 
     {
-        // --- DEPO VE ROUND ---
-        public static readonly Vector2 RoundTextPos = new Vector2(850, 50);
-        public static readonly Vector2 CurrentBidPos = new Vector2(750, 150);
+        // --- DEPO VE ROUND --- (BİTTİ)
+        public static readonly Vector2 RoundTextPos = new Vector2(810, 50);
+        public static readonly Vector2 CurrentBidPos = new Vector2(740, 150);
 
         // --- PLAYER 1 (AUCTION) ---
         public static readonly Vector2 P1TitlePos = new Vector2(100, 850);
@@ -22,10 +22,10 @@ namespace StorageWars
         public static readonly Vector2 P2PassPos = new Vector2(1450, 750); 
         public static readonly Vector2 P2ThinkPos = new Vector2(1450, 750); 
 
-        // --- AI BOT ---
-        public static readonly Vector2 AIBotBidPos = new Vector2(1380, 130);   
-        public static readonly Vector2 AIBotPassPos = new Vector2(1380, 130);  
-        public static readonly Vector2 AIBotThinkPos = new Vector2(1380, 130); 
+        // --- AI BOT --- (BİTTİ)
+        public static readonly Vector2 AIBotBidPos = new Vector2(1430, 130);   
+        public static readonly Vector2 AIBotPassPos = new Vector2(1445, 130);  
+        public static readonly Vector2 AIBotThinkPos = new Vector2(1450, 130); 
 
         // --- SİSTEM YAZILARI ---
         public static readonly Vector2 CountdownTextPos = new Vector2(800, 400); 
