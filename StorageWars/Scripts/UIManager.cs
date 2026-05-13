@@ -190,34 +190,32 @@ namespace StorageWars
             DrawTextBottomCenter(spriteBatch, $"${p1.Money}", UIConfig.P1ShopMoneyPos, Color.DarkGreen);
             DrawTextBottomCenter(spriteBatch, $"${p2.Money}", UIConfig.P2ShopMoneyPos, Color.DarkGreen);
 
-            // Oyuncu indexine göre sabit çizim yapılıyor
-            DrawShopSlots(spriteBatch, shop, UIConfig.P1ShopSlots, shop.P1SelectedSlot, Color.Blue, 1);
-            DrawShopSlots(spriteBatch, shop, UIConfig.P2ShopSlots, shop.P2SelectedSlot, Color.Red, 2);
+            // DÜZELTME: UIConfig.P1ShopSlots ve UIConfig.P2ShopSlots buradan SİLİNDİ.
+            // Artık tam olarak 8 argüman gönderiyoruz.
+            DrawShopSlots(spriteBatch, shop, UIConfig.P1ShopNameOffsets, UIConfig.P1ShopPriceOffsets, UIConfig.P1ShopCursorOffsets, shop.P1SelectedSlot, Color.Blue, 1);
+            DrawShopSlots(spriteBatch, shop, UIConfig.P2ShopNameOffsets, UIConfig.P2ShopPriceOffsets, UIConfig.P2ShopCursorOffsets, shop.P2SelectedSlot, Color.Red, 2);
         }
 
-        private void DrawShopSlots(SpriteBatch sb, ShopManager shop, Vector2[] slots, int selectedIndex, Color cursorColor, int playerIndex)
+        private void DrawShopSlots(SpriteBatch sb, ShopManager shop, Vector2[] nameCoords, Vector2[] priceCoords, Vector2[] cursorCoords, int selectedIndex, Color cursorColor, int playerIndex)
         {
-            // Yazının/İkonun tam merkezini pivot kabul ediyoruz (Center Pivot)
             Vector2 cursorSize = _gameFont.MeasureString(">");
             Vector2 cursorOrigin = new Vector2(cursorSize.X / 2f, cursorSize.Y / 2f);
-            
-            // Açıları doğrudan UIConfig'den çekiyoruz
             float rotation = (playerIndex == 1) ? UIConfig.P1ShopCursorRotation : UIConfig.P2ShopCursorRotation;
 
             for (int i = 0; i < 3; i++)
             {
-                Vector2 slotPos = slots[i];
                 if (shop.DailySkills.Count > i)
                 {
                     Skill s = shop.DailySkills[i];
-                    DrawTextBottomCenter(sb, s.Name, slotPos + UIConfig.ShopSkillNameOffset, Color.Black);
-                    DrawTextBottomCenter(sb, $"${s.Price}", slotPos + UIConfig.ShopSkillPriceOffset, Color.DarkRed);
+
+                    // Doğrudan verdiğin mutlak koordinatlara çizim yapılır
+                    DrawTextBottomCenter(sb, s.Name, nameCoords[i], Color.Black);
+                    DrawTextBottomCenter(sb, $"${s.Price}", priceCoords[i], Color.DarkRed);
                 }
                 
                 if (selectedIndex == i)
                 {
-                    // Belirlediğin sabit rotasyonla çizim
-                    sb.DrawString(_gameFont, ">", slotPos - UIConfig.ShopCursorOffset, cursorColor, rotation, cursorOrigin, 1.0f, SpriteEffects.None, 0f);
+                    sb.DrawString(_gameFont, ">", cursorCoords[i], cursorColor, rotation, cursorOrigin, 1.0f, SpriteEffects.None, 0f);
                 }
             }
         }
