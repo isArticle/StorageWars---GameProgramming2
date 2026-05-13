@@ -190,26 +190,34 @@ namespace StorageWars
             DrawTextBottomCenter(spriteBatch, $"${p1.Money}", UIConfig.P1ShopMoneyPos, Color.DarkGreen);
             DrawTextBottomCenter(spriteBatch, $"${p2.Money}", UIConfig.P2ShopMoneyPos, Color.DarkGreen);
 
-            DrawShopSlots(spriteBatch, shop, UIConfig.P1ShopSlots, shop.P1SelectedSlot, Color.Blue);
-            DrawShopSlots(spriteBatch, shop, UIConfig.P2ShopSlots, shop.P2SelectedSlot, Color.Red);
+            // Oyuncu indexine göre sabit çizim yapılıyor
+            DrawShopSlots(spriteBatch, shop, UIConfig.P1ShopSlots, shop.P1SelectedSlot, Color.Blue, 1);
+            DrawShopSlots(spriteBatch, shop, UIConfig.P2ShopSlots, shop.P2SelectedSlot, Color.Red, 2);
         }
 
-        private void DrawShopSlots(SpriteBatch sb, ShopManager shop, Vector2[] slots, int selectedIndex, Color cursorColor)
+        private void DrawShopSlots(SpriteBatch sb, ShopManager shop, Vector2[] slots, int selectedIndex, Color cursorColor, int playerIndex)
         {
+            // Yazının/İkonun tam merkezini pivot kabul ediyoruz (Center Pivot)
+            Vector2 cursorSize = _gameFont.MeasureString(">");
+            Vector2 cursorOrigin = new Vector2(cursorSize.X / 2f, cursorSize.Y / 2f);
+            
+            // Açıları doğrudan UIConfig'den çekiyoruz
+            float rotation = (playerIndex == 1) ? UIConfig.P1ShopCursorRotation : UIConfig.P2ShopCursorRotation;
+
             for (int i = 0; i < 3; i++)
             {
                 Vector2 slotPos = slots[i];
                 if (shop.DailySkills.Count > i)
                 {
                     Skill s = shop.DailySkills[i];
-                    // Shop yazıları da simetrik büyüyecek
                     DrawTextBottomCenter(sb, s.Name, slotPos + UIConfig.ShopSkillNameOffset, Color.Black);
                     DrawTextBottomCenter(sb, $"${s.Price}", slotPos + UIConfig.ShopSkillPriceOffset, Color.DarkRed);
                 }
+                
                 if (selectedIndex == i)
                 {
-                    // Ok işareti (Cursor) normal DrawString olarak kaldı çünkü onda pivot değişimine gerek yok.
-                    sb.DrawString(_gameFont, ">", slotPos - UIConfig.ShopCursorOffset, cursorColor, UIConfig.ShopCursorRotation, UIConfig.ShopCursorOrigin, 1.0f, SpriteEffects.None, 0f);
+                    // Belirlediğin sabit rotasyonla çizim
+                    sb.DrawString(_gameFont, ">", slotPos - UIConfig.ShopCursorOffset, cursorColor, rotation, cursorOrigin, 1.0f, SpriteEffects.None, 0f);
                 }
             }
         }

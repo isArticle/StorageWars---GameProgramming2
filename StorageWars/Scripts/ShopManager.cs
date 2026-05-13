@@ -30,7 +30,6 @@ namespace StorageWars
             else if (playerIndex == 2) P2SelectedSlot = (P2SelectedSlot + direction + 3) % 3;
         }
 
-        // YENİ EKLENDİ: Yetenek Satın Alma İşlemi
         public bool BuySkill(Player player, int playerIndex)
         {
             int slot = (playerIndex == 1) ? P1SelectedSlot : P2SelectedSlot;
@@ -47,7 +46,6 @@ namespace StorageWars
             return false;
         }
 
-        // YENİ EKLENDİ: Sahip Olunan Yeteneği Satma İşlemi
         public bool SellSkill(Player player, int playerIndex)
         {
             int slot = (playerIndex == 1) ? P1SelectedSlot : P2SelectedSlot;

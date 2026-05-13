@@ -64,9 +64,9 @@ namespace StorageWars
         public static readonly Vector2 P2ShopMoneyPos = new Vector2(1440, 160);
         public static readonly Vector2 ShopSkillNameOffset = new Vector2(30, 40);
         public static readonly Vector2 ShopSkillPriceOffset = new Vector2(40, 80);
-        public static readonly Vector2 ShopCursorOffset = new Vector2(30, 0); 
-        public const float ShopCursorRotation = 0f; 
-        public static readonly Vector2 ShopCursorOrigin = Vector2.Zero; 
+        public static readonly Vector2 ShopCursorOffset = new Vector2(30, 0);
+        public static readonly float P1ShopCursorRotation = MathHelper.ToRadians(180f);
+        public static readonly float P2ShopCursorRotation = 0f;
 
         // --- BOSS ---
         public static readonly Vector2 BossHpPos = new Vector2(850, 100);
