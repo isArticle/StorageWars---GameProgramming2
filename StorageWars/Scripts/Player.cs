@@ -1,19 +1,42 @@
-using System.Collections.Generic;
-
 namespace StorageWars
 {
     public class Player
     {
-        // Tüm başlangıç değerleri merkezi sisteme bağlandı
+        // --- OYUNCU İSTATİSTİKLERİ ---
         public int Money { get; private set; } = GameConstants.StartingMoney;
         public int Debt { get; private set; } = GameConstants.StartingDebt; 
-        public int MaxHP { get; private set; } = GameConstants.MaxPlayerHP;
+        
+        // Başlangıç canı artık 0. Sadece borç ödedikçe artacak.
+        public int MaxHP { get; private set; } = GameConstants.StartingHP;
+        
+        // Arka planda ödenen ve HP'ye dönüşen borcu takip eden sayaç
+        public int DebtPaidForHP { get; private set; } = 0;
         
         public Skill[] EquippedSkills { get; private set; } = new Skill[3];
         public Item[,] InventoryGrid { get; private set; } = new Item[GameConstants.InventoryCols, GameConstants.InventoryRows];
-        
-        public int CursorX { get; private set; } = 0;
-        public int CursorY { get; private set; } = 0;
+
+        // --- BORÇ ÖDEME VE CAN KAZANMA ---
+        public void PayDebt(int amount)
+        {
+            // Ödeme yapabilmek için para olması ve borcun bulunması gerekir
+            if (Money >= amount && Debt > 0)
+            {
+                int actualPayment = (amount > Debt) ? Debt : amount;
+
+                SpendMoney(actualPayment);
+                Debt -= actualPayment;
+
+                // HP Kazanım Kontrolü: Sadece ilk 10.000 birimlik ödeme can verir
+                if (DebtPaidForHP < GameConstants.MaxDebtForHP)
+                {
+                    int spaceLeft = GameConstants.MaxDebtForHP - DebtPaidForHP;
+                    int hpGain = (actualPayment < spaceLeft) ? actualPayment : spaceLeft;
+                    
+                    DebtPaidForHP += hpGain; 
+                    MaxHP += hpGain; // 0'dan başlayarak 10.000'e kadar yükselir
+                }
+            }
+        }
 
         public void TakeDamage(int damageAmount)
         {
@@ -24,6 +47,7 @@ namespace StorageWars
         public void TakeDebt(int amount) 
         { 
             Money += amount; 
+            // Bu sonradan alınan borçlar DebtPaidForHP sayacını etkilemez, sadece faiz yükü getirir
             Debt += amount + (amount / GameConstants.DebtInterestRate); 
         }
 
@@ -32,58 +56,21 @@ namespace StorageWars
             if (Money >= amount) Money -= amount;
         }
 
-        public void MoveCursor(int dx, int dy)
+        public void EarnMoney(int amount)
         {
-            CursorX += dx;
-            CursorY += dy;
-            if (CursorX < 0) CursorX = 0; 
-            if (CursorX >= GameConstants.InventoryCols) CursorX = GameConstants.InventoryCols - 1;
-            if (CursorY < 0) CursorY = 0; 
-            if (CursorY >= GameConstants.InventoryRows) CursorY = GameConstants.InventoryRows - 1;
+            if (amount > 0) Money += amount;
         }
 
-        public bool AddItem(Item item)
+        // --- SETTER METOTLARI ---
+        public void SetInventoryItem(int x, int y, Item item)
         {
-            for (int y = 0; y < GameConstants.InventoryRows; y++)
-            {
-                for (int x = 0; x < GameConstants.InventoryCols; x++)
-                {
-                    if (InventoryGrid[x, y] == null) { InventoryGrid[x, y] = item; return true; }
-                }
-            }
-            return false; 
+            if (x >= 0 && x < GameConstants.InventoryCols && y >= 0 && y < GameConstants.InventoryRows)
+                InventoryGrid[x, y] = item;
         }
 
-        public void SellSelectedItem()
+        public void SetSkill(int slotIndex, Skill skill)
         {
-            if (InventoryGrid[CursorX, CursorY] != null)
-            {
-                Money += InventoryGrid[CursorX, CursorY].Value;
-                InventoryGrid[CursorX, CursorY] = null; 
-            }
-        }
-
-        public bool BuySkill(Skill skill, int slotIndex) 
-        { 
-            if (Money >= skill.Price && slotIndex >= 0 && slotIndex < 3) 
-            { 
-                SpendMoney(skill.Price); 
-                EquippedSkills[slotIndex] = skill; 
-                return true; 
-            }
-            return false;
-        }
-
-        public bool SellSkill(int slotIndex)
-        {
-            if (slotIndex >= 0 && slotIndex < 3 && EquippedSkills[slotIndex] != null)
-            {
-                int refund = EquippedSkills[slotIndex].Price / 2;
-                this.Money += refund; // Satıştan gelen para ekleniyor
-                EquippedSkills[slotIndex] = null;
-                return true;
-            }
-            return false;
+            if (slotIndex >= 0 && slotIndex < 3) EquippedSkills[slotIndex] = skill;
         }
     }
 }

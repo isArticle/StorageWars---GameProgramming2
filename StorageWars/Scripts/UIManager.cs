@@ -34,6 +34,24 @@ namespace StorageWars
             }
         }
 
+        // ====================================================================
+        // AARON HOCA STANDARDI: DİNAMİK PIVOT YÖNETİCİSİ (YENİ EKLENDİ)
+        // ====================================================================
+        private void DrawTextBottomCenter(SpriteBatch sb, string text, Vector2 position, Color color)
+        {
+            if (string.IsNullOrEmpty(text)) return;
+            
+            // 1. Yazının ekranda kaplayacağı piksel boyutunu (Genişlik ve Yükseklik) ölçüyoruz
+            Vector2 textSize = _gameFont.MeasureString(text);
+            
+            // 2. Merkez noktasını (Origin) ayarlıyoruz: X'in tam ortası, Y'nin en altı!
+            Vector2 origin = new Vector2(textSize.X / 2f, textSize.Y);
+            
+            // 3. Yazıyı bu yeni origin ile çizdiriyoruz
+            sb.DrawString(_gameFont, text, position, color, 0f, origin, 1.0f, SpriteEffects.None, 0f);
+        }
+        // ====================================================================
+
         #region MENÜ ÇİZİMLERİ
         public void DrawMainMenu(SpriteBatch sb) { if (_bgMainMenu != null) sb.Draw(_bgMainMenu, Vector2.Zero, Color.White); }
         public void DrawHowToPlay(SpriteBatch sb) { if (_bgHowToPlay != null) sb.Draw(_bgHowToPlay, Vector2.Zero, Color.White); }
@@ -46,8 +64,9 @@ namespace StorageWars
             if (_bgAuction != null) spriteBatch.Draw(_bgAuction, Vector2.Zero, Color.White);
             int animatedPrice = (int)Math.Round(_displayedPrice);
 
-            spriteBatch.DrawString(_gameFont, $"ROUND: {roundManager.CurrentRound} / {GameConstants.MaxRounds}", UIConfig.RoundTextPos, Color.Black); 
-            spriteBatch.DrawString(_gameFont, $"CURRENT BID: ${animatedPrice}", UIConfig.CurrentBidPos, Color.Black); 
+            // Dinamik yazılar (Round, Current Bid vb.) artık Orta-Alt referansla çiziliyor
+            DrawTextBottomCenter(spriteBatch, $"ROUND: {roundManager.CurrentRound} / {GameConstants.MaxRounds}", UIConfig.RoundTextPos, Color.Black); 
+            DrawTextBottomCenter(spriteBatch, $"CURRENT BID: ${animatedPrice}", UIConfig.CurrentBidPos, Color.Black); 
 
             DrawP1AuctionInfo(spriteBatch, auctionManager, p1);
             DrawP2AuctionInfo(spriteBatch, auctionManager, p2);
@@ -57,44 +76,43 @@ namespace StorageWars
 
         private void DrawP1AuctionInfo(SpriteBatch sb, AuctionManager am, Player p)
         {
-            sb.DrawString(_gameFont, "PLAYER 1", UIConfig.P1TitlePos, Color.Black);
-            sb.DrawString(_gameFont, $"Money: ${p.Money}", UIConfig.P1MoneyPos, Color.DarkGreen);
+            DrawTextBottomCenter(sb, "PLAYER 1", UIConfig.P1TitlePos, Color.Black);
+            DrawTextBottomCenter(sb, $"Money: ${p.Money}", UIConfig.P1MoneyPos, Color.DarkGreen);
             
-            if (am.IsP1Out) sb.DrawString(_gameFont, "I PASS!", UIConfig.P1PassPos, Color.DarkRed);
+            if (am.IsP1Out) DrawTextBottomCenter(sb, "I PASS!", UIConfig.P1PassPos, Color.DarkRed);
             else if (am.P1LastBid > 0)
             {
-                // HATA ÇÖZÜMÜ: String yerine BidderType Enum kontrolü yapıldı
                 Color c = (am.HighestBidder == BidderType.Player1) ? Color.Black : Color.Gray;
-                sb.DrawString(_gameFont, $"Bid: ${am.P1LastBid}", UIConfig.P1BidPos, c);
+                DrawTextBottomCenter(sb, $"Bid: ${am.P1LastBid}", UIConfig.P1BidPos, c);
             }
-            else sb.DrawString(_gameFont, "...", UIConfig.P1ThinkPos, Color.Gray);
+            else DrawTextBottomCenter(sb, "...", UIConfig.P1ThinkPos, Color.Gray);
         }
 
         private void DrawP2AuctionInfo(SpriteBatch sb, AuctionManager am, Player p)
         {
-            sb.DrawString(_gameFont, "PLAYER 2", UIConfig.P2TitlePos, Color.Black);
-            sb.DrawString(_gameFont, $"Money: ${p.Money}", UIConfig.P2MoneyPos, Color.DarkGreen);
+            DrawTextBottomCenter(sb, "PLAYER 2", UIConfig.P2TitlePos, Color.Black);
+            DrawTextBottomCenter(sb, $"Money: ${p.Money}", UIConfig.P2MoneyPos, Color.DarkGreen);
             
-            if (am.IsP2Out) sb.DrawString(_gameFont, "I PASS!", UIConfig.P2PassPos, Color.DarkRed);
+            if (am.IsP2Out) DrawTextBottomCenter(sb, "I PASS!", UIConfig.P2PassPos, Color.DarkRed);
             else if (am.P2LastBid > 0)
             {
-                // HATA ÇÖZÜMÜ: BidderType Enum kontrolü
                 Color c = (am.HighestBidder == BidderType.Player2) ? Color.Black : Color.Gray;
-                sb.DrawString(_gameFont, $"Bid: ${am.P2LastBid}", UIConfig.P2BidPos, c);
+                DrawTextBottomCenter(sb, $"Bid: ${am.P2LastBid}", UIConfig.P2BidPos, c);
             }
-            else sb.DrawString(_gameFont, "...", UIConfig.P2ThinkPos, Color.Gray);
+            else DrawTextBottomCenter(sb, "...", UIConfig.P2ThinkPos, Color.Gray);
         }
 
         private void DrawBotAuctionInfo(SpriteBatch sb, AuctionManager am, AIBot bot)
         {
-            if (bot.IsOut) sb.DrawString(_gameFont, "I'm out!", UIConfig.AIBotPassPos, Color.DarkRed); 
+            DrawTextBottomCenter(sb, $"Bot Money: ${bot.Money}", UIConfig.AIBotMoneyPos, Color.DarkRed);
+
+            if (bot.IsOut) DrawTextBottomCenter(sb, "I'm out!", UIConfig.AIBotPassPos, Color.DarkRed); 
             else if (am.AILastBid > 0)
             {
-                // HATA ÇÖZÜMÜ: BidderType Enum kontrolü
                 Color c = (am.HighestBidder == BidderType.AI) ? Color.Black : Color.Gray;
-                sb.DrawString(_gameFont, $"Bid: ${am.AILastBid}", UIConfig.AIBotBidPos, c);
+                DrawTextBottomCenter(sb, $"Bid: ${am.AILastBid}", UIConfig.AIBotBidPos, c);
             }
-            else sb.DrawString(_gameFont, "Hmm...", UIConfig.AIBotThinkPos, Color.Gray);
+            else DrawTextBottomCenter(sb, "Hmm...", UIConfig.AIBotThinkPos, Color.Gray);
         }
 
         private void DrawAuctionStatusMessages(SpriteBatch sb, AuctionManager am)
@@ -103,42 +121,52 @@ namespace StorageWars
             {
                 AuctionManager.AuctionState.GoingOnce => "GOING ONCE...",
                 AuctionManager.AuctionState.GoingTwice => "GOING TWICE...",
-                // HATA ÇÖZÜMÜ: Enum'u metne çevirmek için ToString() eklendi
                 AuctionManager.AuctionState.Sold => $"SOLD TO {am.HighestBidder.ToString().ToUpper()}!!!",
                 _ => ""
             };
-            if (!string.IsNullOrEmpty(msg)) sb.DrawString(_gameFont, msg, UIConfig.CountdownTextPos, Color.Red);
+            if (!string.IsNullOrEmpty(msg)) DrawTextBottomCenter(sb, msg, UIConfig.CountdownTextPos, Color.Red);
         }
         #endregion
 
         #region ENVANTER (INVENTORY) ÇİZİMİ
-        public void DrawInventoryPhase(SpriteBatch spriteBatch, Player p1, Player p2)
+        public void DrawInventoryPhase(SpriteBatch spriteBatch, Player p1, Player p2, InventoryManager invManager)
         {
             if (_bgInventory != null) spriteBatch.Draw(_bgInventory, Vector2.Zero, Color.White);
 
-            spriteBatch.DrawString(_gameFont, $"P1 Money: ${p1.Money} | Debt: ${p1.Debt}", UIConfig.P1InventoryStatsPos, Color.Black);
-            spriteBatch.DrawString(_gameFont, $"P2 Money: ${p2.Money} | Debt: ${p2.Debt}", UIConfig.P2InventoryStatsPos, Color.Black);
+            // Tüm Envanter UI yazıları yeni metotla çiziliyor
+            DrawTextBottomCenter(spriteBatch, $"P1 Money: ${p1.Money} | Debt: ${p1.Debt}", UIConfig.P1InventoryStatsPos, Color.Black);
+            DrawTextBottomCenter(spriteBatch, $"P2 Money: ${p2.Money} | Debt: ${p2.Debt}", UIConfig.P2InventoryStatsPos, Color.Black);
 
-            DrawInventoryGrid(spriteBatch, p1, UIConfig.P1GridStart, Color.Blue);
-            DrawInventoryGrid(spriteBatch, p2, UIConfig.P2GridStart, Color.Red);
+            DrawTextBottomCenter(spriteBatch, $"HP: {p1.MaxHP} / {GameConstants.MaxPlayerHP}", UIConfig.P1InventoryHpPos, Color.DarkRed);
+            DrawTextBottomCenter(spriteBatch, $"HP: {p2.MaxHP} / {GameConstants.MaxPlayerHP}", UIConfig.P2InventoryHpPos, Color.DarkRed);
+
+            Item p1HoveredItem = invManager.GetSelectedItem(p1, 1);
+            if (p1HoveredItem != null)
+                DrawTextBottomCenter(spriteBatch, $"${p1HoveredItem.Value}", UIConfig.P1MarketValuePos, Color.Orange);
+
+            Item p2HoveredItem = invManager.GetSelectedItem(p2, 2);
+            if (p2HoveredItem != null)
+                DrawTextBottomCenter(spriteBatch, $"${p2HoveredItem.Value}", UIConfig.P2MarketValuePos, Color.Orange);
+
+            DrawInventoryGrid(spriteBatch, p1, invManager.P1CursorX, invManager.P1CursorY, UIConfig.P1GridStart, Color.Blue);
+            DrawInventoryGrid(spriteBatch, p2, invManager.P2CursorX, invManager.P2CursorY, UIConfig.P2GridStart, Color.Red);
         }
 
-        private void DrawInventoryGrid(SpriteBatch sb, Player p, Vector2 start, Color cursorColor)
+        private void DrawInventoryGrid(SpriteBatch sb, Player p, int cursorX, int cursorY, Vector2 start, Color cursorColor)
         {
             for (int y = 0; y < GameConstants.InventoryRows; y++)
             {
                 for (int x = 0; x < GameConstants.InventoryCols; x++)
                 {
                     Vector2 cellPos = new Vector2(start.X + (x * (UIConfig.GridCellSize + UIConfig.GapX)), start.Y + (y * (UIConfig.GridCellSize + UIConfig.GapY)));
+                    Rectangle cellRect = new Rectangle((int)cellPos.X, (int)cellPos.Y, UIConfig.GridCellSize, UIConfig.GridCellSize);
 
-                    if (p.InventoryGrid[x, y] != null)
+                    if (p.InventoryGrid[x, y] == null)
                     {
-                        Item item = p.InventoryGrid[x, y];
-                        sb.DrawString(_gameFont, item.Name, cellPos + UIConfig.InventoryItemNameOffset, Color.Black);
-                        sb.DrawString(_gameFont, $"${item.Value}", cellPos + UIConfig.InventoryItemPriceOffset, Color.DarkRed);
+                        sb.Draw(_pixel, cellRect, Color.Black * 0.3f); 
                     }
 
-                    if (p.CursorX == x && p.CursorY == y) DrawSelectionBorder(sb, cellPos, cursorColor);
+                    if (cursorX == x && cursorY == y) DrawSelectionBorder(sb, cellPos, cursorColor);
                 }
             }
         }
@@ -159,8 +187,8 @@ namespace StorageWars
         {
             if (_bgShop != null) spriteBatch.Draw(_bgShop, Vector2.Zero, Color.White);
 
-            spriteBatch.DrawString(_gameFont, $"${p1.Money}", UIConfig.P1ShopMoneyPos, Color.DarkGreen);
-            spriteBatch.DrawString(_gameFont, $"${p2.Money}", UIConfig.P2ShopMoneyPos, Color.DarkGreen);
+            DrawTextBottomCenter(spriteBatch, $"${p1.Money}", UIConfig.P1ShopMoneyPos, Color.DarkGreen);
+            DrawTextBottomCenter(spriteBatch, $"${p2.Money}", UIConfig.P2ShopMoneyPos, Color.DarkGreen);
 
             DrawShopSlots(spriteBatch, shop, UIConfig.P1ShopSlots, shop.P1SelectedSlot, Color.Blue);
             DrawShopSlots(spriteBatch, shop, UIConfig.P2ShopSlots, shop.P2SelectedSlot, Color.Red);
@@ -174,11 +202,13 @@ namespace StorageWars
                 if (shop.DailySkills.Count > i)
                 {
                     Skill s = shop.DailySkills[i];
-                    sb.DrawString(_gameFont, s.Name, slotPos + UIConfig.ShopSkillNameOffset, Color.Black);
-                    sb.DrawString(_gameFont, $"${s.Price}", slotPos + UIConfig.ShopSkillPriceOffset, Color.DarkRed);
+                    // Shop yazıları da simetrik büyüyecek
+                    DrawTextBottomCenter(sb, s.Name, slotPos + UIConfig.ShopSkillNameOffset, Color.Black);
+                    DrawTextBottomCenter(sb, $"${s.Price}", slotPos + UIConfig.ShopSkillPriceOffset, Color.DarkRed);
                 }
                 if (selectedIndex == i)
                 {
+                    // Ok işareti (Cursor) normal DrawString olarak kaldı çünkü onda pivot değişimine gerek yok.
                     sb.DrawString(_gameFont, ">", slotPos - UIConfig.ShopCursorOffset, cursorColor, UIConfig.ShopCursorRotation, UIConfig.ShopCursorOrigin, 1.0f, SpriteEffects.None, 0f);
                 }
             }

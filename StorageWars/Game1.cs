@@ -1,11 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace StorageWars
 {
     public class Game1 : Game
-    {
+    {       
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch; 
         private GameState _currentState; 
@@ -17,6 +17,7 @@ namespace StorageWars
         private AuctionManager auctionManager;
         private ShopManager shopManager;
         private LootManager lootManager; 
+        private InventoryManager inventoryManager;
 
         private Player player1;
         private Player player2;
@@ -27,6 +28,7 @@ namespace StorageWars
         private bool shopRolledThisTurn = false;
         private float _soldTimer = 0f;
         private bool _moneyDeducted = false;
+        private Random _rnd = new Random();
 
         public Game1()
         {
@@ -42,6 +44,7 @@ namespace StorageWars
         protected override void Initialize() 
         {
             _currentState = GameState.MainMenu;
+            
             inputManager = new InputManager();
             audioManager = new AudioManager();
             uiManager = new UIManager();
@@ -49,10 +52,13 @@ namespace StorageWars
             auctionManager = new AuctionManager();
             shopManager = new ShopManager();
             lootManager = new LootManager(); 
+            inventoryManager = new InventoryManager(); 
 
             player1 = new Player();
             player2 = new Player();
-            aiBot = new AIBot(10000);
+            
+            // DÜZELTME: İlk inşada bot GameConstants üzerinden başlar
+            aiBot = new AIBot(GameConstants.BotStartingMoney);
             boss = new Boss();
             
             base.Initialize();
@@ -70,7 +76,7 @@ namespace StorageWars
             inputManager.Update();
             uiManager.Update(gameTime, auctionManager); 
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || inputManager.IsKeyDown(Keys.Escape)) Exit();
+            if (inputManager.IsExitGame()) Exit();
             
             switch (_currentState)
             {
@@ -86,24 +92,25 @@ namespace StorageWars
             base.Update(gameTime);
         }
 
+        // ... [MainMenu, HowToPlay ve Credits Metotları Birebir Aynı Kalıyor] ...
         private void UpdateMainMenu()
         {
             Window.Title = "MAIN MENU - Press ENTER to Start, H for How To Play, C for Credits";
-            if (inputManager.IsKeyPressed(Keys.Enter)) { audioManager.PlayClick(); _currentState = GameState.AuctionPhase; }
-            else if (inputManager.IsKeyPressed(Keys.H)) { audioManager.PlayClick(); _currentState = GameState.HowToPlay; }
-            else if (inputManager.IsKeyPressed(Keys.C)) { audioManager.PlayClick(); _currentState = GameState.Credits; }
+            if (inputManager.IsStartOrConfirm()) { audioManager.PlayClick(); _currentState = GameState.AuctionPhase; }
+            else if (inputManager.IsHowToPlay()) { audioManager.PlayClick(); _currentState = GameState.HowToPlay; }
+            else if (inputManager.IsCredits()) { audioManager.PlayClick(); _currentState = GameState.Credits; }
         }
 
         private void UpdateHowToPlay()
         {
             Window.Title = "HOW TO PLAY - Press BACKSPACE to return to Main Menu";
-            if (inputManager.IsKeyPressed(Keys.Back)) { audioManager.PlayClick(); _currentState = GameState.MainMenu; }
+            if (inputManager.IsBack()) { audioManager.PlayClick(); _currentState = GameState.MainMenu; }
         }
 
         private void UpdateCredits()
         {
             Window.Title = "CREDITS - Press BACKSPACE to return";
-            if (inputManager.IsKeyPressed(Keys.Back)) { audioManager.PlayClick(); _currentState = GameState.MainMenu; }
+            if (inputManager.IsBack()) { audioManager.PlayClick(); _currentState = GameState.MainMenu; }
         }
 
         private void UpdateAuctionPhase(GameTime gameTime)
@@ -113,34 +120,46 @@ namespace StorageWars
                 aiBot.Update(gameTime, auctionManager);
                 auctionManager.Update(gameTime);
 
+                // Kimse teklif vermezse ihale sıfırlanır
                 if (auctionManager.IsP1Out && auctionManager.IsP2Out && aiBot.IsOut)
                 {
                     auctionManager.StartNewAuction(GameConstants.AuctionStartingBid);
-                    aiBot.ResetForNewAuction();
+                    int currentBotMoney = GameConstants.BotStartingMoney + ((roundManager.CurrentRound - 1) * GameConstants.BotMoneyIncrement);
+                    aiBot.ResetForNewAuction(currentBotMoney);
                 }
 
-                int nextBid = auctionManager.CurrentHighestBid + GameConstants.BidIncrement;
-
-                // DÜZELTME: "Player 1" Stringleri yerine Enum Kullanıldı
-                if (inputManager.IsKeyPressed(Keys.LeftShift))
+                // --- PLAYER 1 TEKLİF ---
+                if (inputManager.IsP1Bid())
                 {
-                    if (auctionManager.PlaceBid(BidderType.Player1, nextBid, player1.Money)) audioManager.PlayClick(); 
-                    else audioManager.PlayError();
-                }
-                if (inputManager.IsKeyPressed(Keys.LeftControl)) auctionManager.PlayerPass(BidderType.Player1);
+                    // DÜZELTME: Her basışta 100-199 arası rastgele bir artış hesaplar
+                    int randomIncrement = _rnd.Next(GameConstants.PlayerMinBidIncrease, GameConstants.PlayerMaxBidIncrease);
+                    int bidAmount = auctionManager.CurrentHighestBid + randomIncrement;
 
-                if (inputManager.IsKeyPressed(Keys.RightShift))
-                {
-                    if (auctionManager.PlaceBid(BidderType.Player2, nextBid, player2.Money)) audioManager.PlayClick(); 
-                    else audioManager.PlayError();
+                    if (auctionManager.PlaceBid(BidderType.Player1, bidAmount, player1.Money)) 
+                        audioManager.PlayClick(); 
+                    else 
+                        audioManager.PlayError();
                 }
-                if (inputManager.IsKeyPressed(Keys.RightControl)) auctionManager.PlayerPass(BidderType.Player2);
+                if (inputManager.IsP1Pass()) auctionManager.PlayerPass(BidderType.Player1);
+
+                // --- PLAYER 2 TEKLİF ---
+                if (inputManager.IsP2Bid())
+                {
+                    // DÜZELTME: P2 için de aynı dinamik artış uygulanır
+                    int randomIncrement = _rnd.Next(GameConstants.PlayerMinBidIncrease, GameConstants.PlayerMaxBidIncrease);
+                    int bidAmount = auctionManager.CurrentHighestBid + randomIncrement;
+
+                    if (auctionManager.PlaceBid(BidderType.Player2, bidAmount, player2.Money)) 
+                        audioManager.PlayClick(); 
+                    else 
+                        audioManager.PlayError();
+                }       
+                if (inputManager.IsP2Pass()) auctionManager.PlayerPass(BidderType.Player2);
             }
             else if (auctionManager.CurrentState == AuctionManager.AuctionState.Sold)
             {
                 if (!_moneyDeducted)
                 {
-                    // DÜZELTME: Enum Kullanıldı
                     if (auctionManager.HighestBidder == BidderType.Player1) player1.SpendMoney(auctionManager.CurrentHighestBid);
                     else if (auctionManager.HighestBidder == BidderType.Player2) player2.SpendMoney(auctionManager.CurrentHighestBid);
                     else if (auctionManager.HighestBidder == BidderType.AI) aiBot.Money -= auctionManager.CurrentHighestBid;
@@ -157,7 +176,7 @@ namespace StorageWars
                     Player winner = (auctionManager.HighestBidder == BidderType.Player1) ? player1 : (auctionManager.HighestBidder == BidderType.Player2) ? player2 : null;
                     if (winner != null)
                     {
-                        lootManager.DistributeAuctionLoot(winner, roundManager.CurrentRound);
+                        lootManager.DistributeAuctionLoot(winner, roundManager.CurrentRound, inventoryManager);
                     }
                     _currentState = GameState.InventoryPhase; 
                 }
@@ -165,30 +184,39 @@ namespace StorageWars
             else
             {
                 auctionManager.StartNewAuction(GameConstants.AuctionStartingBid);
-                aiBot.ResetForNewAuction();
+                // YENİ EKONOMİ
+                int currentBotMoney = GameConstants.BotStartingMoney + ((roundManager.CurrentRound - 1) * GameConstants.BotMoneyIncrement);
+                aiBot.ResetForNewAuction(currentBotMoney);
             }
         }
 
         private void UpdateInventoryPhase()
         {
-            Window.Title = $"INVENTORY | P1: Q(Sell)/E(Debt) | P2: I(Sell)/O(Debt) | SPACE to Next";
-            
-            if (inputManager.IsKeyPressed(Keys.W)) player1.MoveCursor(0, -1);
-            if (inputManager.IsKeyPressed(Keys.S)) player1.MoveCursor(0, 1);
-            if (inputManager.IsKeyPressed(Keys.A)) player1.MoveCursor(-1, 0);
-            if (inputManager.IsKeyPressed(Keys.D)) player1.MoveCursor(1, 0);
-            if (inputManager.IsKeyPressed(Keys.Q)) player1.SellSelectedItem(); 
-            if (inputManager.IsKeyPressed(Keys.E)) player1.TakeDebt(GameConstants.DebtActionAmount);      
+            // Arayüz bilgilendirmesi de yeni tuşlara göre güncellendi
+            Window.Title = $"INVENTORY | P1: Q(Sell)/E(Debt)/R(Pay) | P2: I(Sell)/O(Debt)/P(Pay) | SPACE to Next";
+    
+            // P1 Kontrolleri 
+            if (inputManager.IsP1Up()) inventoryManager.MoveCursor(1, 0, -1);
+            if (inputManager.IsP1Down()) inventoryManager.MoveCursor(1, 0, 1);
+            if (inputManager.IsP1Left()) inventoryManager.MoveCursor(1, -1, 0);
+            if (inputManager.IsP1Right()) inventoryManager.MoveCursor(1, 1, 0);
+            if (inputManager.IsP1PrimaryAction()) inventoryManager.SellSelectedItem(player1, 1); 
+            if (inputManager.IsP1SecondaryAction()) player1.TakeDebt(GameConstants.DebtActionAmount);      
+            // YENİ: P1 Borç Ödeme
+            if (inputManager.IsP1PayDebt()) player1.PayDebt(GameConstants.DebtActionAmount); 
 
-            if (inputManager.IsKeyPressed(Keys.Up)) player2.MoveCursor(0, -1);
-            if (inputManager.IsKeyPressed(Keys.Down)) player2.MoveCursor(0, 1);
-            if (inputManager.IsKeyPressed(Keys.Left)) player2.MoveCursor(-1, 0);
-            if (inputManager.IsKeyPressed(Keys.Right)) player2.MoveCursor(1, 0);
-            if (inputManager.IsKeyPressed(Keys.I)) player2.SellSelectedItem();
-            if (inputManager.IsKeyPressed(Keys.O)) player2.TakeDebt(GameConstants.DebtActionAmount);
+            // P2 Kontrolleri 
+            if (inputManager.IsP2Up()) inventoryManager.MoveCursor(2, 0, -1);
+            if (inputManager.IsP2Down()) inventoryManager.MoveCursor(2, 0, 1);
+            if (inputManager.IsP2Left()) inventoryManager.MoveCursor(2, -1, 0);
+            if (inputManager.IsP2Right()) inventoryManager.MoveCursor(2, 1, 0);
+            if (inputManager.IsP2PrimaryAction()) inventoryManager.SellSelectedItem(player2, 2);
+            if (inputManager.IsP2SecondaryAction()) player2.TakeDebt(GameConstants.DebtActionAmount);
+            // YENİ: P2 Borç Ödeme
+            if (inputManager.IsP2PayDebt()) player2.PayDebt(GameConstants.DebtActionAmount); 
 
             shopRolledThisTurn = false; 
-            if (inputManager.IsKeyPressed(Keys.Space)) _currentState = GameState.ShopPhase;
+            if (inputManager.IsNextPhase()) _currentState = GameState.ShopPhase;
         }
 
         private void UpdateShopPhase()
@@ -201,33 +229,46 @@ namespace StorageWars
                 shopRolledThisTurn = true; 
             }
 
-            if (inputManager.IsKeyPressed(Keys.W)) shopManager.MoveSelection(1, -1);
-            if (inputManager.IsKeyPressed(Keys.S)) shopManager.MoveSelection(1, 1);
-            if (inputManager.IsKeyPressed(Keys.E))
+            if (inputManager.IsP1Up()) shopManager.MoveSelection(1, -1);
+            if (inputManager.IsP1Down()) shopManager.MoveSelection(1, 1);
+            if (inputManager.IsP1SecondaryAction())
             {
-                if (shopManager.DailySkills.Count > shopManager.P1SelectedSlot)
-                    if (player1.BuySkill(shopManager.DailySkills[shopManager.P1SelectedSlot], shopManager.P1SelectedSlot)) audioManager.PlayClick();
-                    else audioManager.PlayError();
+                if (shopManager.BuySkill(player1, 1)) audioManager.PlayClick();
+                else audioManager.PlayError();
             }
-            if (inputManager.IsKeyPressed(Keys.Q))
-                if (player1.SellSkill(shopManager.P1SelectedSlot)) audioManager.PlayClick(); else audioManager.PlayError();
-
-            if (inputManager.IsKeyPressed(Keys.Up)) shopManager.MoveSelection(2, -1);
-            if (inputManager.IsKeyPressed(Keys.Down)) shopManager.MoveSelection(2, 1);
-            if (inputManager.IsKeyPressed(Keys.O))
+            if (inputManager.IsP1PrimaryAction())
             {
-                if (shopManager.DailySkills.Count > shopManager.P2SelectedSlot)
-                    if (player2.BuySkill(shopManager.DailySkills[shopManager.P2SelectedSlot], shopManager.P2SelectedSlot)) audioManager.PlayClick();
-                    else audioManager.PlayError();
+                if (shopManager.SellSkill(player1, 1)) audioManager.PlayClick(); 
+                else audioManager.PlayError();
             }
-            if (inputManager.IsKeyPressed(Keys.I))
-                if (player2.SellSkill(shopManager.P2SelectedSlot)) audioManager.PlayClick(); else audioManager.PlayError();
 
-            if (inputManager.IsKeyPressed(Keys.Space))
+            if (inputManager.IsP2Up()) shopManager.MoveSelection(2, -1);
+            if (inputManager.IsP2Down()) shopManager.MoveSelection(2, 1);
+            if (inputManager.IsP2SecondaryAction())
+            {
+                if (shopManager.BuySkill(player2, 2)) audioManager.PlayClick();
+                else audioManager.PlayError();
+            }
+            if (inputManager.IsP2PrimaryAction())
+            {
+                if (shopManager.SellSkill(player2, 2)) audioManager.PlayClick(); 
+                else audioManager.PlayError();
+            }
+
+            if (inputManager.IsNextPhase())
             {
                 roundManager.AdvanceRound();
                 if (roundManager.IsBossRound) _currentState = GameState.BossPhase; 
-                else { auctionManager.StartNewAuction(GameConstants.AuctionStartingBid); _currentState = GameState.AuctionPhase; }
+                else 
+                { 
+                    auctionManager.StartNewAuction(GameConstants.AuctionStartingBid); 
+                    
+                    // YENİ EKONOMİ İLE TUR ATLATMA
+                    int newBotMoney = GameConstants.BotStartingMoney + ((roundManager.CurrentRound - 1) * GameConstants.BotMoneyIncrement);
+                    aiBot.ResetForNewAuction(newBotMoney); 
+
+                    _currentState = GameState.AuctionPhase; 
+                }   
             }
         }
 
@@ -237,12 +278,18 @@ namespace StorageWars
 
             if (!bossTurnStarted) { boss.StartNewAttack(roundManager.CurrentRound); bossTurnStarted = true; }
             
-            if (inputManager.IsKeyPressed(Keys.W) && player1.Money >= GameConstants.BossActionAmount) 
-                { player1.SpendMoney(GameConstants.BossActionAmount); boss.Contribute(GameConstants.BossActionAmount); }
-            if (inputManager.IsKeyPressed(Keys.I) && player2.Money >= GameConstants.BossActionAmount) 
-                { player2.SpendMoney(GameConstants.BossActionAmount); boss.Contribute(GameConstants.BossActionAmount); }
+            if (inputManager.IsP1BossAction() && player1.Money >= GameConstants.BossActionAmount) 
+            { 
+                player1.SpendMoney(GameConstants.BossActionAmount); 
+                boss.Contribute(GameConstants.BossActionAmount); 
+            }
+            if (inputManager.IsP2BossAction() && player2.Money >= GameConstants.BossActionAmount) 
+            { 
+                player2.SpendMoney(GameConstants.BossActionAmount); 
+                boss.Contribute(GameConstants.BossActionAmount); 
+            }
             
-            if (inputManager.IsKeyPressed(Keys.Enter))
+            if (inputManager.IsStartOrConfirm())
             {
                 if (!boss.ResolveAttack()) 
                 { 
@@ -270,7 +317,7 @@ namespace StorageWars
             else if (_currentState == GameState.HowToPlay) uiManager.DrawHowToPlay(_spriteBatch);
             else if (_currentState == GameState.Credits) uiManager.DrawCredits(_spriteBatch);
             else if (_currentState == GameState.AuctionPhase) uiManager.DrawAuctionPhase(_spriteBatch, auctionManager, player1, player2, roundManager, aiBot);
-            else if (_currentState == GameState.InventoryPhase) uiManager.DrawInventoryPhase(_spriteBatch, player1, player2);
+            else if (_currentState == GameState.InventoryPhase) uiManager.DrawInventoryPhase(_spriteBatch, player1, player2, inventoryManager);
             else if (_currentState == GameState.ShopPhase) uiManager.DrawShopPhase(_spriteBatch, player1, player2, shopManager);
             
             _spriteBatch.End();

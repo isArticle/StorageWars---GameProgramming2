@@ -8,7 +8,6 @@ namespace StorageWars
         public AuctionState CurrentState { get; private set; }
         public int CurrentHighestBid { get; private set; }
         
-        // GÜVENLİ MİMARİ: string yerine Enum kullanıldı
         public BidderType HighestBidder { get; private set; } 
         
         public bool IsAuctionActive { get; private set; }
@@ -18,6 +17,10 @@ namespace StorageWars
         public int P2LastBid { get; private set; }
         public int AILastBid { get; private set; }
         
+        // YENİ: 1 Saniyelik Blok Sistemi
+        public bool IsBidBlocked { get; private set; }
+        private float _blockTimer;
+
         private float _auctionTimer; 
         private const float TimeToSold = 5f;
         private const float TimeToGoingTwice = 4f;
@@ -31,6 +34,9 @@ namespace StorageWars
             CurrentState = AuctionState.Bidding; 
             _auctionTimer = 0f; 
             
+            IsBidBlocked = false;
+            _blockTimer = 0f;
+
             IsP1Out = false; IsP2Out = false;
             P1LastBid = 0; P2LastBid = 0; AILastBid = 0;
         }
@@ -44,6 +50,7 @@ namespace StorageWars
         public bool PlaceBid(BidderType bidder, int bidAmount, int playerMoney)
         {
             if (!IsAuctionActive || CurrentState == AuctionState.Sold) return false; 
+            if (IsBidBlocked) return false; // YENİ: Sistem blokluyken teklif reddedilir (Hata sesi çalar)
             if (bidder == BidderType.Player1 && IsP1Out) return false;
             if (bidder == BidderType.Player2 && IsP2Out) return false;
             if (HighestBidder == bidder) return false;
@@ -53,8 +60,13 @@ namespace StorageWars
             {
                 CurrentHighestBid = bidAmount; 
                 HighestBidder = bidder; 
-                _auctionTimer = 0f; 
                 CurrentState = AuctionState.Bidding; 
+                
+                _auctionTimer = 0f; 
+
+                // YENİ: Teklif başarılı olduysa masayı 1 saniyeliğine kitle
+                IsBidBlocked = true;
+                _blockTimer = GameConstants.BidCooldown;
 
                 if (bidder == BidderType.Player1) P1LastBid = bidAmount;
                 else if (bidder == BidderType.Player2) P2LastBid = bidAmount;
@@ -68,6 +80,15 @@ namespace StorageWars
         public void Update(GameTime gameTime)
         {
             if (!IsAuctionActive) return; 
+
+            // YENİ: Eğer masa kilitliyse süreyi düşür ve geri sayımı duraklat
+            if (IsBidBlocked)
+            {
+                _blockTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (_blockTimer <= 0) IsBidBlocked = false;
+                
+                return; // Blok kalkana kadar Going Once... vb çalışmaz, donar!
+            }
 
             if (HighestBidder != BidderType.None)  
             {

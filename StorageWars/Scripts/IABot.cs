@@ -15,18 +15,28 @@ namespace StorageWars
         {
             Money = startingMoney;
             _random = new Random();
-            ResetForNewAuction();
+            ResetForNewAuction(startingMoney);
         }
 
-        public void ResetForNewAuction()
+        public void ResetForNewAuction(int newBudget)
         {
+            Money = newBudget;
             IsOut = false;
             _bidTimer = 0f;
         }
 
         public void Update(GameTime gameTime, AuctionManager auctionManager) 
         {
-            if (IsOut || Money <= auctionManager.CurrentHighestBid) return;
+            if (IsOut) return;
+            
+            // YENİ: Masa blokluyken Bot da donar ve bekler, süre işlemez
+            if (auctionManager.IsBidBlocked) return; 
+
+            if (Money <= auctionManager.CurrentHighestBid && auctionManager.HighestBidder != BidderType.AI)
+            {
+                IsOut = true;
+                return;
+            }
 
             _bidTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -44,7 +54,6 @@ namespace StorageWars
 
                 if (newBid <= Money) 
                 {
-                    // DÜZELTME: Enum Kullanıldı
                     auctionManager.PlaceBid(BidderType.AI, newBid, Money);
                 }
                 

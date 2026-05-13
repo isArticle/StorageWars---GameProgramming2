@@ -6,27 +6,25 @@ namespace StorageWars
     {
         private readonly Random _rnd = new Random();
 
-        public void DistributeAuctionLoot(Player winner, int currentRound)
+        // Parametre olarak artık InventoryManager da alıyor
+        public void DistributeAuctionLoot(Player winner, int currentRound, InventoryManager inventoryManager)
         {
-            // GameConstants'a eklenebilir: MinLoot=2, MaxLoot=5
             int lootCount = _rnd.Next(2, 5); 
             
             for (int i = 0; i < lootCount; i++)
             {
                 Item newItem = GenerateRandomItem(currentRound);
-                winner.AddItem(newItem);
+                // İşlemi Yöneticiler (Managers) kendi aralarında hallediyor
+                inventoryManager.AddItem(winner, newItem);
             }
         }
 
         private Item GenerateRandomItem(int currentRound)
         {
-            // ŞANS ALGORİTMASI: Tur ilerledikçe (currentRound) iyi eşya çıkma ihtimali artar!
             int roll = _rnd.Next(1, 101) + (currentRound * 2); 
-
             ItemTier tier;
             int value;
 
-            // Senin tasarım dokümanındaki (GDD) fiyat aralıkları
             if (roll >= 95)      { tier = ItemTier.S; value = _rnd.Next(10000, 20001); }
             else if (roll >= 80) { tier = ItemTier.A; value = _rnd.Next(3000, 10000); }
             else if (roll >= 60) { tier = ItemTier.B; value = _rnd.Next(1000, 3000); }
