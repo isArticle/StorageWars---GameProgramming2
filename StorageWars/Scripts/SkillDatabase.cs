@@ -2,7 +2,7 @@ namespace StorageWars
 {
     public static class SkillDatabase
     {
-        // Tüm oyun yeteneklerinin havuzu
+        // Oyunda bulunabilecek tüm yetenek isimlerinin sabit listesini tutar
         public static readonly string[] SkillNames = { 
             "Hızlı Teklif", "Çift Satış", "Vergi Kaçırma", "Keskin Göz", "Şanslı Para", "Sabotaj", "Ekspertiz" 
         };

@@ -4,41 +4,44 @@ namespace StorageWars
 {
     public static class UIConfig 
     {
-        // --- DEPO VE ROUND --- (BİTTİ)
+        // --- Round --- 
         public static readonly Vector2 RoundTextPos = new Vector2(960, 119);
         public static readonly Vector2 CurrentBidPos = new Vector2(960, 209);
 
-        // --- PLAYER 1 (AUCTION) --- (BİTTİ)
+        // --- P1 --- 
         public static readonly Vector2 P1TitlePos = new Vector2(300, 850);
         public static readonly Vector2 P1MoneyPos = new Vector2(300, 895);
         public static readonly Vector2 P1BidPos = new Vector2(320, 572);   
         public static readonly Vector2 P1PassPos = new Vector2(320, 572);  
         public static readonly Vector2 P1ThinkPos = new Vector2(320, 560);
 
-        // --- PLAYER 2 (AUCTION) --- (BİTTİ)
+        // --- P2 --- 
         public static readonly Vector2 P2TitlePos = new Vector2(1620, 850);
         public static readonly Vector2 P2MoneyPos = new Vector2(1620, 895);
         public static readonly Vector2 P2BidPos = new Vector2(1605, 572);
         public static readonly Vector2 P2PassPos = new Vector2(1605, 572); 
         public static readonly Vector2 P2ThinkPos = new Vector2(1605, 560); 
 
-        // --- AI BOT --- (BİTTİ)
-        public static readonly Vector2 AIBotBidPos = new Vector2(1500, 160);   
-        public static readonly Vector2 AIBotPassPos = new Vector2(1500, 160);  
-        public static readonly Vector2 AIBotThinkPos = new Vector2(1500, 160);
+        // --- AIBot --- 
+        public static readonly Vector2 AIBotBidPos = new Vector2(1575, 180);   
+        public static readonly Vector2 AIBotPassPos = new Vector2(1575, 180);  
+        public static readonly Vector2 AIBotThinkPos = new Vector2(1575, 180);
         public static readonly Vector2 AIBotMoneyPos = new Vector2(1630, 390);
 
-        // --- SİSTEM YAZILARI --- (BİTTİ)
+        // --- System --- 
         public static readonly Vector2 CountdownTextPos = new Vector2(960, 990); 
 
-        // --- INVENTORY KOORDİNATLARI --- (BİTTİ)
+        // --- Characters ---
+        public static readonly Vector2 P1PortraitPos = new Vector2(260, 673);
+        public static readonly Vector2 P2PortraitPos = new Vector2(1660, 673);
+        public static readonly Vector2 AIBotPortraitPos = new Vector2(1660, 195);
+
+        // --- Inventory --- 
         public static readonly Vector2 P1GridStart = new Vector2(175, 263); 
         public static readonly Vector2 P2GridStart = new Vector2(1139, 263); 
         public const int GridCellSize = 130; 
         public const int GapX = 29; 
         public const int GapY = 19; 
-
-        // --- INVENTORY STATS --- (BİTTİ)
         public static readonly Vector2 P1InventoryStatsPos = new Vector2(480, 160);
         public static readonly Vector2 P2InventoryStatsPos = new Vector2(1440, 160);
         public static readonly Vector2 P1InventoryHpPos = new Vector2(480, 210); 
@@ -46,62 +49,23 @@ namespace StorageWars
         public static readonly Vector2 P1MarketValuePos = new Vector2(480, 895); 
         public static readonly Vector2 P2MarketValuePos = new Vector2(1440, 895);
 
-        // --- SHOP KOORDİNATLARI --- (BİTTİ)
+        // --- Shop --- 
         public static readonly Vector2 P1ShopMoneyPos = new Vector2(480, 160);
         public static readonly Vector2 P2ShopMoneyPos = new Vector2(1440, 160);
 
-        public static readonly Vector2[] P1ShopSlots = {
-            new Vector2(205, 345), 
-            new Vector2(525, 530), 
-            new Vector2(205, 710)  
-        };
-        public static readonly Vector2[] P2ShopSlots = {
-            new Vector2(1720, 345), 
-            new Vector2(1400, 530), 
-            new Vector2(1720, 710)  
-        };
-        public static readonly Vector2[] P1ShopNameOffsets = 
-        { 
-            new Vector2(205, 490),
-            new Vector2(525, 675), 
-            new Vector2(205, 860) 
-        };
-        public static readonly Vector2[] P2ShopNameOffsets = 
-        { 
-            new Vector2(1720, 490), 
-            new Vector2(1400, 675), 
-            new Vector2(1720, 860) 
-        };
-        public static readonly Vector2[] P1ShopPriceOffsets = 
-        { 
-            new Vector2(490, 310), 
-            new Vector2(775, 620), 
-            new Vector2(490, 850) 
-        };
-        public static readonly Vector2[] P2ShopPriceOffsets = 
-        { 
-            new Vector2(1435, 310), 
-            new Vector2(1150, 620), 
-            new Vector2(1435, 850) 
-        };
-        public static readonly Vector2[] P1ShopCursorOffsets = 
-        { 
-            new Vector2(605, 285), 
-            new Vector2(890, 595), 
-            new Vector2(605, 825) 
-        };
-        public static readonly Vector2[] P2ShopCursorOffsets = 
-        { 
-            new Vector2(1320, 285), 
-            new Vector2(1035, 595), 
-            new Vector2(1320, 825) 
-        };
+        public static readonly Vector2[] P1ShopSlots = { new Vector2(205, 345), new Vector2(525, 530), new Vector2(205, 710) };
+        public static readonly Vector2[] P2ShopSlots = { new Vector2(1720, 345), new Vector2(1400, 530), new Vector2(1720, 710) };
+        public static readonly Vector2[] P1ShopNameOffsets = { new Vector2(205, 490), new Vector2(525, 675), new Vector2(205, 860) };
+        public static readonly Vector2[] P2ShopNameOffsets = { new Vector2(1720, 490), new Vector2(1400, 675), new Vector2(1720, 860) };
+        public static readonly Vector2[] P1ShopPriceOffsets = { new Vector2(490, 310), new Vector2(775, 620), new Vector2(490, 850) };
+        public static readonly Vector2[] P2ShopPriceOffsets = { new Vector2(1435, 310), new Vector2(1150, 620), new Vector2(1435, 850) };
+        public static readonly Vector2[] P1ShopCursorOffsets = { new Vector2(605, 285), new Vector2(890, 595), new Vector2(605, 825) };
+        public static readonly Vector2[] P2ShopCursorOffsets = { new Vector2(1320, 285), new Vector2(1035, 595), new Vector2(1320, 825) };
 
         public static readonly float P1ShopCursorRotation = MathHelper.ToRadians(180f);
         public static readonly float P2ShopCursorRotation = 0f;
 
-
-        // --- BOSS ---
+        // --- Boss ---
         public static readonly Vector2 BossHpPos = new Vector2(850, 100);
         public static readonly Vector2 BossDemandPos = new Vector2(850, 200);
         public static readonly Vector2 BossPoolPos = new Vector2(850, 500);
