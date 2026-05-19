@@ -9,7 +9,7 @@ namespace StorageWars
         public int P2CursorX { get; private set; } = 0;
         public int P2CursorY { get; private set; } = 0;
 
-        public void MoveCursor(int playerIndex, int dx, int dy)   // Oyuncunun envanter imlecini (cursor) grid dışına çıkmayacak şekilde matematiksel olarak sınırlandırır.
+        public void MoveCursor(int playerIndex, int dx, int dy) 
         {
             if (playerIndex == 1)
             {
@@ -23,7 +23,7 @@ namespace StorageWars
             }
         }
 
-        public bool AddItem(Player player, Item item)  // Oyuncunun envanterindeki ilk boş (null) slota yeni düşen eşyayı yerleştirir.
+        public bool AddItem(Player player, Item item) 
         {
             for (int y = 0; y < GameConstants.InventoryRows; y++)
             {
@@ -38,8 +38,8 @@ namespace StorageWars
             }
             return false; 
         }
-
-        public bool SellSelectedItem(Player player, int playerIndex)  // İmlecin üzerinde olduğu eşyayı satar, parayı oyuncuya verir ve slotu boşaltır.
+       
+        public bool SellSelectedItem(Player player, int playerIndex, RoundManager roundManager)  //RoundManager parametre olarak eklendi. Böylece enflasyonlu satış tescilleniyor.
         {
             int cx = (playerIndex == 1) ? P1CursorX : P2CursorX;
             int cy = (playerIndex == 1) ? P1CursorY : P2CursorY;
@@ -48,7 +48,9 @@ namespace StorageWars
             
             if (selectedItem != null)
             {
-                player.EarnMoney(selectedItem.Value);
+                int currentMarketValue = roundManager.CalculateCurrentItemValue(selectedItem);
+                
+                player.EarnMoney(currentMarketValue);
                 player.SetInventoryItem(cx, cy, null); 
                 
                 return true;
@@ -57,7 +59,7 @@ namespace StorageWars
             return false;
         }
 
-        public Item GetSelectedItem(Player player, int playerIndex)  // Çizim veya UI ekranı için imlecin anlık olarak üzerinde durduğu eşyayı döndürür.
+        public Item GetSelectedItem(Player player, int playerIndex) 
         {
             int cx = (playerIndex == 1) ? P1CursorX : P2CursorX;
             int cy = (playerIndex == 1) ? P1CursorY : P2CursorY;

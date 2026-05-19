@@ -30,9 +30,9 @@ namespace StorageWars
             _auctionRenderer.Draw(sb, am, p1, p2, rm, bot);
         }
 
-        public void DrawInventoryPhase(SpriteBatch sb, Player p1, Player p2, InventoryManager inv)
+        public void DrawInventoryPhase(SpriteBatch sb, Player p1, Player p2, InventoryManager inv, RoundManager rm)
         {
-            _inventoryRenderer.Draw(sb, p1, p2, inv);
+            _inventoryRenderer.Draw(sb, p1, p2, inv, rm);
         }
 
         public void DrawShopPhase(SpriteBatch sb, Player p1, Player p2, ShopManager shop)

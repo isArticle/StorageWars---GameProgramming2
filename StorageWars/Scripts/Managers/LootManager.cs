@@ -38,7 +38,7 @@ namespace StorageWars
             else                 
             { tier = ItemTier.F; value = _rnd.Next(1, 10); }
 
-            return new Item($"Ganimet T-{tier}", value, tier);
+            return ItemDatabase.GenerateItem(tier, value);
         }
     }
 }

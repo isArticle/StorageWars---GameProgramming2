@@ -32,7 +32,7 @@ namespace StorageWars
             { inv.MoveCursor(1, 1, 0); audio.PlayNav(); }
             
             if (input.IsP1PrimaryAction()) 
-            { if (inv.SellSelectedItem(p1, 1)) audio.PlaySell(); else audio.PlayError(); } 
+            { if (inv.SellSelectedItem(p1, 1, _game.RoundManager)) audio.PlaySell(); else audio.PlayError(); }
 
             if (input.IsP1SecondaryAction()) 
             { p1.TakeDebt(GameConstants.DebtActionAmount); audio.PlayDebt(); }    
@@ -54,7 +54,7 @@ namespace StorageWars
             { inv.MoveCursor(2, 1, 0); audio.PlayNav(); }
             
             if (input.IsP2PrimaryAction()) 
-            { if (inv.SellSelectedItem(p2, 2)) audio.PlaySell(); else audio.PlayError(); }
+            { if (inv.SellSelectedItem(p2, 2, _game.RoundManager)) audio.PlaySell(); else audio.PlayError(); }
 
             if (input.IsP2SecondaryAction()) 
             { p2.TakeDebt(GameConstants.DebtActionAmount); audio.PlayDebt(); }
@@ -72,7 +72,7 @@ namespace StorageWars
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            _game.UIManager.DrawInventoryPhase(spriteBatch, _game.Player1, _game.Player2, _game.InventoryManager);
+            _game.UIManager.DrawInventoryPhase(spriteBatch, _game.Player1, _game.Player2, _game.InventoryManager, _game.RoundManager);
         }
     }
 }
