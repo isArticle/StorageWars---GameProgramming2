@@ -6,7 +6,7 @@ namespace StorageWars
     {
         private readonly Random _rnd = new Random();
 
-        public void DistributeAuctionLoot(Player winner, int currentRound, InventoryManager inventoryManager) // İhaleyi kazanana rastgele sayıda ganimet (eşya) dağıtır.
+        public void DistributeAuctionLoot(Player winner, int currentRound, InventoryManager inventoryManager)   // İhaleyi kazanana rastgele sayıda (2 ile 4 arası) ganimet dağıtır.
         {
             int lootCount = _rnd.Next(2, 5); 
             
@@ -17,7 +17,7 @@ namespace StorageWars
             }
         }
 
-        private Item GenerateRandomItem(int currentRound) // İçinde bulunulan tura göre şansı hesaplayıp eşya kalitesini (Tier) belirler.
+        private Item GenerateRandomItem(int currentRound)  // Tura göre zorluk hesaplayıp eşya kalitesini (Tier) ve değerini (Value) RNG ile belirler.
         {
             int roll = _rnd.Next(1, 101) + (currentRound * 2); 
             ItemTier tier;

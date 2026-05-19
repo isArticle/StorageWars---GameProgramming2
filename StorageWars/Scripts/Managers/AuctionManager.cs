@@ -4,8 +4,6 @@ namespace StorageWars
 {
     public class AuctionManager
     {
-        public enum AuctionState { Bidding, GoingOnce, GoingTwice, Sold }
-
         public AuctionState CurrentState { get; private set; }
         public BidderType HighestBidder { get; private set; }
 
@@ -26,7 +24,7 @@ namespace StorageWars
         private const float TimeToGoingTwice = 4f;
         private const float TimeToGoingOnce = 3f;
 
-        public void StartNewAuction(int startingPrice) // Yeni bir ihale başlatır ve önceki teklif verilerini sıfırlar.
+        public void StartNewAuction(int startingPrice)   // Yeni bir ihale başlatır ve önceki teklif verilerini sıfırlar.
         {
             CurrentHighestBid = startingPrice; 
             HighestBidder = BidderType.None; 
@@ -50,7 +48,7 @@ namespace StorageWars
             if (player == BidderType.Player2) IsP2Out = true;
         }
 
-        public bool PlaceBid(BidderType bidder, int bidAmount, int playerMoney) // Şartlar uygunsa oyuncunun veya botun geçerli teklifi vermesini sağlar.
+        public bool PlaceBid(BidderType bidder, int bidAmount, int playerMoney)  // Şartlar uygunsa oyuncunun veya botun geçerli teklifi vermesini sağlar.
         {
             if (!IsAuctionActive || CurrentState == AuctionState.Sold) return false; 
             if (IsBidBlocked) return false; 
@@ -79,7 +77,7 @@ namespace StorageWars
             return false; 
         }
 
-        public void Update(GameTime gameTime, AudioManager audioManager) // İhale sayacını, durum geçişlerini ve ses tetikleyicilerini yönetir.
+        public void Update(GameTime gameTime, AudioManager audioManager)   // İhale sayacını, durum geçişlerini ve ses tetikleyicilerini yönetir (Saniyede 60 kez).
         {
             if (!IsAuctionActive) return; 
 
@@ -94,7 +92,6 @@ namespace StorageWars
             if (HighestBidder != BidderType.None)  
             {
                 AuctionState previousState = CurrentState;
-
                 _auctionTimer += (float)gameTime.ElapsedGameTime.TotalSeconds; 
 
                 if (_auctionTimer >= TimeToSold) 
@@ -109,13 +106,9 @@ namespace StorageWars
                 if (previousState != CurrentState)
                 {
                     if (CurrentState == AuctionState.GoingOnce || CurrentState == AuctionState.GoingTwice)
-                    {
                         audioManager.PlayTick();
-                    }
                     else if (CurrentState == AuctionState.Sold)
-                    {
                         audioManager.PlayGavel();
-                    }
                 }
             }
         }
