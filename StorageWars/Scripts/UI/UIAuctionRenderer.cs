@@ -12,6 +12,8 @@ namespace StorageWars
         private float _currentDeltaTime = 0f;
         private float _displayedPrice = 100f;
 
+        private UIAuctionSkillRenderer _auctionSkillRenderer = new UIAuctionSkillRenderer();
+
         public void Update(GameTime gameTime, AuctionManager auctionManager)
         {
             _currentDeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -27,6 +29,9 @@ namespace StorageWars
         public void Draw(SpriteBatch spriteBatch, AuctionManager auctionManager, Player p1, Player p2, RoundManager roundManager, AIBot bot)
         {
             if (AssetManager.BgAuction != null) spriteBatch.Draw(AssetManager.BgAuction, Vector2.Zero, Color.White);
+            
+            _auctionSkillRenderer.DrawActiveSkills(spriteBatch, p1, p2);
+
             int animatedPrice = (int)Math.Round(_displayedPrice);
 
             AssetManager.DrawTextBottomCenter(spriteBatch, $"ROUND: {roundManager.CurrentRound} / {GameConstants.MaxRounds}", UIConfig.RoundTextPos, Color.Black);

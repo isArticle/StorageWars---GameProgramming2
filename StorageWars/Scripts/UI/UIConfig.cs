@@ -8,6 +8,9 @@ namespace StorageWars
         public static readonly Vector2 RoundTextPos = new Vector2(960, 119);
         public static readonly Vector2 CurrentBidPos = new Vector2(960, 209);
 
+        public static readonly Vector2[] P1AuctionSkillSlots = { new Vector2(86, 998), new Vector2(235, 998), new Vector2(387, 998) };
+        public static readonly Vector2[] P2AuctionSkillSlots = { new Vector2(1535, 998), new Vector2(1684, 998), new Vector2(1836, 998) };
+
         // --- P1 --- 
         public static readonly Vector2 P1TitlePos = new Vector2(300, 850);
         public static readonly Vector2 P1MoneyPos = new Vector2(300, 895);
