@@ -13,15 +13,12 @@ namespace StorageWars
         public int P1SelectedSlot { get; private set; } = 0; 
         public int P2SelectedSlot { get; private set; } = 0;
 
-        public void RollDailySkills(float inflation)   // Her tur başında markete enflasyonlu fiyatlarla yeni yetenekler dizer.
+        public void RollDailySkills(float inflation) 
         {
             _dailySkills.Clear();
             for (int i = 0; i < 3; i++)
             {
-                int basePrice = _rnd.Next(GameConstants.SkillMinPrice, GameConstants.SkillMaxPrice);
-                int finalPrice = (int)(basePrice * inflation);
-                string randomSkillName = SkillDatabase.SkillNames[_rnd.Next(SkillDatabase.SkillNames.Length)];
-                _dailySkills.Add(new Skill(randomSkillName, finalPrice, "Açıklama metni..."));
+                _dailySkills.Add(SkillDatabase.GetRandomSkill(inflation));
             }
         }
 

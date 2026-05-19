@@ -37,11 +37,11 @@ namespace StorageWars
             { ItemTier.C, new List<ItemTemplate> {
                 new ItemTemplate("Silver Cutlery", "item_c_silver_cutlery"),
                 new ItemTemplate("Sealed LEGO Set", "item_c_sealed_lego"),
-                new ItemTemplate("Zippo Collection", "item_c_zippo_collection")
+                new ItemTemplate("Zippo ", "item_c_zippo")
             }},
             { ItemTier.B, new List<ItemTemplate> {
-                new ItemTemplate("Scrambler Parts", "item_b_scrambler_parts"),
-                new ItemTemplate("Antique Typewriter", "item_b_antique_typewriter"),
+                new ItemTemplate("Car Part", "item_b_car_part"),
+                new ItemTemplate("Typewriter", "item_b_typewriter"),
                 new ItemTemplate("Vintage Binoculars", "item_b_vintage_binoculars")
             }},
             { ItemTier.A, new List<ItemTemplate> {
@@ -68,7 +68,6 @@ namespace StorageWars
                 return new Item(selectedTemplate.Name, selectedTemplate.TextureName, assignedValue, tier);
             }
             
-            // Hata koruması (Fallback)
             return new Item("Unknown Box", "item_default", assignedValue, tier);
         }
     }

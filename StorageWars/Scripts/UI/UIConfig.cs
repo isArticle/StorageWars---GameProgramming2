@@ -53,8 +53,8 @@ namespace StorageWars
         public static readonly Vector2 P1ShopMoneyPos = new Vector2(480, 160);
         public static readonly Vector2 P2ShopMoneyPos = new Vector2(1440, 160);
 
-        public static readonly Vector2[] P1ShopSlots = { new Vector2(205, 345), new Vector2(525, 530), new Vector2(205, 710) };
-        public static readonly Vector2[] P2ShopSlots = { new Vector2(1720, 345), new Vector2(1400, 530), new Vector2(1720, 710) };
+        public static readonly Vector2[] P1ShopSlots = { new Vector2(205, 420), new Vector2(525, 605), new Vector2(205, 790) };
+        public static readonly Vector2[] P2ShopSlots = { new Vector2(1720, 420), new Vector2(1400, 605), new Vector2(1720, 790) };
         public static readonly Vector2[] P1ShopNameOffsets = { new Vector2(205, 490), new Vector2(525, 675), new Vector2(205, 860) };
         public static readonly Vector2[] P2ShopNameOffsets = { new Vector2(1720, 490), new Vector2(1400, 675), new Vector2(1720, 860) };
         public static readonly Vector2[] P1ShopPriceOffsets = { new Vector2(490, 310), new Vector2(775, 620), new Vector2(490, 850) };

@@ -53,6 +53,17 @@ namespace StorageWars
         public bool IsP2PrimaryAction()   => IsKeyPressed(Keys.I);        
         public bool IsP2SecondaryAction() => IsKeyPressed(Keys.O);      
         public bool IsP2BossAction()      => IsKeyPressed(Keys.Up);           
-        public bool IsP2PayDebt()         => IsKeyPressed(Keys.P);              
+        public bool IsP2PayDebt()         => IsKeyPressed(Keys.P);
+
+
+        // --- OYUNCU 1 (P1) SKILL KONTROLLERİ ---
+        public bool IsP1Skill1() => IsKeyPressed(Keys.Q);
+        public bool IsP1Skill2() => IsKeyPressed(Keys.W);
+        public bool IsP1Skill3() => IsKeyPressed(Keys.E);
+
+        // --- OYUNCU 2 (P2) SKILL KONTROLLERİ ---
+        public bool IsP2Skill1() => IsKeyPressed(Keys.J);
+        public bool IsP2Skill2() => IsKeyPressed(Keys.K);
+        public bool IsP2Skill3() => IsKeyPressed(Keys.L);              
     }
 }
