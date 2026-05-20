@@ -38,7 +38,7 @@ namespace StorageWars
         public const int MinLootPerStorage = 2;             // Bir depodan çıkacak minimum eşya
         public const int MaxLootPerStorage = 5;             // Bir depodan çıkacak maksimum eşya (Random.Next için 1 fazlası)
 
-        // Eşya Fiyat Skalaları
+        // Eşya Fiyat Skalaları  İtem Fiyatları
         public const int TierS_MinValue = 5000; public const int TierS_MaxValue = 8000;
         public const int TierA_MinValue = 2000; public const int TierA_MaxValue = 4500;
         public const int TierB_MinValue = 800;  public const int TierB_MaxValue = 1800;
