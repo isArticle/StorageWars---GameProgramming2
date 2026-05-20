@@ -1,6 +1,6 @@
 namespace StorageWars
 {
-    public enum GameState  // Oyunun anlık olarak hangi ekranda/aşamada olduğunu yönetir
+    public enum GameState  // Oyunun anlık olarak hangi ana ekranda/aşamada (Menü, İhale, Dükkan) olduğunu yönetir
     {
         MainMenu, 
         HowToPlay, 

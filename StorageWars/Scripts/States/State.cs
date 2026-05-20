@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StorageWars
 {
-    public abstract class State
+    public abstract class State // Tüm oyun sahnelerinin (fazların) türetileceği, standart şablonu belirleyen soyut (abstract) temel sınıftır
     {
         protected Game1 _game;
 
@@ -12,7 +12,7 @@ namespace StorageWars
             _game = game;
         }
 
-        public abstract void Update(GameTime gameTime);
-        public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
+        public abstract void Update(GameTime gameTime); // Sahnede gerçekleşecek tüm mantıksal hesaplamaları ve girdi (input) kontrollerini işler
+        public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch); // Sahnedeki UI ve grafik bileşenlerini ekrana çizdirmek için UIManager'a emir verir
     }
 }

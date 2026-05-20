@@ -10,7 +10,7 @@ namespace StorageWars
             _game.Window.Title = $"INVENTORY | P1: Q(Sell)/E(Debt)/R(Pay) | P2: I(Sell)/O(Debt)/P(Pay) | SPACE to Next";
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime) // Grid (matris) üzerindeki imleç hareketlerini ve eşya satma/borç ödeme aksiyonlarını dinler
         {
             var inv = _game.InventoryManager;
             var input = _game.InputManager;
@@ -70,7 +70,7 @@ namespace StorageWars
             }
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) // Envanter grid'ini ve oyuncuların güncel değer statülerini ekrana yansıtır
         {
             _game.UIManager.DrawInventoryPhase(spriteBatch, _game.Player1, _game.Player2, _game.InventoryManager, _game.RoundManager);
         }

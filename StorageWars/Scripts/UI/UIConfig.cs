@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace StorageWars
 {
-    public static class UIConfig 
+    public static class UIConfig // Tüm arayüz (UI) elemanlarının ekrandaki mutlak X ve Y koordinatlarını tutan veri merkezidir
     {
         // --- Round --- 
         public static readonly Vector2 RoundTextPos = new Vector2(960, 119);

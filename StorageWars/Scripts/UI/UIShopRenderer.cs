@@ -6,7 +6,7 @@ namespace StorageWars
 {
     public class UIShopRenderer
     {
-        public void Draw(SpriteBatch spriteBatch, Player p1, Player p2, ShopManager shop)
+        public void Draw(SpriteBatch spriteBatch, Player p1, Player p2, ShopManager shop) // Dükkan arayüzünü, oyuncu paralarını ve P1/P2'ye özel ayrı yetenek havuzlarını ekrana çizer
         {
             if (AssetManager.BgShop != null) spriteBatch.Draw(AssetManager.BgShop, Vector2.Zero, Color.White);
             
@@ -17,7 +17,7 @@ namespace StorageWars
             DrawShopSlots(spriteBatch, shop.P2DailySkills, UIConfig.P2ShopSlots, UIConfig.P2ShopNameOffsets, UIConfig.P2ShopPriceOffsets, UIConfig.P2ShopCursorOffsets, shop.P2SelectedSlot, Color.Red, 2);
         }
 
-        private void DrawShopSlots(SpriteBatch sb, IReadOnlyList<Skill> skills, Vector2[] slotCoords, Vector2[] nameCoords, Vector2[] priceCoords, Vector2[] cursorCoords, int selectedIndex, Color cursorColor, int playerIndex)
+        private void DrawShopSlots(SpriteBatch sb, IReadOnlyList<Skill> skills, Vector2[] slotCoords, Vector2[] nameCoords, Vector2[] priceCoords, Vector2[] cursorCoords, int selectedIndex, Color cursorColor, int playerIndex) // Dükkan havuzundaki satılık yetenek ikonlarını, fiyatlarını ve seçim imlecini çizer
         {
             Vector2 cursorSize = AssetManager.GameFont.MeasureString(">");
             Vector2 cursorOrigin = new Vector2(cursorSize.X / 2f, cursorSize.Y / 2f);

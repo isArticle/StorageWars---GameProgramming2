@@ -10,7 +10,7 @@ namespace StorageWars
         
         public bool IsUsed { get; private set; }
 
-        public Skill(string name,string textureName, SkillType type, int price, string description)
+        public Skill(string name,string textureName, SkillType type, int price, string description) // Marketten alınacak yeteneğin başlangıç parametrelerini tanımlar
         {
             Name = name;
             TextureName = textureName;

@@ -5,7 +5,7 @@ namespace StorageWars
 {
     public class UIInventoryRenderer
     {
-        private Color GetTierColor(ItemTier tier) => tier switch
+        private Color GetTierColor(ItemTier tier) => tier switch // Eşyanın nadirlik seviyesine (Tier) göre arayüzde kullanılacak dış çizgi/kutu rengini belirler
         {
             ItemTier.S => Color.MediumPurple,
             ItemTier.A => Color.Orange,       
@@ -16,7 +16,8 @@ namespace StorageWars
             ItemTier.F => Color.Crimson,
             _ => Color.White
         };
-        public void Draw(SpriteBatch spriteBatch, Player p1, Player p2, InventoryManager invManager, RoundManager roundManager)
+        
+        public void Draw(SpriteBatch spriteBatch, Player p1, Player p2, InventoryManager invManager, RoundManager roundManager) // Envanter gridini ve oyuncuların sahip olduğu parasal değerleri ekrana çizer
         {
             if (AssetManager.BgInventory != null) spriteBatch.Draw(AssetManager.BgInventory, Vector2.Zero, Color.White);
 
@@ -47,7 +48,7 @@ namespace StorageWars
             DrawInventoryGrid(spriteBatch, p2, invManager.P2CursorX, invManager.P2CursorY, UIConfig.P2GridStart, Color.Red);
         }
 
-        private void DrawInventoryGrid(SpriteBatch sb, Player p, int cursorX, int cursorY, Vector2 start, Color cursorColor)
+        private void DrawInventoryGrid(SpriteBatch sb, Player p, int cursorX, int cursorY, Vector2 start, Color cursorColor) // 4x4 matrisi, içindeki eşyaları ve aktif imleç konumunu çizer
         {
             for (int y = 0; y < GameConstants.InventoryRows; y++)
             {
@@ -76,7 +77,7 @@ namespace StorageWars
             }
         }
 
-        private void DrawSelectionBorder(SpriteBatch sb, Vector2 pos, Color c)
+        private void DrawSelectionBorder(SpriteBatch sb, Vector2 pos, Color c) // İmlecin üzerinde olduğu eşyanın etrafına kalın seçim çerçevesini çizer
         {
             Rectangle rect = new Rectangle((int)pos.X, (int)pos.Y, UIConfig.GridCellSize, UIConfig.GridCellSize);
             int t = 5;

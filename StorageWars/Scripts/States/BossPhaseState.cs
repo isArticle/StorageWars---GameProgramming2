@@ -10,7 +10,7 @@ namespace StorageWars
             _game.Boss.StartNewAttack(_game.RoundManager.CurrentRound);
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime) // Oyuncuların mafya/boss'a karşı ortak havuza (pool) para ödemesini ve hasar alma durumunu kontrol eder
         {
             _game.Window.Title = $"BOSS PHASE | Boss HP: {_game.Boss.HP} | Demand: {_game.Boss.CurrentDemand} | Pooled: {_game.Boss.PooledMoney} | P1 HP: {_game.Player1.MaxHP} | P2 HP: {_game.Player2.MaxHP}";
 
@@ -45,27 +45,9 @@ namespace StorageWars
             }
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) // Gelecekte Boss ekranı arayüz çizimlerinin ekleneceği boş metot gövdesidir
         {
             // İleride Aşama 10'da UI çizimleri eklenecek. Şimdilik siyah ekran.
-        }
-    }
-
-    public class GameOverPhaseState : State
-    {
-        public GameOverPhaseState(Game1 game) : base(game) { }
-
-        public override void Update(GameTime gameTime)
-        {
-            if (_game.Boss.HP <= 0) 
-                _game.Window.Title = _game.Player1.Money > _game.Player2.Money ? $"GAME OVER - WINNER: PLAYER 1 (${_game.Player1.Money})" : (_game.Player2.Money > _game.Player1.Money ? $"GAME OVER - WINNER: PLAYER 2 (${_game.Player2.Money})" : "GAME OVER - DRAW!");
-            else 
-                _game.Window.Title = "GAME OVER - BANKRUPT! BOSS WINS.";
-        }
-
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            // İleride Aşama 11'de Net Servet (Stats Board) çizimleri eklenecek. Şimdilik siyah ekran.
         }
     }
 }

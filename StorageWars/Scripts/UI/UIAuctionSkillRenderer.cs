@@ -7,13 +7,13 @@ namespace StorageWars
     {
         private const float AuctionSkillScale = 0.35f; 
 
-        public void DrawActiveSkills(SpriteBatch sb, Player p1, Player p2)
+        public void DrawActiveSkills(SpriteBatch sb, Player p1, Player p2) // İhale esnasında kullanılabilecek aktif yetenekleri UIConfig koordinatlarına göre çizer
         {
             DrawPlayerSkills(sb, p1, UIConfig.P1AuctionSkillSlots);
             DrawPlayerSkills(sb, p2, UIConfig.P2AuctionSkillSlots);
         }
 
-        private void DrawPlayerSkills(SpriteBatch sb, Player player, Vector2[] slotCoords)
+        private void DrawPlayerSkills(SpriteBatch sb, Player player, Vector2[] slotCoords) // Oyuncunun çantasındaki dolu slotları ikonlarıyla, boş slotları gölge kutularla çizer
         {
             for (int i = 0; i < player.EquippedSkills.Length; i++)
             {

@@ -11,7 +11,7 @@ namespace StorageWars
             _game.ShopManager.RollDailySkills(_game.RoundManager.GetInflationMultiplier());
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime) // Oyuncuların dükkan içi yetenek alma, satma ve menüde gezinme komutlarını yakalayıp ShopManager'a iletir
         {
             var shop = _game.ShopManager;
             var input = _game.InputManager;
@@ -19,32 +19,17 @@ namespace StorageWars
             var p1 = _game.Player1;
             var p2 = _game.Player2;
 
-            // --- P1 KONTROLLERİ ---
-            if (input.IsP1Up()) 
-            { shop.MoveSelection(1, -1); audio.PlayNav(); }
+            if (input.IsP1Up()) { shop.MoveSelection(1, -1); audio.PlayNav(); }
+            if (input.IsP1Down()) { shop.MoveSelection(1, 1); audio.PlayNav(); }
 
-            if (input.IsP1Down()) 
-            { shop.MoveSelection(1, 1); audio.PlayNav(); }
+            if (input.IsP1SecondaryAction()) { if (shop.BuySkill(p1, 1)) audio.PlayBuy(); else audio.PlayError(); }
+            if (input.IsP1PrimaryAction()) { if (shop.RefundSkill(p1, 1)) audio.PlaySell(); else audio.PlayError(); } 
 
-            if (input.IsP1SecondaryAction()) // P1 Satın Alma (E)
-            { if (shop.BuySkill(p1, 1)) audio.PlayBuy(); else audio.PlayError(); }
+            if (input.IsP2Up()) { shop.MoveSelection(2, -1); audio.PlayNav(); }
+            if (input.IsP2Down()) { shop.MoveSelection(2, 1); audio.PlayNav(); }
 
-            if (input.IsP1PrimaryAction()) // P1 İade Etme (Q)
-            { if (shop.RefundSkill(p1, 1)) audio.PlaySell(); else audio.PlayError(); }
-
-            // --- P2 KONTROLLERİ ---
-            if (input.IsP2Up()) 
-            { shop.MoveSelection(2, -1); audio.PlayNav(); }
-
-            if (input.IsP2Down()) 
-            { shop.MoveSelection(2, 1); audio.PlayNav(); }
-
-            if (input.IsP2SecondaryAction()) // P2 Satın Alma (O)
-            { if (shop.BuySkill(p2, 2)) audio.PlayBuy(); else audio.PlayError(); }
-
-            if (input.IsP2PrimaryAction()) // P2 İade Etme (I)
-            { if (shop.RefundSkill(p2, 2)) audio.PlaySell(); else audio.PlayError(); }
-
+            if (input.IsP2SecondaryAction()) { if (shop.BuySkill(p2, 2)) audio.PlayBuy(); else audio.PlayError(); }
+            if (input.IsP2PrimaryAction()) { if (shop.RefundSkill(p2, 2)) audio.PlaySell(); else audio.PlayError(); } 
 
             if (input.IsNextPhase())
             {
@@ -57,7 +42,11 @@ namespace StorageWars
                 }
                 else 
                 { 
-                    _game.AuctionManager.StartNewAuction(GameConstants.AuctionStartingBid); 
+                    Storage newStorage = _game.LootManager.GenerateStorageForAuction(_game.RoundManager.CurrentRound);
+                    int basePrice = _game.RoundManager.GetBaseStartingPrice();
+                    
+                    _game.AuctionManager.StartNewAuction(newStorage, basePrice); 
+                    
                     int newBotMoney = GameConstants.BotStartingMoney + ((_game.RoundManager.CurrentRound - 1) * GameConstants.BotMoneyIncrement);
                     _game.AiBot.ResetForNewAuction(newBotMoney); 
                     
@@ -66,7 +55,7 @@ namespace StorageWars
             }
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) // Dükkan arayüzünü güncel imleç konumları ve içeriklerle birlikte çizdirir
         {
             _game.UIManager.DrawShopPhase(spriteBatch, _game.Player1, _game.Player2, _game.ShopManager);
         }

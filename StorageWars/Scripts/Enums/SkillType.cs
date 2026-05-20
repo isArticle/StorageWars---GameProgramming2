@@ -1,6 +1,6 @@
 namespace StorageWars
 {
-    public enum SkillType
+    public enum SkillType // Oyundaki kullan-at taktiksel yeteneklerin kimliklerini tanımlar
     {
         TheBluff,
         BidLock,

@@ -12,18 +12,18 @@ namespace StorageWars
             PooledMoney = 0; 
         }
 
-        public void Contribute(int amount) 
+        public void Contribute(int amount) // Oyuncuların boss'tan kurtulmak için ortak havuza para atmasını sağlar
         {
             if (amount > 0) PooledMoney += amount;
         }
 
-        private void TakeDamage(int damage) 
+        private void TakeDamage(int damage) // Boss'un canını, 0'ın altına inmeyecek şekilde güvenle azaltır
         {
             HP -= damage;
             if (HP < 0) HP = 0;
         }
 
-        public bool ResolveAttack() 
+        public bool ResolveAttack() // Havuzdaki para boss'un talebini karşılıyorsa aradaki fark kadar boss'a hasar vurur
         {
             if (PooledMoney >= CurrentDemand)
             {

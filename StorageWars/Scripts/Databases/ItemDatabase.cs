@@ -10,7 +10,7 @@ namespace StorageWars
             public string Name;
             public string TextureName;
 
-            public ItemTemplate(string name, string textureName)
+            public ItemTemplate(string name, string textureName) // Veritabanındaki eşyanın kalıbını (şablonunu) oluşturur
             {
                 Name = name;
                 TextureName = textureName;

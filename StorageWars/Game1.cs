@@ -25,7 +25,7 @@ namespace StorageWars
         public AIBot AiBot { get; private set; }
         public Boss Boss { get; private set; }
 
-        public Game1()
+        public Game1() // Grafik motorunu hazırlar ve pencere/tam ekran ayarlarını yapılandırır
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -36,7 +36,7 @@ namespace StorageWars
             _graphics.ApplyChanges();
         }
 
-        protected override void Initialize() 
+        protected override void Initialize() // Temel yöneticileri (Managers) ve oyuncu nesnelerini oyun motoruna kaydeder
         {
             InputManager = new InputManager();
             AudioManager = new AudioManager();
@@ -55,22 +55,21 @@ namespace StorageWars
             base.Initialize();
         }
 
-        protected override void LoadContent() 
+        protected override void LoadContent() // Asset'leri yükler ve oyunu ilk sahne olan Ana Menüden (MainMenu) başlatır
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             AssetManager.LoadContent(Content, GraphicsDevice); 
             AudioManager.LoadContent(Content);
 
-            // Oyunu Ana Menü Sahnesinden Başlat
             ChangeState(new MainMenuPhaseState(this));
         }
 
-        public void ChangeState(State newState) // Sahneler arası geçişi sağlayan kilit metot
+        public void ChangeState(State newState) // Sahneler arası geçişi güvenli bir şekilde (update loop'unu bozmadan) kuyruğa alır
         {
             _nextState = newState;
         }
 
-        protected override void Update(GameTime gameTime) 
+        protected override void Update(GameTime gameTime) // Saniyede 60 kez çalışan, girdileri yakalayan ve sahne geçişlerini uygulayan ana motor döngüsü
         {
             InputManager.Update();
             UIManager.Update(gameTime, AuctionManager); 
@@ -88,7 +87,7 @@ namespace StorageWars
             base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime) 
+        protected override void Draw(GameTime gameTime) // Aktif olan sahnedeki tüm nesnelerin ekrana (Canvas) çizilmesini sağlar
         {
             GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin();

@@ -17,16 +17,16 @@ namespace StorageWars
         public int AILastBid { get; private set; }
         public int CurrentHighestBid { get; private set; }
 
+        public Storage CurrentStorage { get; private set; } 
+
         private float _blockTimer;
         private float _auctionTimer; 
 
-        private const float TimeToSold = 5f;
-        private const float TimeToGoingTwice = 4f;
-        private const float TimeToGoingOnce = 3f;
-
-        public void StartNewAuction(int startingPrice)   // Yeni bir ihale başlatır ve önceki teklif verilerini sıfırlar.
+        public void StartNewAuction(Storage storage, int baseStartingPrice)  // Yeni bir ihaleyi depodan gelen Gizemli Primi (BonusPremium) fiyata yedirerek tamamen sıfırlanmış olarak başlatır 
         {
-            CurrentHighestBid = startingPrice; 
+            CurrentStorage = storage;
+            CurrentHighestBid = baseStartingPrice + storage.BonusPremium; 
+            
             HighestBidder = BidderType.None; 
             IsAuctionActive = true; 
             CurrentState = AuctionState.Bidding; 
@@ -34,21 +34,17 @@ namespace StorageWars
             
             IsBidBlocked = false;
             _blockTimer = 0f;
-
-            IsP1Out = false; 
-            IsP2Out = false;
-            P1LastBid = 0; 
-            P2LastBid = 0; 
-            AILastBid = 0;
+            IsP1Out = false; IsP2Out = false;
+            P1LastBid = 0; P2LastBid = 0; AILastBid = 0;
         }
 
-        public void PlayerPass(BidderType player) // Belirtilen oyuncunun ihaleden çekilmesini (pas geçmesini) sağlar.
+        public void PlayerPass(BidderType player) // İhaleden çekilen (Pas geçen) oyuncuyu kilitler ve tur dışı bırakır
         {
             if (player == BidderType.Player1) IsP1Out = true;
             if (player == BidderType.Player2) IsP2Out = true;
         }
 
-        public bool PlaceBid(BidderType bidder, int bidAmount, int playerMoney)  // Şartlar uygunsa oyuncunun veya botun geçerli teklifi vermesini sağlar.
+        public bool PlaceBid(BidderType bidder, int bidAmount, int playerMoney) // Bakiye, sıra ve Cooldown kontrollerini aşan teklifi masaya yazar, masayı kısa süreliğine spama karşı kilitler
         {
             if (!IsAuctionActive || CurrentState == AuctionState.Sold) return false; 
             if (IsBidBlocked) return false; 
@@ -62,9 +58,7 @@ namespace StorageWars
                 CurrentHighestBid = bidAmount; 
                 HighestBidder = bidder; 
                 CurrentState = AuctionState.Bidding; 
-                
                 _auctionTimer = 0f; 
-
                 IsBidBlocked = true;
                 _blockTimer = GameConstants.BidCooldown;
 
@@ -77,7 +71,7 @@ namespace StorageWars
             return false; 
         }
 
-        public void Update(GameTime gameTime, AudioManager audioManager)   // İhale sayacını, durum geçişlerini ve ses tetikleyicilerini yönetir (Saniyede 60 kez).
+        public void Update(GameTime gameTime, AudioManager audioManager) // İhalenin 3 aşamalı (Going Once/Twice/Sold) satılma zamanlayıcılarını yönetir ve doğru seste çekiç vurdurur
         {
             if (!IsAuctionActive) return; 
 
@@ -85,7 +79,6 @@ namespace StorageWars
             {
                 _blockTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (_blockTimer <= 0) IsBidBlocked = false;
-                
                 return; 
             }
 
@@ -94,11 +87,11 @@ namespace StorageWars
                 AuctionState previousState = CurrentState;
                 _auctionTimer += (float)gameTime.ElapsedGameTime.TotalSeconds; 
 
-                if (_auctionTimer >= TimeToSold) 
+                if (_auctionTimer >= GameConstants.TimeToSold) 
                     { CurrentState = AuctionState.Sold; IsAuctionActive = false; }
-                else if (_auctionTimer >= TimeToGoingTwice) 
+                else if (_auctionTimer >= GameConstants.TimeToGoingTwice) 
                     CurrentState = AuctionState.GoingTwice; 
-                else if (_auctionTimer >= TimeToGoingOnce) 
+                else if (_auctionTimer >= GameConstants.TimeToGoingOnce) 
                     CurrentState = AuctionState.GoingOnce; 
                 else 
                     CurrentState = AuctionState.Bidding; 

@@ -7,7 +7,7 @@ namespace StorageWars
         private KeyboardState _oldKeyState;
         private KeyboardState _currentKeyState;
 
-        public void Update() // Game Loop'un en başında çağrılmalı
+        public void Update() // Game Loop'un en başında çağrılmalı ve son karedeki tuş durumuyla şimdiki durumu kıyaslamalıdır
         {
             _oldKeyState = _currentKeyState;
             _currentKeyState = Keyboard.GetState();
@@ -18,7 +18,7 @@ namespace StorageWars
             return _currentKeyState.IsKeyDown(key) && _oldKeyState.IsKeyUp(key);
         }
         
-        private bool IsKeyDown(Keys key) // Tuşun anlık olarak basılı olup olmadığını kontrol eder
+        private bool IsKeyDown(Keys key) // Tuşun anlık olarak basılı olup olmadığını (spam) kontrol eder
         {
             return _currentKeyState.IsKeyDown(key);
         }
@@ -57,13 +57,13 @@ namespace StorageWars
 
 
         // --- OYUNCU 1 (P1) SKILL KONTROLLERİ ---
-        public bool IsP1Skill1() => IsKeyPressed(Keys.Q);
-        public bool IsP1Skill2() => IsKeyPressed(Keys.W);
-        public bool IsP1Skill3() => IsKeyPressed(Keys.E);
+        public bool IsP1Skill1() => IsKeyPressed(Keys.Q); // Slot 1 Yeteneğini ateşler
+        public bool IsP1Skill2() => IsKeyPressed(Keys.W); // Slot 2 Yeteneğini ateşler
+        public bool IsP1Skill3() => IsKeyPressed(Keys.E); // Slot 3 Yeteneğini ateşler
 
         // --- OYUNCU 2 (P2) SKILL KONTROLLERİ ---
-        public bool IsP2Skill1() => IsKeyPressed(Keys.J);
-        public bool IsP2Skill2() => IsKeyPressed(Keys.K);
-        public bool IsP2Skill3() => IsKeyPressed(Keys.L);              
+        public bool IsP2Skill1() => IsKeyPressed(Keys.J); // Slot 1 Yeteneğini ateşler
+        public bool IsP2Skill2() => IsKeyPressed(Keys.K); // Slot 2 Yeteneğini ateşler
+        public bool IsP2Skill3() => IsKeyPressed(Keys.L); // Slot 3 Yeteneğini ateşler              
     }
 }

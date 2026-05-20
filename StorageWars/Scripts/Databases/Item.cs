@@ -7,7 +7,7 @@ namespace StorageWars
         public int Value { get; private set; }
         public ItemTier Tier { get; private set; }
 
-        public Item(string name, string textureName, int value, ItemTier tier) 
+        public Item(string name, string textureName, int value, ItemTier tier) // Eşyanın temel verilerini (isim, çizim, fiyat, kalite) atayarak nesneyi oluşturur
         {
             Name = name;
             TextureName = textureName;

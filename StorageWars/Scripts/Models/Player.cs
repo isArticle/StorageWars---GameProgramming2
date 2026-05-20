@@ -13,7 +13,6 @@ namespace StorageWars
         public Skill[] EquippedSkills { get; private set; } = new Skill[3];
         public Item[,] InventoryGrid { get; private set; } = new Item[GameConstants.InventoryCols, GameConstants.InventoryRows];
 
-
         public bool AddSkill(Skill skill)    //Yeteneği ilk boş slota (1, 2 veya 3) ekler.
         {
             for (int i = 0; i < EquippedSkills.Length; i++)
@@ -42,7 +41,7 @@ namespace StorageWars
             return false;
         }
 
-        public CharacterState GetCurrentState(AuctionManager am, BidderType myType, bool isOut)
+        public CharacterState GetCurrentState(AuctionManager am, BidderType myType, bool isOut) // İhale gidişatına bakarak oyuncunun çizdirilecek olan anlık animasyon durumunu belirler
         {
             if (!am.IsAuctionActive) return CharacterState.Idle; 
             if (isOut) return CharacterState.Passed; 
@@ -60,7 +59,7 @@ namespace StorageWars
             return CharacterState.Thinking; 
         }
 
-        public bool PayDebt(int amount) 
+        public bool PayDebt(int amount) // Yeterli bakiye varsa borcu öder ve ödenen miktar kadar oyuncunun maksimum canını artırır
         {
             if (Money >= amount && Debt > 0) 
             {
@@ -76,29 +75,29 @@ namespace StorageWars
             return false;
         }
 
-        public void TakeDamage(int damageAmount)
+        public void TakeDamage(int damageAmount) // Gelen cezayı/hasarı oyuncunun maksimum canından düşer
         {
             MaxHP -= damageAmount;
             if (MaxHP < 0) MaxHP = 0;
         }
 
-        public void TakeDebt(int amount) 
+        public void TakeDebt(int amount) // Oyuncuya acil nakit verir ancak alınan miktarı faiziyle beraber borca yazar
         { 
             Money += amount; 
             Debt += amount + (amount / GameConstants.DebtInterestRate); 
         }
 
-        public void SpendMoney(int amount)
+        public void SpendMoney(int amount) // Oyuncunun bakiyesi yeterliyse harcama işlemini gerçekleştirir
         {
             if (Money >= amount) Money -= amount;
         }
 
-        public void EarnMoney(int amount)
+        public void EarnMoney(int amount) // Satışlardan kazanılan veya iade edilen parayı oyuncunun kasasına ekler
         {
             if (amount > 0) Money += amount;
         }
 
-        public void SetInventoryItem(int x, int y, Item item)
+        public void SetInventoryItem(int x, int y, Item item) // Kazanılan eşyayı envanter matrisindeki (grid) X ve Y koordinatlarına yerleştirir
         {
             if (x >= 0 && x < GameConstants.InventoryCols && y >= 0 && y < GameConstants.InventoryRows)
                 InventoryGrid[x, y] = item;

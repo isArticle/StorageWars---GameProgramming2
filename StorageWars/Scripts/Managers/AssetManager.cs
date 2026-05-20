@@ -34,7 +34,7 @@ namespace StorageWars
         private static Dictionary<string, Texture2D> _itemTextures = new Dictionary<string, Texture2D>();
         private static Dictionary<string, Texture2D> _skillTextures = new Dictionary<string, Texture2D>();
 
-        public static void LoadContent(ContentManager content, GraphicsDevice graphicsDevice)
+        public static void LoadContent(ContentManager content, GraphicsDevice graphicsDevice) // Projedeki tüm sabit 2D çizimleri, arkaplanları ve yazı tiplerini tek seferde RAM'e yükler
         {
             _content = content;
 
@@ -86,7 +86,7 @@ namespace StorageWars
             sb.DrawString(GameFont, text, position, color, 0f, origin, 1.0f, SpriteEffects.None, 0f);
         }
 
-        public static Texture2D GetItemTexture(string textureName)
+        public static Texture2D GetItemTexture(string textureName) // İstenen eşyanın görselini sözlükten (Dictionary) O(1) hızında bulur, yoksa Content'ten okur
         {
             if (_itemTextures.ContainsKey(textureName))
                 return _itemTextures[textureName];
@@ -105,7 +105,7 @@ namespace StorageWars
             }
         }
 
-        public static Texture2D GetSkillTexture(string textureName)
+        public static Texture2D GetSkillTexture(string textureName) // İstenen yetenek görselini RAM'den çeker, Texture eksikse hatayı yutarak (Pixel dönerek) oyunun çökmesini engeller
         {
             if (string.IsNullOrEmpty(textureName)) return Pixel;
 

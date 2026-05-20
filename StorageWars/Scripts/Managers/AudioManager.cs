@@ -8,13 +8,13 @@ namespace StorageWars
         private SoundEffect _sfxClick, _sfxBid, _sfxError, _sfxTick, _sfxGavel, _sfxCash, _sfxPass;
         private SoundEffect _sfxNav, _sfxSell, _sfxBuy, _sfxDebt, _sfxHeal;
 
-        private SoundEffect LoadSound(ContentManager content, string assetName)
+        private SoundEffect LoadSound(ContentManager content, string assetName) // Ses dosyasını güvenli bir şekilde yükler, Asset bulunamazsa oyunu çökertmek yerine null döndürür
         {
             try { return content.Load<SoundEffect>(assetName); }
             catch { return null; }
         }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent(ContentManager content) // Tüm oyun ses efektlerini (SFX) oyun başında hafızaya (RAM) alır
         {
             _sfxClick = LoadSound(content, "sfx_click");
             _sfxBid   = LoadSound(content, "sfx_bid");
@@ -31,7 +31,7 @@ namespace StorageWars
         }
 
 
-        // Volume - Pitch - Pan
+        // Volume, Pan ve Pitch
         public void PlayClick() { _sfxClick?.Play(0.8f, 0f, 0f); }      
         public void PlayBid()   { _sfxBid?.Play(1.0f, 0f, 0f); }        
         public void PlayError() { _sfxError?.Play(0.3f, 0f, 0f); }      
