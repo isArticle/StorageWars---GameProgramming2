@@ -73,5 +73,13 @@ namespace StorageWars
         public const float TimeToSold = 5.0f;               // Satıldı süresi
         public const float BotThinkTime = 2.0f;             // Botun karar verme hızı
         public const float AllPassedWaitTime = 2.0f;        // Herkes pas geçtiğinde bekleme süresi
+
+        // --- Juice & Game Feel ---
+        public const float FloatingTextDefaultLifeTime = 1.5f;  // Yüzen yazıların ekranda kalma süresi
+        public const float FloatingTextRiseSpeed = 60f;         // Yüzen yazıların yukarı doğru süzülme hızı
+        public const float BluffShakeIntensity = 5f;            // Blöf yapıldığında yazının sağa sola titreme şiddeti
+        public const float BluffShakeSpeedX = 50f;              // Blöf X ekseni titreme hızı
+        public const float BluffShakeSpeedY = 45f;              // Blöf Y ekseni titreme hızı
+        public const float BluffPulseSpeed = 20f;               // Blöf yazısının büyüme/küçülme kalp atış hızı
     }
 }

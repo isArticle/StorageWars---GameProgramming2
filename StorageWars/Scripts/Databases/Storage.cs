@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace StorageWars
@@ -12,6 +13,16 @@ namespace StorageWars
         {
             Items = items;
             CalculateValues();
+        }
+
+        public void BurnRandomItem() // Item Burner yeteneği tetiklendiğinde depodan rastgele bir eşyayı silerek deponun değerini düşürür
+        {
+            if (Items.Count > 0)
+            {
+                int index = new Random().Next(Items.Count);
+                Items.RemoveAt(index);
+                CalculateValues(); 
+            }
         }
 
         private void CalculateValues() // Eşyaların toplam fiyatını ve kalite ortalamasına göre eklenecek gizemli primi hesaplar

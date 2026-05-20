@@ -7,6 +7,9 @@ namespace StorageWars
     {
         private SoundEffect _sfxClick, _sfxBid, _sfxError, _sfxTick, _sfxGavel, _sfxCash, _sfxPass;
         private SoundEffect _sfxNav, _sfxSell, _sfxBuy, _sfxDebt, _sfxHeal;
+        
+        // YENİ: Taktiksel Yetenek Sesleri
+        private SoundEffect _sfxBluff, _sfxLock, _sfxMirror, _sfxBurn;
 
         private SoundEffect LoadSound(ContentManager content, string assetName) // Ses dosyasını güvenli bir şekilde yükler, Asset bulunamazsa oyunu çökertmek yerine null döndürür
         {
@@ -28,6 +31,11 @@ namespace StorageWars
             _sfxBuy   = LoadSound(content, "sfx_buy");
             _sfxDebt  = LoadSound(content, "sfx_debt");
             _sfxHeal  = LoadSound(content, "sfx_heal");
+
+            _sfxBluff = LoadSound(content, "sfx_bluff");
+            _sfxLock  = LoadSound(content, "sfx_lock");
+            _sfxMirror= LoadSound(content, "sfx_mirror");
+            _sfxBurn  = LoadSound(content, "sfx_burn");
         }
 
 
@@ -45,5 +53,10 @@ namespace StorageWars
         public void PlayBuy()   { _sfxBuy?.Play(0.9f, 0f, 0f); }       
         public void PlayDebt()  { _sfxDebt?.Play(1.0f, -0.2f, 0f); }    
         public void PlayHeal()  { _sfxHeal?.Play(0.4f, 0f, 0f); }       
+        
+        public void PlayBluff() { _sfxBluff?.Play(1.0f, -0.5f, 0f); } // Kalın, sarsıcı bir ses
+        public void PlayLock()  { _sfxLock?.Play(1.0f, 0f, 0f); }     // Zincir kilit sesi
+        public void PlayMirror(){ _sfxMirror?.Play(0.8f, 0.5f, 0f); } // Tiz, sihirli bir şıngırtı
+        public void PlayBurn()  { _sfxBurn?.Play(0.9f, 0f, 0f); }     // Alev/cızırtı sesi
     }
 }

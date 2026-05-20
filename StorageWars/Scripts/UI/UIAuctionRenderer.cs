@@ -10,6 +10,7 @@ namespace StorageWars
         private UIAnimator _p2Anim = new UIAnimator();
         private UIAnimator _botAnim = new UIAnimator();
         private float _currentDeltaTime = 0f;
+        private float _totalTime = 0f;
         private float _displayedPrice = 100f;
 
         private UIAuctionSkillRenderer _auctionSkillRenderer = new UIAuctionSkillRenderer();
@@ -17,6 +18,8 @@ namespace StorageWars
         public void Update(GameTime gameTime, AuctionManager auctionManager) // Anlık ihale fiyatının anında değişmesi yerine akıcı bir şekilde yumuşayarak (Lerp) artmasını sağlar
         {
             _currentDeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _totalTime += _currentDeltaTime;
+
             if (auctionManager != null && auctionManager.IsAuctionActive)
             {
                 _displayedPrice = MathHelper.Lerp(_displayedPrice, auctionManager.CurrentHighestBid, 10f * _currentDeltaTime);
@@ -35,7 +38,24 @@ namespace StorageWars
             int animatedPrice = (int)Math.Round(_displayedPrice);
 
             AssetManager.DrawTextBottomCenter(spriteBatch, $"ROUND: {roundManager.CurrentRound} / {GameConstants.MaxRounds}", UIConfig.RoundTextPos, Color.Black);
-            AssetManager.DrawTextBottomCenter(spriteBatch, $"CURRENT BID: ${animatedPrice}", UIConfig.CurrentBidPos, Color.Black);
+            
+            Vector2 bidPos = UIConfig.CurrentBidPos;
+            Color bidColor = Color.Black;
+            float bidScale = 1.0f;
+
+            if (auctionManager.IsBluffActive)
+            {
+                bidScale = 1.5f + (float)Math.Sin(_totalTime * GameConstants.BluffPulseSpeed) * 0.1f;
+                float shakeX = (float)Math.Sin(_totalTime * GameConstants.BluffShakeSpeedX) * GameConstants.BluffShakeIntensity;
+                float shakeY = (float)Math.Cos(_totalTime * GameConstants.BluffShakeSpeedY) * GameConstants.BluffShakeIntensity;
+                bidPos += new Vector2(shakeX, shakeY);
+                bidColor = Color.DarkMagenta; 
+            }
+
+            string bidText = $"CURRENT BID: ${animatedPrice}";
+            Vector2 textSize = AssetManager.GameFont.MeasureString(bidText);
+            Vector2 origin = new Vector2(textSize.X / 2f, textSize.Y);
+            spriteBatch.DrawString(AssetManager.GameFont, bidText, bidPos, bidColor, 0f, origin, bidScale, SpriteEffects.None, 0f);
 
             CharacterState p1State = p1.GetCurrentState(auctionManager, BidderType.Player1, auctionManager.IsP1Out);
             CharacterState p2State = p2.GetCurrentState(auctionManager, BidderType.Player2, auctionManager.IsP2Out);

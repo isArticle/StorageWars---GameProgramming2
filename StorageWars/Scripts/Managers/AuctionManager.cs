@@ -22,6 +22,19 @@ namespace StorageWars
         private float _blockTimer;
         private float _auctionTimer; 
 
+        private float _p1LockTimer = 0f;
+        private float _p2LockTimer = 0f;
+        
+        public bool P1CashBack { get; private set; }
+        public bool P2CashBack { get; private set; }
+        public bool P1ItemBurner { get; private set; }
+        public bool P2ItemBurner { get; private set; }
+        public bool P1TaxCollector { get; private set; }
+        public bool P2TaxCollector { get; private set; }
+        public bool IsBluffActive { get; private set; }
+        private int _realHighestBid;
+        private BidderType _realHighestBidder;
+
         public void StartNewAuction(Storage storage, int baseStartingPrice)  // Yeni bir ihaleyi depodan gelen Gizemli Primi (BonusPremium) fiyata yedirerek tamamen sıfırlanmış olarak başlatır 
         {
             CurrentStorage = storage;
@@ -36,6 +49,60 @@ namespace StorageWars
             _blockTimer = 0f;
             IsP1Out = false; IsP2Out = false;
             P1LastBid = 0; P2LastBid = 0; AILastBid = 0;
+
+            _p1LockTimer = 0f; _p2LockTimer = 0f;
+            P1CashBack = false; P2CashBack = false;
+            P1ItemBurner = false; P2ItemBurner = false;
+            P1TaxCollector = false; P2TaxCollector = false;
+            IsBluffActive = false;
+        }
+
+        public void ActivateSkill(BidderType user, SkillType type, RoundManager rm) // Müzayede esnasında klavyeden basılan yeteneğin arka plan (Backend) etki mantığını çalıştırır
+        {
+            if (type == SkillType.BidLock)
+            {
+                if (user == BidderType.Player1) _p2LockTimer = 3.0f;
+                else if (user == BidderType.Player2) _p1LockTimer = 3.0f;
+            }
+            else if (type == SkillType.TheBluff)
+            {
+                if (HighestBidder != user && HighestBidder != BidderType.None && !IsBluffActive)
+                {
+                    IsBluffActive = true;
+                    _realHighestBid = CurrentHighestBid;
+                    _realHighestBidder = HighestBidder;
+                    
+                    CurrentHighestBid += rm.GetPlayerBidIncrement() * 2; 
+                    HighestBidder = user;
+                    CurrentState = AuctionState.Bidding;
+                    _auctionTimer = 0f;
+                }
+            }
+            else if (type == SkillType.CashBack)
+            {
+                if (user == BidderType.Player1) P1CashBack = true;
+                else if (user == BidderType.Player2) P2CashBack = true;
+            }
+            else if (type == SkillType.ItemBurner)
+            {
+                if (user == BidderType.Player1) P1ItemBurner = true;
+                else if (user == BidderType.Player2) P2ItemBurner = true;
+            }
+            else if (type == SkillType.TaxCollector)
+            {
+                if (user == BidderType.Player1) P1TaxCollector = true;
+                else if (user == BidderType.Player2) P2TaxCollector = true;
+            }
+        }
+
+        public void FinalizeBluff() // İhale çekiç yediğinde (Sold), eğer rakip blöfü yutmamışsa ihaleyi asıl fiyatıyla (sahte artışsız) asıl sahibine verir
+        {
+            if (IsBluffActive)
+            {
+                CurrentHighestBid = _realHighestBid;
+                HighestBidder = _realHighestBidder;
+                IsBluffActive = false;
+            }
         }
 
         public void PlayerPass(BidderType player) // İhaleden çekilen (Pas geçen) oyuncuyu kilitler ve tur dışı bırakır
@@ -50,11 +117,17 @@ namespace StorageWars
             if (IsBidBlocked) return false; 
             if (bidder == BidderType.Player1 && IsP1Out) return false;
             if (bidder == BidderType.Player2 && IsP2Out) return false;
+            
+            if (bidder == BidderType.Player1 && _p1LockTimer > 0) return false;
+            if (bidder == BidderType.Player2 && _p2LockTimer > 0) return false;
+
             if (HighestBidder == bidder) return false;
             if (playerMoney < bidAmount) return false;
 
             if (bidAmount > CurrentHighestBid) 
             {
+                if (IsBluffActive) IsBluffActive = false; 
+
                 CurrentHighestBid = bidAmount; 
                 HighestBidder = bidder; 
                 CurrentState = AuctionState.Bidding; 
@@ -70,7 +143,7 @@ namespace StorageWars
             }
             return false; 
         }
-
+        
         public void Update(GameTime gameTime, AudioManager audioManager) // İhalenin 3 aşamalı (Going Once/Twice/Sold) satılma zamanlayıcılarını yönetir ve doğru seste çekiç vurdurur
         {
             if (!IsAuctionActive) return; 

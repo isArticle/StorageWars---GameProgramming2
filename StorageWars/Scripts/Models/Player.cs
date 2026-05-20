@@ -13,6 +13,28 @@ namespace StorageWars
         public Skill[] EquippedSkills { get; private set; } = new Skill[3];
         public Item[,] InventoryGrid { get; private set; } = new Item[GameConstants.InventoryCols, GameConstants.InventoryRows];
 
+        public Skill GetSkill(int index) => (index >= 0 && index < 3) ? EquippedSkills[index] : null; // İhale sırasında basılan tuşun indeksine karşılık gelen yeteneği döndürür
+
+        public void ReplaceSkill(int index, Skill newSkill) // Mirror yeteneği kullanıldığında, kendini feda edip tam kendi yuvasına düşmandan kopyalanan yeteneği yerleştirir
+        {
+            if (index >= 0 && index < 3) EquippedSkills[index] = newSkill;
+        }
+
+        public Skill GetRandomActiveSkill() // "Mirror" yeteneği tetiklendiğinde rakibin çantasından henüz kullanılmamış rastgele bir yetenek seçer
+        {
+            var activeSkills = Array.FindAll(EquippedSkills, s => s != null && !s.IsUsed);
+            if (activeSkills.Length > 0) return activeSkills[new Random().Next(activeSkills.Length)];
+            return null;
+        }
+
+        public void RemoveUsedSkills() // İhale fazı bittiğinde "Kullanıldı" olarak mühürlenmiş yetenekleri aktif slotlardan kalıcı olarak siler
+        {
+            for (int i = 0; i < EquippedSkills.Length; i++)
+            {
+                if (EquippedSkills[i] != null && EquippedSkills[i].IsUsed) EquippedSkills[i] = null;
+            }
+        }
+
         public bool AddSkill(Skill skill)    //Yeteneği ilk boş slota (1, 2 veya 3) ekler.
         {
             for (int i = 0; i < EquippedSkills.Length; i++)

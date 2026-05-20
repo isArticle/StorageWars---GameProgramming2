@@ -27,7 +27,10 @@ namespace StorageWars
                     Texture2D skillTex = AssetManager.GetSkillTexture(skill.TextureName);
                     Vector2 origin = new Vector2(skillTex.Width / 2f, skillTex.Height);
 
-                    sb.Draw(skillTex, slotPos, null, Color.White, 0f, origin, AuctionSkillScale, SpriteEffects.None, 0f);
+                    Color tint = skill.IsUsed ? (Color.DarkGray * 0.5f) : Color.White;
+                    sb.Draw(skillTex, slotPos, null, tint, 0f, origin, AuctionSkillScale, SpriteEffects.None, 0f);
+
+                    if (skill.IsUsed) AssetManager.DrawTextBottomCenter(sb, "USED", slotPos + UIConfig.UsedSkillTextOffset, Color.Red);
                 }
                 else
                 {

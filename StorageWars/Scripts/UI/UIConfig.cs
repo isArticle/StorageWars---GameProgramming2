@@ -75,5 +75,11 @@ namespace StorageWars
         public static readonly Vector2 P1BossHpPos = new Vector2(300, 850); 
         public static readonly Vector2 P2BossHpPos = new Vector2(1400, 850); 
         public static readonly Vector2 GameOverWinnerTextPos = new Vector2(700, 400);
+
+        // --- Juice & Floating Text Offsets ---
+        public static readonly Vector2 FloatingTextSkillOffset = new Vector2(0, -150); // Yetenek ismi fırlarken karakterin ne kadar üstünden çıkacak
+        public static readonly Vector2 FloatingTextTaxOffset = new Vector2(0, -100);   // Vergi/Cashback fırlarken karakterin ne kadar üstünden çıkacak
+        public static readonly Vector2 FloatingTextBurnOffset = new Vector2(0, 100);   // Burn yazısı fırlarken Round Text'in ne kadar altından çıkacak
+        public static readonly Vector2 UsedSkillTextOffset = new Vector2(0, -50);      // Yetenek kullanıldı (USED) yazısının ikonun neresinde duracağı
     }
 }
