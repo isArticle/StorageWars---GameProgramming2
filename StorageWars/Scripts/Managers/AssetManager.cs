@@ -78,7 +78,6 @@ namespace StorageWars
 
             int thickness = 2;
 
-            //yazıyı saran SİYAH dış çizgileri (4 farklı yöne) çiziyoruz
             sb.DrawString(GameFont, text, position + new Vector2(-thickness, 0), Color.Black, 0f, origin, 1.0f, SpriteEffects.None, 0f); // Sol
             sb.DrawString(GameFont, text, position + new Vector2(thickness, 0), Color.Black, 0f, origin, 1.0f, SpriteEffects.None, 0f);  // Sağ
             sb.DrawString(GameFont, text, position + new Vector2(0, -thickness), Color.Black, 0f, origin, 1.0f, SpriteEffects.None, 0f); // Yukarı

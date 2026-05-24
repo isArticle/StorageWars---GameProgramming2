@@ -10,7 +10,6 @@ namespace StorageWars
         private UIAnimator _p2Anim = new UIAnimator();
         private UIAnimator _botAnim = new UIAnimator();
         private float _currentDeltaTime = 0f;
-        private float _totalTime = 0f;
         private float _displayedPrice = 100f;
 
         private UIAuctionSkillRenderer _auctionSkillRenderer = new UIAuctionSkillRenderer();
@@ -18,7 +17,6 @@ namespace StorageWars
         public void Update(GameTime gameTime, AuctionManager auctionManager) // Anlık ihale fiyatının anında değişmesi yerine akıcı bir şekilde yumuşayarak (Lerp) artmasını sağlar
         {
             _currentDeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _totalTime += _currentDeltaTime;
 
             if (auctionManager != null && auctionManager.IsAuctionActive)
             {
@@ -29,11 +27,11 @@ namespace StorageWars
         private Texture2D GetTextureByState(CharacterState state) => state switch { CharacterState.Thinking => AssetManager.CharThinking ?? AssetManager.CharIdle, CharacterState.Bidding => AssetManager.CharBidding ?? AssetManager.CharIdle, CharacterState.Winning => AssetManager.CharWinning ?? AssetManager.CharIdle, CharacterState.Passed => AssetManager.CharPassed ?? AssetManager.CharIdle, _ => AssetManager.CharIdle }; // Oyuncunun State durumuna göre doğru Texture'ı döndürür
         private Texture2D GetBotTextureByState(CharacterState state) => state switch { CharacterState.Thinking => AssetManager.BotThinking ?? AssetManager.BotIdle, CharacterState.Bidding => AssetManager.BotBidding ?? AssetManager.BotIdle, CharacterState.Winning => AssetManager.BotWinning ?? AssetManager.BotIdle, CharacterState.Passed => AssetManager.BotPassed ?? AssetManager.BotIdle, _ => AssetManager.BotIdle }; // Botun State durumuna göre doğru Texture'ı döndürür
 
-        public void Draw(SpriteBatch spriteBatch, AuctionManager auctionManager, Player p1, Player p2, RoundManager roundManager, AIBot bot) // İhale ekranının tüm statik, hareketli, ve metin bileşenlerini çizdirir
+        public void Draw(SpriteBatch spriteBatch, AuctionManager auctionManager, Player p1, Player p2, RoundManager roundManager, AIBot bot, GameTime gameTime) // İhale ekranının tüm statik, hareketli, ve metin bileşenlerini çizdirir
         {
             if (AssetManager.BgAuction != null) spriteBatch.Draw(AssetManager.BgAuction, Vector2.Zero, Color.White);
             
-            _auctionSkillRenderer.DrawActiveSkills(spriteBatch, p1, p2);
+            _auctionSkillRenderer.DrawActiveSkills(spriteBatch, p1, p2, _currentDeltaTime);
 
             int animatedPrice = (int)Math.Round(_displayedPrice);
 
@@ -45,9 +43,12 @@ namespace StorageWars
 
             if (auctionManager.IsBluffActive)
             {
-                bidScale = 1.5f + (float)Math.Sin(_totalTime * GameConstants.BluffPulseSpeed) * 0.1f;
-                float shakeX = (float)Math.Sin(_totalTime * GameConstants.BluffShakeSpeedX) * GameConstants.BluffShakeIntensity;
-                float shakeY = (float)Math.Cos(_totalTime * GameConstants.BluffShakeSpeedY) * GameConstants.BluffShakeIntensity;
+                float absTime = (float)gameTime.TotalGameTime.TotalSeconds; 
+                bidScale = 1.5f + (float)Math.Sin(absTime * GameConstants.BluffPulseSpeed) * 0.1f;
+                
+                float shakeX = (float)Math.Sin(absTime * GameConstants.BluffShakeSpeedX) * (GameConstants.BluffShakeIntensity * 3f);
+                float shakeY = (float)Math.Cos(absTime * GameConstants.BluffShakeSpeedY) * (GameConstants.BluffShakeIntensity * 3f);
+                
                 bidPos += new Vector2(shakeX, shakeY);
                 bidColor = Color.DarkMagenta; 
             }

@@ -9,7 +9,8 @@ namespace StorageWars
         private SoundEffect _sfxNav, _sfxSell, _sfxBuy, _sfxDebt, _sfxHeal;
         
         // YENİ: Taktiksel Yetenek Sesleri
-        private SoundEffect _sfxBluff, _sfxLock, _sfxMirror, _sfxBurn;
+        private SoundEffect _sfxBluff, _sfxLock, _sfxMirror, _sfxBurn, _sfxCashback, _sfxTax;
+        
 
         private SoundEffect LoadSound(ContentManager content, string assetName) // Ses dosyasını güvenli bir şekilde yükler, Asset bulunamazsa oyunu çökertmek yerine null döndürür
         {
@@ -36,10 +37,13 @@ namespace StorageWars
             _sfxLock  = LoadSound(content, "sfx_lock");
             _sfxMirror= LoadSound(content, "sfx_mirror");
             _sfxBurn  = LoadSound(content, "sfx_burn");
+
+            _sfxCashback = LoadSound(content, "sfx_cashback");
+            _sfxTax  = LoadSound(content, "sfx_tax");
         }
 
 
-        // Volume, Pan ve Pitch
+        // Volume, Pitch ve Pan
         public void PlayClick() { _sfxClick?.Play(0.8f, 0f, 0f); }      
         public void PlayBid()   { _sfxBid?.Play(1.0f, 0f, 0f); }        
         public void PlayError() { _sfxError?.Play(0.3f, 0f, 0f); }      
@@ -54,9 +58,11 @@ namespace StorageWars
         public void PlayDebt()  { _sfxDebt?.Play(1.0f, -0.2f, 0f); }    
         public void PlayHeal()  { _sfxHeal?.Play(0.4f, 0f, 0f); }       
         
-        public void PlayBluff() { _sfxBluff?.Play(1.0f, -0.5f, 0f); } // Kalın, sarsıcı bir ses
-        public void PlayLock()  { _sfxLock?.Play(1.0f, 0f, 0f); }     // Zincir kilit sesi
-        public void PlayMirror(){ _sfxMirror?.Play(0.8f, 0.5f, 0f); } // Tiz, sihirli bir şıngırtı
-        public void PlayBurn()  { _sfxBurn?.Play(0.9f, 0f, 0f); }     // Alev/cızırtı sesi
+        public void PlayBluff() { _sfxBluff?.Play(0.2f, -0.5f, 0f); }
+        public void PlayLock()  { _sfxLock?.Play(0.2f, 0f, 0f); } 
+        public void PlayMirror(){ _sfxMirror?.Play(0.2f, 0.0f, 0f); } 
+        public void PlayBurn()  { _sfxBurn?.Play(0.2f, 0f, 0f); } 
+        public void PlayCashback() { _sfxCashback?.Play(0.2f, 0f, 0f); } 
+        public void PlayTax()  { _sfxTax?.Play(0.2f, -0.2f, 0f); }
     }
 }

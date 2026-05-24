@@ -49,18 +49,6 @@
 /processorParam:TextureFormat=Color
 /build:bg_credits.png
 
-#begin bg_credits.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:bg_credits.png
-
 #begin bg_howtoplay.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -494,6 +482,18 @@
 /processorParam:Quality=Best
 /build:sfx_bid.wav
 
+#begin sfx_bluff.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx_bluff.wav
+
+#begin sfx_burn.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx_burn.wav
+
 #begin sfx_buy.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -505,6 +505,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sfx_cash.wav
+
+#begin sfx_cashback.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx_cashback.wav
 
 #begin sfx_click.wav
 /importer:WavImporter
@@ -536,6 +542,18 @@
 /processorParam:Quality=Best
 /build:sfx_heal.wav
 
+#begin sfx_lock.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx_lock.wav
+
+#begin sfx_mirror.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx_mirror.wav
+
 #begin sfx_nav.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -553,6 +571,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sfx_sell.wav
+
+#begin sfx_tax.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx_tax.wav
 
 #begin sfx_tick.wav
 /importer:WavImporter

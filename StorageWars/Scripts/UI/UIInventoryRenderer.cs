@@ -48,7 +48,7 @@ namespace StorageWars
             DrawInventoryGrid(spriteBatch, p2, invManager.P2CursorX, invManager.P2CursorY, UIConfig.P2GridStart, Color.Red);
         }
 
-        private void DrawInventoryGrid(SpriteBatch sb, Player p, int cursorX, int cursorY, Vector2 start, Color cursorColor) // 4x4 matrisi, içindeki eşyaları ve aktif imleç konumunu çizer
+        private void DrawInventoryGrid(SpriteBatch sb, Player p, int cursorX, int cursorY, Vector2 start, Color cursorColor) // 4x4 matrisi ve içindeki boş/dolu eşya yuvalarını çizer
         {
             for (int y = 0; y < GameConstants.InventoryRows; y++)
             {
@@ -68,7 +68,6 @@ namespace StorageWars
                     }
                     else
                     {
-                        // Boş slotlar siyah kalsın
                         sb.Draw(AssetManager.Pixel, cellRect, Color.Black * 0.3f); 
                     }
 

@@ -8,7 +8,7 @@ namespace StorageWars
     {
         private readonly List<FloatingText> _floatingTexts = new List<FloatingText>();
 
-        public void AddText(string text, Vector2 position, Color color) // Sisteme Floating Text ekler
+        public void AddText(string text, Vector2 position, Color color) // Sisteme fırlatılacak yeni bir Floating Text ekler
         {
             _floatingTexts.Add(new FloatingText(text, position, color, 1.5f));
         }
@@ -27,11 +27,20 @@ namespace StorageWars
             }
         }
 
-        public void Draw(SpriteBatch sb) // UIManager tarafından çağrıldığında, hayatta olan tüm yazıları ekrana basar
+        public void Draw(SpriteBatch sb) // UIManager tarafından çağrıldığında, hayatta olan tüm yazıları siyah bir dış çerçeve (Outline) ile neon tabela gibi belirgin şekilde ekrana basar
         {
             foreach (var ft in _floatingTexts)
             {
-                AssetManager.DrawTextBottomCenter(sb, ft.Text, ft.Position, ft.Color * ft.GetOpacity());
+                Color textColor = ft.Color * ft.GetOpacity();
+                Color outlineColor = Color.Black * ft.GetOpacity(); // Opaklığa duyarlı dinamik siyah gölge
+                Vector2 pos = ft.Position;
+
+                AssetManager.DrawTextBottomCenter(sb, ft.Text, pos + new Vector2(2, 2), outlineColor);
+                AssetManager.DrawTextBottomCenter(sb, ft.Text, pos + new Vector2(-2, -2), outlineColor);
+                AssetManager.DrawTextBottomCenter(sb, ft.Text, pos + new Vector2(2, -2), outlineColor);
+                AssetManager.DrawTextBottomCenter(sb, ft.Text, pos + new Vector2(-2, 2), outlineColor);
+
+                AssetManager.DrawTextBottomCenter(sb, ft.Text, pos, textColor);
             }
         }
     }

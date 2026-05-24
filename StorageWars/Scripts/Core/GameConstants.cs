@@ -64,7 +64,7 @@ namespace StorageWars
 
         // --- System & Cooldowns ---
         public const float PhaseTransitionDelay = 2.0f;     // Fazlar arası bekleme süresi
-        public const float BidCooldown = 1.0f;              // Teklif spamını önleyen kilit süresi
+        public const float BidCooldown = 0.6f;              // Teklif spamını önleyen kilit süresi
         public const int DebtActionAmount = 500;            // Borç alma/ödeme tuşunun işlem miktarı
         public const int BossActionAmount = 500;            // Boss'a tek tuşla atılan para miktarı
 

@@ -12,7 +12,7 @@ namespace StorageWars
 
         public AuctionPhaseState(Game1 game) : base(game) { }
 
-        private void TryUseSkill(Player p, BidderType bType, Player opponent, int slotIndex, RoundManager rm) // Klavyeden tetiklenen yeteneği çantada bulur, tüketir ve etkisini (veya Mirror kopyasını) sisteme enjekte eder
+        private void TryUseSkill(Player p, BidderType bType, Player opponent, int slotIndex, RoundManager rm) // Klavyeden tetiklenen yeteneği bulur ve etkisini sisteme enjekte eder
         {
             Skill s = p.GetSkill(slotIndex);
             if (s != null)
@@ -42,7 +42,8 @@ namespace StorageWars
                         if (s.Type == SkillType.TheBluff) _game.AudioManager.PlayBluff();
                         else if (s.Type == SkillType.BidLock) _game.AudioManager.PlayLock();
                         else if (s.Type == SkillType.ItemBurner) _game.AudioManager.PlayBurn();
-                        else _game.AudioManager.PlayHeal();
+                        else if (s.Type == SkillType.CashBack) _game.AudioManager.PlayCashback();
+                        else if (s.Type == SkillType.TaxCollector) _game.AudioManager.PlayTax();
 
                         _game.AuctionManager.ActivateSkill(bType, s.Type, rm);
                     }
@@ -50,7 +51,7 @@ namespace StorageWars
             }
         }
 
-        public override void Update(GameTime gameTime) // İhale savaşındaki pas geçme, teklif verme ve zamanlayıcı akışlarını yöneterek ekonomiyi günceller
+        public override void Update(GameTime gameTime) // İhale savaşındaki pas, teklif ve müzayede zamanlayıcı akışlarını yönetir
         {
             var am = _game.AuctionManager;
             var input = _game.InputManager;
@@ -62,7 +63,6 @@ namespace StorageWars
 
             if (am.IsAuctionActive)
             {
-                // YETENEK KLAVYE KONTROLLERİ (Aşama 9)
                 if (input.IsP1Skill1()) TryUseSkill(p1, BidderType.Player1, p2, 0, rm);
                 if (input.IsP1Skill2()) TryUseSkill(p1, BidderType.Player1, p2, 1, rm);
                 if (input.IsP1Skill3()) TryUseSkill(p1, BidderType.Player1, p2, 2, rm);
@@ -70,7 +70,6 @@ namespace StorageWars
                 if (input.IsP2Skill1()) TryUseSkill(p2, BidderType.Player2, p1, 0, rm);
                 if (input.IsP2Skill2()) TryUseSkill(p2, BidderType.Player2, p1, 1, rm);
                 if (input.IsP2Skill3()) TryUseSkill(p2, BidderType.Player2, p1, 2, rm);
-
 
                 if (am.IsP1Out && am.IsP2Out && bot.IsOut)
                 {
@@ -131,33 +130,21 @@ namespace StorageWars
                             loser.EarnMoney(taxAmount);
                             Vector2 winnerPos = (winner == p1) ? UIConfig.P1PortraitPos : UIConfig.P2PortraitPos;
                             Vector2 loserPos = (loser == p1) ? UIConfig.P1PortraitPos : UIConfig.P2PortraitPos;
-                            _game.UIManager.FloatingTexts.AddText($"-${taxAmount} TAX!", winnerPos + UIConfig.FloatingTextTaxOffset, Color.Red); // Kazananın vergi cezası yazısı
-                            _game.UIManager.FloatingTexts.AddText($"+${taxAmount} TAX!", loserPos + UIConfig.FloatingTextTaxOffset, Color.LimeGreen); // Kaybedenin vergi geliri yazısı
+                            _game.UIManager.FloatingTexts.AddText($"-${taxAmount} TAX!", winnerPos + UIConfig.FloatingTextTaxOffset, Color.Red); 
+                            _game.UIManager.FloatingTexts.AddText($"+${taxAmount} TAX!", loserPos + UIConfig.FloatingTextTaxOffset, Color.LimeGreen); 
                         }
 
                         int p1CashBack = 0, p2CashBack = 0;
                         if (winner == p1 && am.P1CashBack) { p1CashBack = (int)(finalBid * 0.20f); p1.EarnMoney(p1CashBack); }
                         if (winner == p2 && am.P2CashBack) { p2CashBack = (int)(finalBid * 0.20f); p2.EarnMoney(p2CashBack); }
 
-                        if (p1CashBack > 0) _game.UIManager.FloatingTexts.AddText($"+${p1CashBack} CASHBACK!", UIConfig.P1PortraitPos + UIConfig.FloatingTextTaxOffset, Color.LimeGreen); // P1 Cashback yazısı
-                        if (p2CashBack > 0) _game.UIManager.FloatingTexts.AddText($"+${p2CashBack} CASHBACK!", UIConfig.P2PortraitPos + UIConfig.FloatingTextTaxOffset, Color.LimeGreen); // P2 Cashback yazısı
+                        if (p1CashBack > 0) _game.UIManager.FloatingTexts.AddText($"+${p1CashBack} CASHBACK!", UIConfig.P1PortraitPos + UIConfig.FloatingTextTaxOffset, Color.LimeGreen); 
+                        if (p2CashBack > 0) _game.UIManager.FloatingTexts.AddText($"+${p2CashBack} CASHBACK!", UIConfig.P2PortraitPos + UIConfig.FloatingTextTaxOffset, Color.LimeGreen); 
 
-                        if ((winner == p1 && am.P2ItemBurner) || (winner == p2 && am.P1ItemBurner))
-                        {
-                            am.CurrentStorage.BurnRandomItem();
-                            _game.AudioManager.PlayBurn();
-                            _game.UIManager.FloatingTexts.AddText("ITEM BURNED!", UIConfig.RoundTextPos + UIConfig.FloatingTextBurnOffset, Color.OrangeRed); // Yanan eşya yazısı
-                        }
                     }
                     else if (am.HighestBidder == BidderType.AI) 
                     {
                         bot.SpendMoney(finalBid);
-                        if (am.P1ItemBurner || am.P2ItemBurner) 
-                        {
-                            am.CurrentStorage.BurnRandomItem();
-                            _game.AudioManager.PlayBurn();
-                            _game.UIManager.FloatingTexts.AddText("ITEM BURNED!", UIConfig.RoundTextPos + UIConfig.FloatingTextBurnOffset, Color.OrangeRed); // Yanan eşya yazısı
-                        }
                     }
     
                     audio.PlayCash(); 
@@ -187,10 +174,10 @@ namespace StorageWars
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) // İhale ekranındaki karakter animasyonlarını, teklif yazılarını ve arkaplanı çizdirir
         {
-            _game.UIManager.DrawAuctionPhase(spriteBatch, _game.AuctionManager, _game.Player1, _game.Player2, _game.RoundManager, _game.AiBot);
+            _game.UIManager.DrawAuctionPhase(spriteBatch, _game.AuctionManager, _game.Player1, _game.Player2, _game.RoundManager, _game.AiBot, gameTime);
         }
 
-        private void StartNewDynamicAuction(AuctionManager am, RoundManager rm, AIBot bot) // Eski ihaleyi temizleyip tura uygun yepyeni bir gizli depo ve başlangıç fiyatı üretir
+        private void StartNewDynamicAuction(AuctionManager am, RoundManager rm, AIBot bot) // Eski ihaleyi temizleyip tura uygun yepyeni bir depo ve fiyat üretir
         {
             Storage newStorage = _game.LootManager.GenerateStorageForAuction(rm.CurrentRound);
             int basePrice = rm.GetBaseStartingPrice();

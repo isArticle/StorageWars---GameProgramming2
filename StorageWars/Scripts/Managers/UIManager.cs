@@ -29,10 +29,10 @@ namespace StorageWars
         public void DrawHowToPlay(SpriteBatch sb) { if (AssetManager.BgHowToPlay != null) sb.Draw(AssetManager.BgHowToPlay, Vector2.Zero, Color.White); } // Nasıl Oynanır ekranını çizer
         public void DrawCredits(SpriteBatch sb) { if (AssetManager.BgCredits != null) sb.Draw(AssetManager.BgCredits, Vector2.Zero, Color.White); } // Emeği geçenler ekranını çizer
 
-        public void DrawAuctionPhase(SpriteBatch sb, AuctionManager am, Player p1, Player p2, RoundManager rm, AIBot bot) // İhale ekranının tüm statik ve hareketli bileşenlerini çizdirir
+        public void DrawAuctionPhase(SpriteBatch sb, AuctionManager am, Player p1, Player p2, RoundManager rm, AIBot bot, GameTime gameTime) // DİKKAT: gameTime parametresi eklendi
         {
-            _auctionRenderer.Draw(sb, am, p1, p2, rm, bot);
-            FloatingTexts.Draw(sb); // Yazıların, ekranın ve karakterlerin en ÜST katmanında (Overlay) kalması için çizimin en sonuna yerleştirildi
+            _auctionRenderer.Draw(sb, am, p1, p2, rm, bot, gameTime);
+            FloatingTexts.Draw(sb);
         }
 
         public void DrawInventoryPhase(SpriteBatch sb, Player p1, Player p2, InventoryManager inv, RoundManager rm) // Envanter matrisini, eşyaları ve güncel piyasa/satış değerlerini çizer
