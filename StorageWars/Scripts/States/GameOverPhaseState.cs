@@ -43,7 +43,7 @@ namespace StorageWars
                 AssetManager.DrawTextBottomCenter(spriteBatch, "THE BOSS CRUSHED BOTH OF YOU!", UIConfig.GameOverWinnerTextPos, Color.DarkRed); 
             }
 
-            AssetManager.DrawTextBottomCenter(spriteBatch, "PRESS SPACE TO RETURN MAIN MENU", new Vector2(960, 980), Color.White);
+            AssetManager.DrawTextBottomCenter(spriteBatch, "PRESS SPACE TO RETURN MAIN MENU", new Vector2(960, 980), Color.Black);
         }
     }
 }
