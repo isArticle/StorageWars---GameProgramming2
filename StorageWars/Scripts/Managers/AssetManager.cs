@@ -5,30 +5,41 @@ using System.Collections.Generic;
 
 namespace StorageWars
 {
-
     public static class AssetManager
     {
         private static ContentManager _content;
         
+        // --- Backgrounds ---
         public static Texture2D BgMainMenu { get; private set; }
         public static Texture2D BgHowToPlay { get; private set; }
         public static Texture2D BgCredits { get; private set; }
         public static Texture2D BgAuction { get; private set; }
         public static Texture2D BgInventory { get; private set; }
         public static Texture2D BgShop { get; private set; }
+        public static Texture2D BgBossPhase { get; private set; }
+        public static Texture2D BgGameOver { get; private set; }
 
+        // --- Player Durumları ---
         public static Texture2D CharIdle { get; private set; }
         public static Texture2D CharThinking { get; private set; }
         public static Texture2D CharBidding { get; private set; }
         public static Texture2D CharWinning { get; private set; }
         public static Texture2D CharPassed { get; private set; }
 
+        // --- Bot Durumları ---
         public static Texture2D BotIdle { get; private set; }
         public static Texture2D BotThinking { get; private set; }
         public static Texture2D BotBidding { get; private set; }
         public static Texture2D BotWinning { get; private set; }
         public static Texture2D BotPassed { get; private set; }
 
+        // --- Boss Durumları ---
+        public static Texture2D BossIdle { get; private set; } 
+        public static Texture2D BossThink { get; private set; }
+        public static Texture2D BossBid { get; private set; }
+        public static Texture2D BossWinning { get; private set; }
+
+        // --- Temel UI Araçları ---
         public static SpriteFont GameFont { get; private set; }
         public static Texture2D Pixel { get; private set; }
         private static Dictionary<string, Texture2D> _itemTextures = new Dictionary<string, Texture2D>();
@@ -44,6 +55,8 @@ namespace StorageWars
             BgAuction = content.Load<Texture2D>("bg_auction");
             BgInventory = content.Load<Texture2D>("bg_inventory");
             BgShop = content.Load<Texture2D>("bg_shop");
+            BgBossPhase = content.Load<Texture2D>("bg_bossphase");
+            BgGameOver = content.Load<Texture2D>("bg_gameover");
 
             CharIdle = content.Load<Texture2D>("char_idle");
             CharThinking = content.Load<Texture2D>("char_thinking");
@@ -56,6 +69,11 @@ namespace StorageWars
             BotBidding = content.Load<Texture2D>("bot_bidding");
             BotWinning = content.Load<Texture2D>("bot_winning");
             BotPassed = content.Load<Texture2D>("bot_passed");
+
+            BossIdle = content.Load<Texture2D>("boss_idle");
+            BossThink = content.Load<Texture2D>("boss_think");
+            BossBid = content.Load<Texture2D>("boss_bid");
+            BossWinning = content.Load<Texture2D>("boss_winning");
 
             GameFont = content.Load<SpriteFont>("GameFont");
             Pixel = new Texture2D(graphicsDevice, 1, 1);
@@ -98,7 +116,6 @@ namespace StorageWars
             }
             catch
             {
-
                 System.Diagnostics.Debug.WriteLine($"HATA: '{textureName}' isimli görsel bulunamadı! Content dosyasını kontrol et.");
                 return Pixel;
             }

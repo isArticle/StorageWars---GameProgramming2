@@ -14,6 +14,9 @@ namespace StorageWars
         public float[] SkillFlashTimers { get; private set; } = new float[3];
         public Item[,] InventoryGrid { get; private set; } = new Item[GameConstants.InventoryCols, GameConstants.InventoryRows];
 
+        // --- TEST VE HİLE METODU (F12 İÇİN) ---
+        public void DebugSetHPAndMoney(int hp, int money) { MaxHP = hp; Money = money; } 
+
         public Skill GetSkill(int index) => (index >= 0 && index < 3) ? EquippedSkills[index] : null; // İhale sırasında basılan tuşun indeksine karşılık gelen yeteneği döndürür
 
         public void ReplaceSkill(int index, Skill newSkill) // Mirror yeteneği kullanıldığında, kendini feda edip tam kendi yuvasına düşmandan kopyalanan yeteneği yerleştirir
@@ -108,13 +111,29 @@ namespace StorageWars
             if (MaxHP < 0) MaxHP = 0;
         }
 
+        public int CalculateInventoryNetWorth(RoundManager rm) // OYUN SONU HESAPLAMASI: Çantadaki tüm eşyaların güncel pazar değerini toplayıp serveti çıkartır
+        {
+            int totalValue = 0;
+            for (int y = 0; y < GameConstants.InventoryRows; y++)
+            {
+                for (int x = 0; x < GameConstants.InventoryCols; x++)
+                {
+                    if (InventoryGrid[x, y] != null)
+                    {
+                        totalValue += rm.CalculateCurrentItemValue(InventoryGrid[x, y]);
+                    }
+                }
+            }
+            return totalValue;
+        }
+
         public void TakeDebt(int amount) // Oyuncuya acil nakit verir ancak alınan miktarı faiziyle beraber borca yazar
         { 
             Money += amount; 
             Debt += amount + (amount / GameConstants.DebtInterestRate); 
         }
 
-        public void SpendMoney(int amount) // Oyuncunun parasını keser, vergi ve özel yetenek cezalarında paranın eksilere (borca) düşebilmesi için IF kilidi kırıldı!
+        public void SpendMoney(int amount) // Oyuncunun parasını keser, vergi ve özel yetenek cezalarında paranın eksilere (borca) düşebilmesi için IF kilidi kırıldı
         {
             Money -= amount; 
         }

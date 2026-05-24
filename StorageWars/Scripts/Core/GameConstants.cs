@@ -21,13 +21,13 @@ namespace StorageWars
         public const int AuctionPriceRoundMultiplier = 40; // Her tur taban fiyata eklenecek miktar
         public const int StorageTierBonusMultiplier = 20;  // Gizemli değer primi (Kalite çarpanı)
 
-        // Oyuncu
+        // --- Player ---
         public const int PlayerMinBidBase = 30;             // 1. Tur minimum teklif artışı
         public const int PlayerMinBidRoundMultiplier = 20;  // Her tur minimum artışa eklenen değer
         public const int PlayerMaxBidBase = 100;            // 1. Tur maksimum teklif artışı
         public const int PlayerMaxBidRoundMultiplier = 30;  // Her tur maksimum artışa eklenen değer
 
-        // Bot
+        // --- Bot ---
         public const int BotMinBidBase = 40;                // Bot Min bid
         public const int BotMinBidRoundMultiplier = 35;     // Botun az çarpanı
         public const int BotMaxBidBase = 90;                // Bot Max bid
@@ -38,14 +38,21 @@ namespace StorageWars
         public const int MinLootPerStorage = 2;             // Bir depodan çıkacak minimum eşya
         public const int MaxLootPerStorage = 5;             // Bir depodan çıkacak maksimum eşya (Random.Next için 1 fazlası)
 
-        // Eşya Fiyat Skalaları  İtem Fiyatları
-        public const int TierS_MinValue = 5000; public const int TierS_MaxValue = 8000;
-        public const int TierA_MinValue = 2000; public const int TierA_MaxValue = 4500;
-        public const int TierB_MinValue = 800;  public const int TierB_MaxValue = 1800;
-        public const int TierC_MinValue = 300;  public const int TierC_MaxValue = 700;
-        public const int TierD_MinValue = 100;  public const int TierD_MaxValue = 250;
-        public const int TierE_MinValue = 30;   public const int TierE_MaxValue = 80;
-        public const int TierF_MinValue = 5;    public const int TierF_MaxValue = 20;
+        // --- Item Price ---
+        public const int TierS_MinValue = 5000; 
+        public const int TierS_MaxValue = 8000;
+        public const int TierA_MinValue = 2000; 
+        public const int TierA_MaxValue = 4500;
+        public const int TierB_MinValue = 800;  
+        public const int TierB_MaxValue = 1800;
+        public const int TierC_MinValue = 300;  
+        public const int TierC_MaxValue = 700;
+        public const int TierD_MinValue = 100;  
+        public const int TierD_MaxValue = 250;
+        public const int TierE_MinValue = 30;   
+        public const int TierE_MaxValue = 80;
+        public const int TierF_MinValue = 5;    
+        public const int TierF_MaxValue = 20;
 
         // --- AIBot ---
         public const int BotStartingMoney = 1000;           // Botun oyuna başladığı para
@@ -58,15 +65,19 @@ namespace StorageWars
 
         // --- Boss ---
         public const int BossMaxHP = 10000;                 // Boss'un toplam canı
-        public const int BossBaseDemand = 3000;             // Boss'un taban para talebi
-        public const int BossDemandMultiplier = 500;        // Boss'un talep artış çarpanı
-
+        public const int BossTotalRounds = 3;               // Boss savaşının süreceği toplam tur sayısı
+        public static readonly int[] BossDamagePerRound = 
+        { 4000, 6000, 8000 };                               // 1., 2. ve 3. turun başarısızlık hasarları
+        public const float BossFightDuration = 15.0f;       // Kesintisiz ihale ölüm kalım süresi
+        public const float BossNormalThinkTime = 1.0f;      // Boss'un AI Bot gibi düşünme ve duraksama süresi
+        public const float BossSnipeThinkTime = 0.2f;       // Son saniyelerde oyuncu hile yapmasın diye Boss'un çıldırma hızı
+        public const float BossSnipeThreshold = 2.0f;       // Boss'un hızlanacağı "Son X Saniye" sınırı
+        public const int BossActionAmount = 500;            // Boss'un ve Oyuncuların tek tuşla havuza fırlatacağı para
 
         // --- System & Cooldowns ---
         public const float PhaseTransitionDelay = 2.0f;     // Fazlar arası bekleme süresi
         public const float BidCooldown = 0.6f;              // Teklif spamını önleyen kilit süresi
         public const int DebtActionAmount = 500;            // Borç alma/ödeme tuşunun işlem miktarı
-        public const int BossActionAmount = 500;            // Boss'a tek tuşla atılan para miktarı
 
         public const float TimeToGoingOnce = 3.0f;          // 1. Uyarı süresi
         public const float TimeToGoingTwice = 4.0f;         // 2. Uyarı süresi

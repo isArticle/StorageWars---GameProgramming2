@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace StorageWars
 {
-    public static class UIConfig // Tüm arayüz (UI) elemanlarının ekrandaki mutlak X ve Y koordinatlarını tutan veri merkezidir
+    public static class UIConfig 
     {
         // --- Round --- 
         public static readonly Vector2 RoundTextPos = new Vector2(960, 119);
@@ -68,13 +68,26 @@ namespace StorageWars
         public static readonly float P1ShopCursorRotation = MathHelper.ToRadians(180f);
         public static readonly float P2ShopCursorRotation = 0f;
 
-        // --- Boss ---
-        public static readonly Vector2 BossHpPos = new Vector2(850, 100);
-        public static readonly Vector2 BossDemandPos = new Vector2(850, 200);
-        public static readonly Vector2 BossPoolPos = new Vector2(850, 500);
-        public static readonly Vector2 P1BossHpPos = new Vector2(300, 850); 
-        public static readonly Vector2 P2BossHpPos = new Vector2(1400, 850); 
-        public static readonly Vector2 GameOverWinnerTextPos = new Vector2(700, 400);
+        // --- Boss  ---
+        public static readonly Vector2 BossPortraitPos = new Vector2(360, 430); 
+        public static readonly Vector2 P1BossPortraitPos = new Vector2(260, 1030); 
+        public static readonly Vector2 P2BossPortraitPos = new Vector2(1660, 1030); 
+
+        public static readonly Vector2 P1BossStatsPos = new Vector2(320, 970); 
+        public static readonly Vector2 P2BossStatsPos = new Vector2(1600, 970); 
+        
+        public static readonly Vector2 BossHpPos = new Vector2(960, 90); 
+        public static readonly Vector2 BossTimerPos = new Vector2(1660, 90); 
+        public static readonly Vector2 BossTotalBidPos = new Vector2(960, 950); 
+        public static readonly Vector2 P1BossBidPos = new Vector2(320, 710); 
+        public static readonly Vector2 P2BossBidPos = new Vector2(1600, 710); 
+        public static readonly Vector2 BossActiveBidPos = new Vector2(480, 110);
+
+        public static readonly Vector2 GameOverWinnerTextPos = new Vector2(960, 540); 
+        public static readonly Vector2 GameOverNetWorthPos = new Vector2(960, 600); 
+        public static readonly Vector2 BossCurrentBidPos = new Vector2(960, 270);
+        public static readonly Vector2 BossRoundResultPos = new Vector2(1660, 210);
+        
 
         // --- Juice & Floating Text Offsets ---
         public static readonly Vector2 FloatingTextSkillOffset = new Vector2(0, -150); 
