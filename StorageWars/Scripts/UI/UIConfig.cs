@@ -88,7 +88,6 @@ namespace StorageWars
         public static readonly Vector2 BossCurrentBidPos = new Vector2(960, 270);
         public static readonly Vector2 BossRoundResultPos = new Vector2(1660, 210);
         
-
         // --- Juice & Floating Text Offsets ---
         public static readonly Vector2 FloatingTextSkillOffset = new Vector2(0, -150); 
         public static readonly Vector2 FloatingTextTaxOffset = new Vector2(0, -100);

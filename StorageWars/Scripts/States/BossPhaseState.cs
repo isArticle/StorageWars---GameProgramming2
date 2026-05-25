@@ -29,7 +29,7 @@ namespace StorageWars
             _oldKeyState = Keyboard.GetState(); 
         }
 
-        public override void Update(GameTime gameTime) // Klavye girdilerini yakalar, Boss yapay zekasını tetikler ve oyun sonu hızlı geçişini denetler
+        public override void Update(GameTime gameTime) // Sırayla teklif verme kuralını (Anti-Spam) denetler ve ortak havuzu hesaplar
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var audio = _game.AudioManager; 
@@ -45,7 +45,6 @@ namespace StorageWars
                 if (_p1Cooldown > 0) _p1Cooldown -= dt; 
                 if (_p2Cooldown > 0) _p2Cooldown -= dt; 
 
-                // --- PLAYER 1 ---
                 if (p1.MaxHP > 0 && _p1Cooldown <= 0 && currentKeyState.IsKeyDown(Keys.LeftShift) && _oldKeyState.IsKeyUp(Keys.LeftShift)) 
                 { 
                     if (_lastHumanBidder != HumanBidder.Player1 && p1.Money >= GameConstants.BossActionAmount) 
@@ -56,10 +55,9 @@ namespace StorageWars
                         _lastHumanBidder = HumanBidder.Player1; 
                         audio.PlayBid(); 
                     }
-                    else if (p1.MaxHP > 0) { audio.PlayError(); } 
+                    else if (p1.MaxHP > 0) audio.PlayError(); 
                 }
 
-                // --- PLAYER 2 ---
                 if (p2.MaxHP > 0 && _p2Cooldown <= 0 && currentKeyState.IsKeyDown(Keys.RightShift) && _oldKeyState.IsKeyUp(Keys.RightShift)) 
                 { 
                     if (_lastHumanBidder != HumanBidder.Player2 && p2.Money >= GameConstants.BossActionAmount) 
@@ -70,27 +68,27 @@ namespace StorageWars
                         _lastHumanBidder = HumanBidder.Player2; 
                         audio.PlayBid(); 
                     }
-                    else if (p2.MaxHP > 0) { audio.PlayError(); } 
+                    else if (p2.MaxHP > 0) audio.PlayError(); 
                 }
 
                 int oldBossBid = _boss.CurrentBid; 
                 _boss.UpdateAI(dt, _playersTotalBid, _timer); 
                 if (_boss.CurrentBid > oldBossBid) audio.PlayBid();
 
-                if (_timer <= 0)
+                if (_timer <= 0) 
                 {
                     _boss.ResolveRound(_playersTotalBid, p1, p2);
                     _phaseState = _boss.GetProgressionState(p1, p2);
-
+                    
                     if (_phaseState == BossState.Defeated || _phaseState == BossState.PlayersDead)
                     {
-                        CalculateWinner(p1, p2, _game.RoundManager);
-                        bool isVictory = (_phaseState == BossState.Defeated);
-                        _game.ChangeState(new GameOverPhaseState(_game, _winner, _winnerNetWorth, isVictory));
-                        return;
+                        CalculateWinner(p1, p2, _game.RoundManager); 
+                        bool isVictory = (_phaseState == BossState.Defeated); 
+                        _game.ChangeState(new GameOverPhaseState(_game, _winner, _winnerNetWorth, isVictory)); // Savaş bittiğinde doğrudan Game Over'a atlar
+                        return; 
                     }
                     
-                    _resultTimer = 4.0f;
+                    _resultTimer = 4.0f; // Hala hayattalarsa sonucu 4 saniye asılı bırakır
                     if (_playersTotalBid > _boss.CurrentBid) audio.PlayCash(); else audio.PlayError();
                 }
             }
@@ -123,6 +121,6 @@ namespace StorageWars
             else { _winner = p2; _winnerNetWorth = p2Worth; } 
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) => _game.UIManager.DrawBossPhase(spriteBatch, _boss, _game.Player1, _game.Player2, _playersTotalBid, _timer, gameTime, _winner, _winnerNetWorth, _phaseState); 
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { _game.UIManager.DrawBossPhase(spriteBatch, _boss, _game.Player1, _game.Player2, _playersTotalBid, _timer, gameTime, _winner, _winnerNetWorth, _phaseState); } // Çizimi delege eder
     }
 }

@@ -11,13 +11,12 @@ namespace StorageWars
         private UIAnimator _p2Anim = new UIAnimator(); 
         private float _currentDeltaTime = 0f; 
 
-        private Vector2 GetOriginBottomCenter(Texture2D tex) => (tex == null) ? Vector2.Zero : new Vector2(tex.Width / 2f, tex.Height); 
+        private Vector2 GetOriginBottomCenter(Texture2D tex) => (tex == null) ? Vector2.Zero : new Vector2(tex.Width / 2f, tex.Height); // Tüm zıplama efektlerinin yere sağlam basması için çıpalama yapar
 
         private Texture2D GetBossTexture(CharacterState state) => state switch { CharacterState.Thinking => AssetManager.BossThink ?? AssetManager.BossIdle, CharacterState.Bidding => AssetManager.BossBid ?? AssetManager.BossIdle, CharacterState.Winning => AssetManager.BossWinning ?? AssetManager.BossIdle, _ => AssetManager.BossIdle }; 
-
         private Texture2D GetPlayerTexture(CharacterState state) => state switch { CharacterState.Thinking => AssetManager.CharThinking ?? AssetManager.CharIdle, CharacterState.Bidding => AssetManager.CharBidding ?? AssetManager.CharIdle, CharacterState.Winning => AssetManager.CharWinning ?? AssetManager.CharIdle, _ => AssetManager.CharIdle }; 
 
-        public void Draw(SpriteBatch sb, Boss boss, Player p1, Player p2, int playersTotalBid, float timer, GameTime gameTime, Player winner, int winnerNetWorth, BossState phaseState) 
+        public void Draw(SpriteBatch sb, Boss boss, Player p1, Player p2, int playersTotalBid, float timer, GameTime gameTime, Player winner, int winnerNetWorth, BossState phaseState) // Savaş, sonuc ve Game Over akışını çizer
         {
             _currentDeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds; 
             if (AssetManager.BgBossPhase != null) sb.Draw(AssetManager.BgBossPhase, Vector2.Zero, Color.White); 
@@ -41,20 +40,15 @@ namespace StorageWars
                     string leaderText = (playersTotalBid > boss.CurrentBid) ? "(PLAYERS)" : "(BOSS)";
                     AssetManager.DrawTextBottomCenter(sb, $"CURRENT BID: ${highestBid} {leaderText}", UIConfig.BossCurrentBidPos, Color.Black); 
                 }
-                else
-                {
-                    AssetManager.DrawTextBottomCenter(sb, "CURRENT BID: $0", UIConfig.BossCurrentBidPos, Color.Gray);
-                }
+                else AssetManager.DrawTextBottomCenter(sb, "CURRENT BID: $0", UIConfig.BossCurrentBidPos, Color.Gray);
 
                 bool playersWinning = (playersTotalBid > boss.CurrentBid);
                 bool bossWinning = (boss.CurrentBid >= playersTotalBid && boss.CurrentBid > 0);
 
                 if (!bossWinning) 
                 {
-                    if (boss.CurrentBid > 0) 
-                        AssetManager.DrawTextBottomCenter(sb, $"Bid: ${boss.CurrentBid}", UIConfig.BossActiveBidPos, Color.LightGray); 
-                    else 
-                        AssetManager.DrawTextBottomCenter(sb, "...", UIConfig.BossActiveBidPos, Color.Gray * 0.5f); 
+                    if (boss.CurrentBid > 0) AssetManager.DrawTextBottomCenter(sb, $"Bid: ${boss.CurrentBid}", UIConfig.BossActiveBidPos, Color.LightGray); 
+                    else AssetManager.DrawTextBottomCenter(sb, "...", UIConfig.BossActiveBidPos, Color.Gray * 0.5f); 
                 }
 
                 if (p1.MaxHP > 0) 
@@ -64,10 +58,8 @@ namespace StorageWars
                     
                     if (!playersWinning) 
                     {
-                        if (playersTotalBid > 0) 
-                            AssetManager.DrawTextBottomCenter(sb, $"Bid: ${playersTotalBid}", UIConfig.P1BossBidPos, Color.LightGray); 
-                        else 
-                            AssetManager.DrawTextBottomCenter(sb, "...", UIConfig.P1BossBidPos, Color.Gray * 0.5f); 
+                        if (playersTotalBid > 0) AssetManager.DrawTextBottomCenter(sb, $"Bid: ${playersTotalBid}", UIConfig.P1BossBidPos, Color.LightGray); 
+                        else AssetManager.DrawTextBottomCenter(sb, "...", UIConfig.P1BossBidPos, Color.Gray * 0.5f); 
                     }
                     
                     CharacterState p1State = playersWinning ? CharacterState.Winning : CharacterState.Thinking;
@@ -83,10 +75,8 @@ namespace StorageWars
                     
                     if (!playersWinning) 
                     {
-                        if (playersTotalBid > 0) 
-                            AssetManager.DrawTextBottomCenter(sb, $"Bid: ${playersTotalBid}", UIConfig.P2BossBidPos, Color.LightGray); 
-                        else 
-                            AssetManager.DrawTextBottomCenter(sb, "...", UIConfig.P2BossBidPos, Color.Gray * 0.5f); 
+                        if (playersTotalBid > 0) AssetManager.DrawTextBottomCenter(sb, $"Bid: ${playersTotalBid}", UIConfig.P2BossBidPos, Color.LightGray); 
+                        else AssetManager.DrawTextBottomCenter(sb, "...", UIConfig.P2BossBidPos, Color.Gray * 0.5f); 
                     }
                     
                     CharacterState p2State = playersWinning ? CharacterState.Winning : CharacterState.Thinking;
@@ -103,6 +93,6 @@ namespace StorageWars
             }
         }
 
-        private void DrawPortrait(SpriteBatch sb, Texture2D tex, UIAnimator anim, Vector2 position, SpriteEffects effects) => sb.Draw(tex, position, null, Color.White, 0f, GetOriginBottomCenter(tex), 1.0f + (float)Math.Sin(anim.Progress * Math.PI) * 0.1f, effects, 0f);
+        private void DrawPortrait(SpriteBatch sb, Texture2D tex, UIAnimator anim, Vector2 position, SpriteEffects effects) => sb.Draw(tex, position, null, Color.White, 0f, GetOriginBottomCenter(tex), 1.0f + (float)Math.Sin(anim.Progress * Math.PI) * 0.1f, effects, 0f); // Pop animasyonunu matematiksel olarak merkeze uygular
     }
 }

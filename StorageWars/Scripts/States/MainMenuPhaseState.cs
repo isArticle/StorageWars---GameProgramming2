@@ -11,7 +11,7 @@ namespace StorageWars
         {
             if (_game.InputManager.IsStartOrConfirm()) { _game.AudioManager.PlayClick(); _game.ChangeState(new AuctionPhaseState(_game)); }
             if (_game.InputManager.IsHowToPlay()) { _game.AudioManager.PlayClick(); _game.ChangeState(new HowToPlayPhaseState(_game)); }
-            if (_game.InputManager.IsCredits()) { _game.AudioManager.PlayClick(); _game.ChangeState(new CreditsPhaseState(_game)); }
+            if (_game.InputManager.IsCredits()) { _game.AudioManager.PlayClick(); _game.ChangeState(new CreditPhaseState(_game)); }
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { _game.UIManager.DrawMainMenu(spriteBatch); } // Ana menü arka plan grafiğini UIManager aracılığıyla ekrana basar

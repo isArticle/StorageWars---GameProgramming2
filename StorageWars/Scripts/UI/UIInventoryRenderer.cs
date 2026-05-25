@@ -5,7 +5,7 @@ namespace StorageWars
 {
     public class UIInventoryRenderer
     {
-        private Color GetTierColor(ItemTier tier) => tier switch // Eşyanın nadirlik seviyesine (Tier) göre arayüzde kullanılacak dış çizgi/kutu rengini belirler
+        private Color GetTierColor(ItemTier tier) => tier switch // Eşyanın kalitesine (Tier) göre renk paleti atar
         {
             ItemTier.S => Color.MediumPurple,
             ItemTier.A => Color.Orange,       
@@ -17,7 +17,7 @@ namespace StorageWars
             _ => Color.White
         };
         
-        public void Draw(SpriteBatch spriteBatch, Player p1, Player p2, InventoryManager invManager, RoundManager roundManager) // Envanter gridini ve oyuncuların sahip olduğu parasal değerleri ekrana çizer
+        public void Draw(SpriteBatch spriteBatch, Player p1, Player p2, InventoryManager invManager, RoundManager roundManager) // Envanter gridini, renkleri ve değerleri çizer
         {
             if (AssetManager.BgInventory != null) spriteBatch.Draw(AssetManager.BgInventory, Vector2.Zero, Color.White);
 
@@ -31,7 +31,6 @@ namespace StorageWars
             {
                 int currentVal = roundManager.CalculateCurrentItemValue(p1HoveredItem);
                 Color tierColor = GetTierColor(p1HoveredItem.Tier);
-                
                 AssetManager.DrawTextBottomCenterWithOutline(spriteBatch, $"{p1HoveredItem.Name} (${currentVal})", UIConfig.P1MarketValuePos, tierColor);
             }
 
@@ -40,7 +39,6 @@ namespace StorageWars
             {
                 int currentVal = roundManager.CalculateCurrentItemValue(p2HoveredItem);
                 Color tierColor = GetTierColor(p2HoveredItem.Tier);
-                
                 AssetManager.DrawTextBottomCenterWithOutline(spriteBatch, $"{p2HoveredItem.Name} (${currentVal})", UIConfig.P2MarketValuePos, tierColor);
             }
 
@@ -48,7 +46,7 @@ namespace StorageWars
             DrawInventoryGrid(spriteBatch, p2, invManager.P2CursorX, invManager.P2CursorY, UIConfig.P2GridStart, Color.Red);
         }
 
-        private void DrawInventoryGrid(SpriteBatch sb, Player p, int cursorX, int cursorY, Vector2 start, Color cursorColor) // 4x4 matrisi ve içindeki boş/dolu eşya yuvalarını çizer
+        private void DrawInventoryGrid(SpriteBatch sb, Player p, int cursorX, int cursorY, Vector2 start, Color cursorColor) // Çift For-Loop ile 4x4 matrisi ekrana haritalar
         {
             for (int y = 0; y < GameConstants.InventoryRows; y++)
             {
@@ -61,29 +59,25 @@ namespace StorageWars
 
                     if (currentItem != null)
                     {
-                        sb.Draw(AssetManager.Pixel, cellRect, GetTierColor(currentItem.Tier) * 0.3f);
-
+                        sb.Draw(AssetManager.Pixel, cellRect, GetTierColor(currentItem.Tier) * 0.3f); 
                         Texture2D itemTex = AssetManager.GetItemTexture(currentItem.TextureName);
                         sb.Draw(itemTex, cellRect, Color.White);
                     }
-                    else
-                    {
-                        sb.Draw(AssetManager.Pixel, cellRect, Color.Black * 0.3f); 
-                    }
+                    else sb.Draw(AssetManager.Pixel, cellRect, Color.Black * 0.3f); 
 
                     if (cursorX == x && cursorY == y) DrawSelectionBorder(sb, cellPos, cursorColor);
                 }
             }
         }
 
-        private void DrawSelectionBorder(SpriteBatch sb, Vector2 pos, Color c) // İmlecin üzerinde olduğu eşyanın etrafına kalın seçim çerçevesini çizer
+        private void DrawSelectionBorder(SpriteBatch sb, Vector2 pos, Color c) // İmlecin etrafına 4 adet dikdörtgen çizerek seçili Hover efekti verir
         {
             Rectangle rect = new Rectangle((int)pos.X, (int)pos.Y, UIConfig.GridCellSize, UIConfig.GridCellSize);
-            int t = 5;
-            sb.Draw(AssetManager.Pixel, new Rectangle(rect.X, rect.Y, rect.Width, t), c);
-            sb.Draw(AssetManager.Pixel, new Rectangle(rect.X, rect.Y + rect.Height - t, rect.Width, t), c);
-            sb.Draw(AssetManager.Pixel, new Rectangle(rect.X, rect.Y, t, rect.Height), c);
-            sb.Draw(AssetManager.Pixel, new Rectangle(rect.X + rect.Width - t, rect.Y, t, rect.Height), c);
+            int t = 5; // Kalınlık
+            sb.Draw(AssetManager.Pixel, new Rectangle(rect.X, rect.Y, rect.Width, t), c); // Üst çizgi
+            sb.Draw(AssetManager.Pixel, new Rectangle(rect.X, rect.Y + rect.Height - t, rect.Width, t), c); // Alt çizgi
+            sb.Draw(AssetManager.Pixel, new Rectangle(rect.X, rect.Y, t, rect.Height), c); // Sol çizgi
+            sb.Draw(AssetManager.Pixel, new Rectangle(rect.X + rect.Width - t, rect.Y, t, rect.Height), c); // Sağ çizgi
         }
     }
 }

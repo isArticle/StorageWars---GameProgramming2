@@ -1,6 +1,6 @@
 namespace StorageWars
 {
-    public enum BidderType // İhalede o anki en yüksek teklifin ve sıranın kimde olduğunu tutar
+    public enum BidderType  // O an masada dönen en yüksek paranın sahibinin kim olduğunu tescilleyen yegane belirteçtir
     { 
         None, 
         Player1, 

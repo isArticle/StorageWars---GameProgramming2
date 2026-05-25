@@ -31,7 +31,7 @@ namespace StorageWars
         public bool IsBack()           => IsKeyPressed(Keys.Back);                
         public bool IsNextPhase()      => IsKeyPressed(Keys.Space);          
 
-        // --- OYUNCU 1 (SOL TARAF) KONTROLLERİ ---
+        // --- P1 KONTROLLERİ ---
         public bool IsP1Bid()             => IsKeyPressed(Keys.LeftShift);         
         public bool IsP1Pass()            => IsKeyPressed(Keys.LeftAlt);          
         public bool IsP1Up()              => IsKeyPressed(Keys.W);                 
@@ -43,7 +43,7 @@ namespace StorageWars
         public bool IsP1BossAction()      => IsKeyPressed(Keys.W);           
         public bool IsP1PayDebt()         => IsKeyPressed(Keys.R);              
 
-        // --- OYUNCU 2 (SAĞ TARAF) KONTROLLERİ ---
+        // --- P2 KONTROLLERİ ---
         public bool IsP2Bid()             => IsKeyPressed(Keys.RightShift);         
         public bool IsP2Pass()            => IsKeyPressed(Keys.RightAlt);          
         public bool IsP2Up()              => IsKeyPressed(Keys.Up);                  
@@ -56,12 +56,12 @@ namespace StorageWars
         public bool IsP2PayDebt()         => IsKeyPressed(Keys.P);
 
 
-        // --- OYUNCU 1 (P1) SKILL KONTROLLERİ ---
+        // --- P1 SKILL KONTROLLERİ ---
         public bool IsP1Skill1() => IsKeyPressed(Keys.Q); // Slot 1 Yeteneğini ateşler
         public bool IsP1Skill2() => IsKeyPressed(Keys.W); // Slot 2 Yeteneğini ateşler
         public bool IsP1Skill3() => IsKeyPressed(Keys.E); // Slot 3 Yeteneğini ateşler
 
-        // --- OYUNCU 2 (P2) SKILL KONTROLLERİ ---
+        // --- P2 SKILL KONTROLLERİ ---
         public bool IsP2Skill1() => IsKeyPressed(Keys.J); // Slot 1 Yeteneğini ateşler
         public bool IsP2Skill2() => IsKeyPressed(Keys.K); // Slot 2 Yeteneğini ateşler
         public bool IsP2Skill3() => IsKeyPressed(Keys.L); // Slot 3 Yeteneğini ateşler              

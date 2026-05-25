@@ -1,6 +1,6 @@
 namespace StorageWars
 {
-    public enum AuctionState  // İhalenin anlık gidişatını ve "Satıyorum, Sattım" zamanlamasını yönetir
+    public enum AuctionState    // İhalenin tansiyonunu belirler. Bu enum değiştikçe (GoingOnce, Sold) ekranda uyarılar çıkar ve sayaçlar sıfırlanır
     { 
         Bidding, 
         GoingOnce, 

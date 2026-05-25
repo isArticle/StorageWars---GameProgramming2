@@ -80,7 +80,7 @@ namespace StorageWars
             Pixel.SetData(new[] { Color.White });
         }
 
-        public static void DrawTextBottomCenter(SpriteBatch sb, string text, Vector2 position, Color color)   //Normal Metin Çizici (HP, Para, Menüler için sade çizim)
+        public static void DrawTextBottomCenter(SpriteBatch sb, string text, Vector2 position, Color color) //Normal Metin Çizici (HP, Para, Menüler için sade çizim)
         {
             if (string.IsNullOrEmpty(text)) return;
             Vector2 textSize = GameFont.MeasureString(text);
@@ -88,7 +88,7 @@ namespace StorageWars
             sb.DrawString(GameFont, text, position, color, 0f, origin, 1.0f, SpriteEffects.None, 0f);
         }
 
-        public static void DrawTextBottomCenterWithOutline(SpriteBatch sb, string text, Vector2 position, Color color)   // Sadece Eşyalar (Itemlar) İçin Kalın Dış Çizgili (Outline) Çizici
+        public static void DrawTextBottomCenterWithOutline(SpriteBatch sb, string text, Vector2 position, Color color) // Sadece Eşyalar (Itemlar) İçin Kalın Dış Çizgili (Outline) Çizici
         {
             if (string.IsNullOrEmpty(text)) return;
             Vector2 textSize = GameFont.MeasureString(text);
@@ -103,7 +103,7 @@ namespace StorageWars
             sb.DrawString(GameFont, text, position, color, 0f, origin, 1.0f, SpriteEffects.None, 0f);
         }
 
-        public static Texture2D GetItemTexture(string textureName) // İstenen eşyanın görselini sözlükten (Dictionary) O(1) hızında bulur, yoksa Content'ten okur
+        public static Texture2D GetItemTexture(string textureName) // İstenen eşyanın görselini sözlükten (Dictionary) O(1) hızında bulur, yoksa Content'ten okur ve RAM'e kaydeder (Lazy Loading)
         {
             if (_itemTextures.ContainsKey(textureName))
                 return _itemTextures[textureName];

@@ -1,6 +1,6 @@
 namespace StorageWars
 {
-    public enum GameState  // Oyunun anlık olarak hangi ana ekranda/aşamada (Menü, İhale, Dükkan) olduğunu yönetir
+    public enum GameState  // State Machine mimarisinin iskeletidir. Ana oyun döngüsünün hangi sahnede (Menu, Boss, vb.) update ve draw yapacağını belirler
     {
         MainMenu, 
         HowToPlay, 

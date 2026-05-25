@@ -14,9 +14,6 @@ namespace StorageWars
         public float[] SkillFlashTimers { get; private set; } = new float[3];
         public Item[,] InventoryGrid { get; private set; } = new Item[GameConstants.InventoryCols, GameConstants.InventoryRows];
 
-        // --- TEST VE HİLE METODU (F12 İÇİN) ---
-        public void DebugSetHPAndMoney(int hp, int money) { MaxHP = hp; Money = money; } 
-
         public Skill GetSkill(int index) => (index >= 0 && index < 3) ? EquippedSkills[index] : null; // İhale sırasında basılan tuşun indeksine karşılık gelen yeteneği döndürür
 
         public void ReplaceSkill(int index, Skill newSkill) // Mirror yeteneği kullanıldığında, kendini feda edip tam kendi yuvasına düşmandan kopyalanan yeteneği yerleştirir
@@ -111,7 +108,7 @@ namespace StorageWars
             if (MaxHP < 0) MaxHP = 0;
         }
 
-        public int CalculateInventoryNetWorth(RoundManager rm) // OYUN SONU HESAPLAMASI: Çantadaki tüm eşyaların güncel pazar değerini toplayıp serveti çıkartır
+        public int CalculateInventoryNetWorth(RoundManager rm) // Çantadaki tüm eşyaların güncel pazar değerini toplayıp Net Serveti çıkartır
         {
             int totalValue = 0;
             for (int y = 0; y < GameConstants.InventoryRows; y++)
@@ -133,7 +130,7 @@ namespace StorageWars
             Debt += amount + (amount / GameConstants.DebtInterestRate); 
         }
 
-        public void SpendMoney(int amount) // Oyuncunun parasını keser, vergi ve özel yetenek cezalarında paranın eksilere (borca) düşebilmesi için IF kilidi kırıldı
+        public void SpendMoney(int amount) // Oyuncunun parasını keser, eksiye düşmesine bilerek izin verir
         {
             Money -= amount; 
         }
@@ -143,7 +140,7 @@ namespace StorageWars
             if (amount > 0) Money += amount;
         }
 
-        public void SetInventoryItem(int x, int y, Item item) // Kazanılan eşyayı envanter matrisindeki (grid) X ve Y koordinatlarına yerleştirir
+        public void SetInventoryItem(int x, int y, Item item) // Kazanılan eşyayı envanter matrisindeki (grid) koordinatlara yerleştirir
         {
             if (x >= 0 && x < GameConstants.InventoryCols && y >= 0 && y < GameConstants.InventoryRows)
                 InventoryGrid[x, y] = item;

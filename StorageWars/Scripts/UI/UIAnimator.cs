@@ -6,7 +6,7 @@ namespace StorageWars
         public CharacterState OldState { get; private set; } = CharacterState.Idle;
         public float Progress { get; private set; } = 1f;
 
-        public void Update(CharacterState newState, float deltaTime) // Karakterlerin durum değişimlerindeki animasyon geçiş (Lerp) yüzdesini hesaplar
+        public void Update(CharacterState newState, float deltaTime) // Karakterlerin durum değişimlerindeki animasyon geçiş (Lerp) yüzdesini 0'dan 1'e doğru doldurur
         {
             if (CurrentState != newState)
             {

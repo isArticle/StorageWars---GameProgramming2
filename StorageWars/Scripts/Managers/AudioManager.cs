@@ -5,11 +5,9 @@ namespace StorageWars
 {
     public class AudioManager
     {
-        private SoundEffect _sfxClick, _sfxBid, _sfxError, _sfxTick, _sfxGavel, _sfxCash, _sfxPass;
-        private SoundEffect _sfxNav, _sfxSell, _sfxBuy, _sfxDebt, _sfxHeal;
-        
-        // YENİ: Taktiksel Yetenek Sesleri
-        private SoundEffect _sfxBluff, _sfxLock, _sfxMirror, _sfxBurn, _sfxCashback, _sfxTax;
+        private SoundEffect _sfxClick, _sfxBid, _sfxError, _sfxTick, _sfxGavel, _sfxCash, _sfxPass; // Auction
+        private SoundEffect _sfxNav, _sfxSell, _sfxBuy, _sfxDebt, _sfxHeal; // Inventory ve Shop
+        private SoundEffect _sfxBluff, _sfxLock, _sfxMirror, _sfxBurn, _sfxCashback, _sfxTax; // Skiller
         
 
         private SoundEffect LoadSound(ContentManager content, string assetName) // Ses dosyasını güvenli bir şekilde yükler, Asset bulunamazsa oyunu çökertmek yerine null döndürür
@@ -41,7 +39,6 @@ namespace StorageWars
             _sfxCashback = LoadSound(content, "sfx_cashback");
             _sfxTax  = LoadSound(content, "sfx_tax");
         }
-
 
         // Volume, Pitch ve Pan
         public void PlayClick() { _sfxClick?.Play(0.8f, 0f, 0f); }      

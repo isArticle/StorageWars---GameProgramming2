@@ -41,7 +41,7 @@ namespace StorageWars
             BonusPremium = (int)(avgTier * GameConstants.StorageTierBonusMultiplier); 
         }
 
-        private int GetTierScore(ItemTier tier) => tier switch // Eşya kalite enum'larını (S, A, B) matematiksel değerlere (6, 5, 4) dönüştürür
+        private int GetTierScore(ItemTier tier) => tier switch // Eşya kalite enum'larını matematiksel değerlere dönüştürerek ortalamaya katar
         {
             ItemTier.S => 6, ItemTier.A => 5, ItemTier.B => 4,
             ItemTier.C => 3, ItemTier.D => 2, ItemTier.E => 1,

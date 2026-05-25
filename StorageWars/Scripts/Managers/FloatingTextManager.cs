@@ -32,7 +32,7 @@ namespace StorageWars
             foreach (var ft in _floatingTexts)
             {
                 Color textColor = ft.Color * ft.GetOpacity();
-                Color outlineColor = Color.Black * ft.GetOpacity(); // Opaklığa duyarlı dinamik siyah gölge
+                Color outlineColor = Color.Black * ft.GetOpacity(); 
                 Vector2 pos = ft.Position;
 
                 AssetManager.DrawTextBottomCenter(sb, ft.Text, pos + new Vector2(2, 2), outlineColor);

@@ -36,7 +36,7 @@ namespace StorageWars
             _graphics.ApplyChanges();
         }
 
-        protected override void Initialize() // Temel yöneticileri (Managers) ve oyuncu nesnelerini oyun motoruna kaydeder
+        protected override void Initialize() // Temel yöneticileri (Managers) ve oyuncu nesnelerini belleğe kaydeder
         {
             InputManager = new InputManager();
             AudioManager = new AudioManager();
@@ -69,7 +69,7 @@ namespace StorageWars
             _nextState = newState;
         }
 
-        protected override void Update(GameTime gameTime) // Saniyede 60 kez çalışan, girdileri yakalayan ve sahne geçişlerini uygulayan ana motor döngüsü
+        protected override void Update(GameTime gameTime) // Saniyede 60 kez çalışan, girdileri yakalayan ve sahneleri yenileyen ana motor döngüsü
         {
             InputManager.Update();
             UIManager.Update(gameTime, AuctionManager); 

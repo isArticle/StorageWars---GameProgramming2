@@ -7,8 +7,6 @@ namespace StorageWars
     {
         private readonly List<Skill> _p1DailySkills = new List<Skill>();
         private readonly List<Skill> _p2DailySkills = new List<Skill>();
-
-        // YENİ: Tur bazlı iade hafızası. Oyuncunun o tur ne satın aldığını aklında tutar (Exploit Fix)
         private readonly HashSet<Skill> _p1PurchasedThisRound = new HashSet<Skill>();
         private readonly HashSet<Skill> _p2PurchasedThisRound = new HashSet<Skill>();
 

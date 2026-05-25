@@ -7,7 +7,7 @@ namespace StorageWars
     {
         protected Game1 _game;
 
-        public State(Game1 game)
+        public State(Game1 game) // Constructor: Oyunun ana motor (Game1) referansını alt sınıflara miras bırakmak üzere alır
         {
             _game = game;
         }

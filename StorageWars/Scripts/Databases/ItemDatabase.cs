@@ -7,10 +7,10 @@ namespace StorageWars
     {
         private class ItemTemplate
         {
-            public string Name;
-            public string TextureName;
+            public string Name { get; private set; }
+            public string TextureName { get; private set; }
 
-            public ItemTemplate(string name, string textureName) // Veritabanındaki eşyanın kalıbını (şablonunu) oluşturur
+            public ItemTemplate(string name, string textureName)
             {
                 Name = name;
                 TextureName = textureName;
@@ -37,7 +37,7 @@ namespace StorageWars
             { ItemTier.C, new List<ItemTemplate> {
                 new ItemTemplate("Silver Cutlery", "item_c_silver_cutlery"),
                 new ItemTemplate("Sealed LEGO Set", "item_c_sealed_lego"),
-                new ItemTemplate("Zippo ", "item_c_zippo")
+                new ItemTemplate("Zippo", "item_c_zippo")
             }},
             { ItemTier.B, new List<ItemTemplate> {
                 new ItemTemplate("Car Part", "item_b_car_part"),
@@ -56,7 +56,7 @@ namespace StorageWars
             }}
         };
 
-        private static Random _rnd = new Random();
+        private static readonly Random _rnd = new Random();
 
         public static Item GenerateItem(ItemTier tier, int assignedValue)  // LootManager tarafından çağrılacak olan, rastgele eşya üretici metot
         {

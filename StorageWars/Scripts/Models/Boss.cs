@@ -13,7 +13,7 @@ namespace StorageWars
         private float _thinkTimer = 0f;
         private Random _rnd = new Random();
 
-        public Boss()
+        public Boss() // Boss ayağa kalktığında can havuzunu ve başlangıç raunt parametrelerini bağlar
         {
             HP = GameConstants.BossMaxHP;
             CurrentRound = 1;
@@ -67,7 +67,7 @@ namespace StorageWars
             }
             else
             {
-                int damage = GameConstants.BossDamagePerRound[CurrentRound - 1]; // Boss kazandıysa bu turun ceza hasarı çekilir
+                int damage = GameConstants.BossDamagePerRound[CurrentRound - 1]; 
                 if (p1.MaxHP > 0) p1.TakeDamage(damage);
                 if (p2.MaxHP > 0) p2.TakeDamage(damage);
             }

@@ -10,7 +10,7 @@ namespace StorageWars
         private int _winnerNetWorth;
         private bool _isVictory;
 
-        public GameOverPhaseState(Game1 game, Player winner, int winnerNetWorth, bool isVictory) : base(game)
+        public GameOverPhaseState(Game1 game, Player winner, int winnerNetWorth, bool isVictory) : base(game) // Final skorlarını ve zafer durumunu önceki sahneden devralır
         {
             _game.Window.Title = "GAME OVER | Press SPACE to Return Main Menu";
             _winner = winner; 
@@ -43,7 +43,7 @@ namespace StorageWars
                 AssetManager.DrawTextBottomCenter(spriteBatch, "THE BOSS CRUSHED BOTH OF YOU!", UIConfig.GameOverWinnerTextPos, Color.DarkRed); 
             }
 
-            AssetManager.DrawTextBottomCenter(spriteBatch, "PRESS SPACE TO RETURN MAIN MENU", new Vector2(960, 980), Color.Black);
+            AssetManager.DrawTextBottomCenter(spriteBatch, "PRESS SPACE TO RETURN MAIN MENU", new Vector2(960, 980), Color.White); 
         }
     }
 }

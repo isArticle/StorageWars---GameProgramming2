@@ -1,6 +1,6 @@
 namespace StorageWars
 {
-    public enum ItemTier  // Eşyaların nadirlik ve değer kalitelerini belirler (F en kötü, S en iyi)
+    public enum ItemTier  // Depolardan çıkan eşyaların market değerini belirleyen RNG (Rastgele Sayı Üretici) sisteminin kalite etiketleridir
     {
         F, 
         E, 

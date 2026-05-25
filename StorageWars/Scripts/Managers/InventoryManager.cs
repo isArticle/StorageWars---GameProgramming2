@@ -39,7 +39,7 @@ namespace StorageWars
             return false; 
         }
        
-        public bool SellSelectedItem(Player player, int playerIndex, RoundManager roundManager)  //RoundManager parametre olarak eklendi. Böylece enflasyonlu satış tescilleniyor.
+        public bool SellSelectedItem(Player player, int playerIndex, RoundManager roundManager)  // Enflasyon hesabı için RoundManager parametresini alır ve satış gerçekleştirir
         {
             int cx = (playerIndex == 1) ? P1CursorX : P2CursorX;
             int cy = (playerIndex == 1) ? P1CursorY : P2CursorY;

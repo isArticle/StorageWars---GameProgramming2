@@ -7,17 +7,17 @@ namespace StorageWars
     {
         private static readonly List<Skill> _masterSkillList = new List<Skill>
         {
-            new Skill("The Bluff", "skill_bluff", SkillType.TheBluff, 300, "Sahte bir yüksek teklif verir. Rakip artırmazsa ihaleyi asıl ucuz fiyattan alırsın!"),
-            new Skill("Bid Lock", "skill_bidlock", SkillType.BidLock, 400, "Rakibin teklif butonunu kritik bir süreliğine kilitler."),
-            new Skill("Cash Back", "skill_cashback", SkillType.CashBack, 500, "Aktif edip ihaleyi kazanırsan, ödediğin paranın %20'sini anında geri alırsın."),
-            new Skill("Item Burner", "skill_itemburner", SkillType.ItemBurner, 600, "İhaleyi rakip kazanırsa, deponun içindeki rastgele bir eşyayı acımasızca yakar!"),
-            new Skill("Tax Collector", "skill_taxcollector", SkillType.TaxCollector, 450, "Rakip ihaleyi kazanırsa, ödediği paranın %10'u vergi olarak senin kasana girer."),
-            new Skill("Mirror", "skill_mirror", SkillType.Mirror, 550, "Rakibin sahip olduğu rastgele bir yeteneği kopyalar ve kendi yerine koyar.")
+            new Skill("The Bluff", "skill_bluff", SkillType.TheBluff, 300, "The Bluff"),
+            new Skill("Bid Lock", "skill_bidlock", SkillType.BidLock, 400, "BidLock"),
+            new Skill("Cash Back", "skill_cashback", SkillType.CashBack, 500, "CashBack"),
+            new Skill("Item Burner", "skill_itemburner", SkillType.ItemBurner, 600, "ItemBurner"),
+            new Skill("Tax Collector", "skill_taxcollector", SkillType.TaxCollector, 450, "TaxCollector"),
+            new Skill("Mirror", "skill_mirror", SkillType.Mirror, 550, "Mirror")
         };
 
         private static Random _rnd = new Random();
 
-        public static Skill GetRandomSkill(float inflationMultiplier)  // ShopManager tarafından çağrıldığında, tur enflasyonuna göre fiyatı artırılmış yeni bir yetenek kopyası üretir
+        public static Skill GetRandomSkill(float inflationMultiplier) // ShopManager tarafından çağrıldığında, tur enflasyonuna göre fiyatı artırılmış yeni bir yetenek kopyası üretir
         {
             var template = _masterSkillList[_rnd.Next(_masterSkillList.Count)];
             
