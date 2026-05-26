@@ -61,6 +61,8 @@ namespace StorageWars
             AssetManager.LoadContent(Content, GraphicsDevice); 
             AudioManager.LoadContent(Content);
 
+            AudioManager.PlayBGM(0.05f);
+
             ChangeState(new MainMenuPhaseState(this));
         }
 

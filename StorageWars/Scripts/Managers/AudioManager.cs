@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Media;
 
 namespace StorageWars
 {
@@ -8,6 +9,8 @@ namespace StorageWars
         private SoundEffect _sfxClick, _sfxBid, _sfxError, _sfxTick, _sfxGavel, _sfxCash, _sfxPass; // Auction
         private SoundEffect _sfxNav, _sfxSell, _sfxBuy, _sfxDebt, _sfxHeal; // Inventory ve Shop
         private SoundEffect _sfxBluff, _sfxLock, _sfxMirror, _sfxBurn, _sfxCashback, _sfxTax; // Skiller
+
+        private Song _bgMusic; // ArkaPlan Müziği
         
 
         private SoundEffect LoadSound(ContentManager content, string assetName) // Ses dosyasını güvenli bir şekilde yükler, Asset bulunamazsa oyunu çökertmek yerine null döndürür
@@ -25,6 +28,7 @@ namespace StorageWars
             _sfxGavel = LoadSound(content, "sfx_gavel");
             _sfxCash  = LoadSound(content, "sfx_cash");
             _sfxPass  = LoadSound(content, "sfx_pass");
+
             _sfxNav   = LoadSound(content, "sfx_nav");
             _sfxSell  = LoadSound(content, "sfx_sell");
             _sfxBuy   = LoadSound(content, "sfx_buy");
@@ -38,6 +42,17 @@ namespace StorageWars
 
             _sfxCashback = LoadSound(content, "sfx_cashback");
             _sfxTax  = LoadSound(content, "sfx_tax");
+
+            try { _bgMusic = content.Load<Song>("bg_music"); }
+            catch { _bgMusic = null; }
+        }
+
+        public void PlayBGM(float volume = 0.3f) // Müziği başlatır, ses seviyesini ayarlar ve loop'a (döngü) sokar
+        {
+            if (_bgMusic == null) return;
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(_bgMusic);
+            MediaPlayer.Volume = volume;
         }
 
         // Volume, Pitch ve Pan

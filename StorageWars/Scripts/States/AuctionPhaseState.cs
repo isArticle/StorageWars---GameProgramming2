@@ -63,7 +63,7 @@ namespace StorageWars
                 if (input.IsP1Pass()) { am.PlayerPass(BidderType.Player1); _game.AudioManager.PlayPass(); }
                 if (input.IsP2Pass()) { am.PlayerPass(BidderType.Player2); _game.AudioManager.PlayPass(); }
 
-                bot.Update(gameTime, am, rm);
+                bot.Update(gameTime, am, rm, _game.AudioManager); 
                 am.Update(gameTime, _game.AudioManager);
 
                 if (am.IsP1Out && am.IsP2Out && bot.IsOut)
@@ -86,7 +86,12 @@ namespace StorageWars
                         else if (am.HighestBidder == BidderType.AI) bot.SpendMoney(finalBid);
 
                         Player winner = (am.HighestBidder == BidderType.Player1) ? p1 : (am.HighestBidder == BidderType.Player2) ? p2 : null;
-                        if (winner != null) _game.LootManager.DistributeStorageLoot(winner, am.CurrentStorage, _game.InventoryManager); 
+                        
+                        if (winner != null) 
+                        {
+                            _game.AudioManager.PlayCash();
+                            _game.LootManager.DistributeStorageLoot(winner, am.CurrentStorage, _game.InventoryManager); 
+                        }
                         
                         p1.RemoveUsedSkills();
                         p2.RemoveUsedSkills();

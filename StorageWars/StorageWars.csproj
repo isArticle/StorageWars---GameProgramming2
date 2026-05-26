@@ -5,10 +5,7 @@
     <RollForward>Major</RollForward>
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <ApplicationIcon>Icon.ico</ApplicationIcon> 
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Icon.ico" />
@@ -27,7 +24,6 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.*" />
   </ItemGroup>
   <PropertyGroup>
-    <!-- Force the content builder command to 'mgcb' to avoid invoking 'dotnet mgcb' -->
     <_Command>mgcb</_Command>
   </PropertyGroup>
 </Project>

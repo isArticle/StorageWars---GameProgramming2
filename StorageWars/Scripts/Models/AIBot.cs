@@ -30,13 +30,14 @@ namespace StorageWars
             if (Money >= amount) Money -= amount;
         }
 
-        public void Update(GameTime gameTime, AuctionManager auctionManager, RoundManager roundManager) // Botun ihaleyi analiz edip karar verme ve teklif sunma mantığını saniyede 60 kez günceller
+        public void Update(GameTime gameTime, AuctionManager auctionManager, RoundManager roundManager, AudioManager audioManager) // Botun ihaleyi analiz edip karar verme ve teklif sunma mantığını saniyede 60 kez günceller
         {
             if (IsOut || auctionManager.IsBidBlocked) return; 
 
             if (Money <= auctionManager.CurrentHighestBid && auctionManager.HighestBidder != BidderType.AI)
             {
                 IsOut = true;
+                audioManager.PlayPass();
                 return;
             }
 
@@ -49,6 +50,7 @@ namespace StorageWars
                 if (foldChance <= GameConstants.BotFoldChance)
                 {
                     IsOut = true;
+                    audioManager.PlayPass();
                     return; 
                 }
 
@@ -56,9 +58,17 @@ namespace StorageWars
                 int newBid = auctionManager.CurrentHighestBid + bidIncrease;
 
                 if (newBid <= Money) 
-                    auctionManager.PlaceBid(BidderType.AI, newBid, Money);
+                {
+                    if (auctionManager.PlaceBid(BidderType.AI, newBid, Money))
+                    {
+                        audioManager.PlayBid(); // Teklif sesi
+                    }
+                }
                 else 
+                {
                     IsOut = true;
+                    audioManager.PlayPass();
+                }
                 
                 _bidTimer = 0f;
             }
