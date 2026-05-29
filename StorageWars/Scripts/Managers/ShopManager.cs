@@ -39,7 +39,7 @@ namespace StorageWars
             else if (playerIndex == 2) P2SelectedSlot = (P2SelectedSlot + direction + 3) % 3;
         }
 
-        public bool BuySkill(Player player, int playerIndex) // Bakiye kontrolünü (Guard Clause) geçerse yeteneği alır ve tur hafızasına işler
+        public bool BuySkill(Player player, int playerIndex) // Bakiye kontrolünü geçerse yeteneği alır ve tur hafızasına işler
         {
             int slot = (playerIndex == 1) ? P1SelectedSlot : P2SelectedSlot;
             var currentPool = (playerIndex == 1) ? _p1DailySkills : _p2DailySkills;

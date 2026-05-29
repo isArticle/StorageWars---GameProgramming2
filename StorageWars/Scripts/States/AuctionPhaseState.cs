@@ -74,7 +74,7 @@ namespace StorageWars
             }
             else
             {
-                am.FinalizeBluff(); // Blöf hesaplaşması
+                am.FinalizeBluff();
                 _resultTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (_resultTimer >= GameConstants.PhaseTransitionDelay)
                 {

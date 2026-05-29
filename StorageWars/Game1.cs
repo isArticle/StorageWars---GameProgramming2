@@ -36,7 +36,7 @@ namespace StorageWars
             _graphics.ApplyChanges();
         }
 
-        protected override void Initialize() // Temel yöneticileri (Managers) ve oyuncu nesnelerini belleğe kaydeder
+        protected override void Initialize() // Managerleri ve oyuncu nesnelerini belleğe kaydeder
         {
             InputManager = new InputManager();
             AudioManager = new AudioManager();
@@ -55,7 +55,7 @@ namespace StorageWars
             base.Initialize();
         }
 
-        protected override void LoadContent() // Asset'leri yükler ve oyunu ilk sahne olan Ana Menüden (MainMenu) başlatır
+        protected override void LoadContent() // Asset'leri yükler ve oyunu ilk sahne olan Ana Menüden başlatır
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             AssetManager.LoadContent(Content, GraphicsDevice); 
@@ -66,7 +66,7 @@ namespace StorageWars
             ChangeState(new MainMenuPhaseState(this));
         }
 
-        public void ChangeState(State newState) // Sahneler arası geçişi güvenli bir şekilde (update loop'unu bozmadan) kuyruğa alır
+        public void ChangeState(State newState) // Sahneler arası geçişi güvenli bir şekilde kuyruğa alır
         {
             _nextState = newState;
         }
@@ -89,7 +89,7 @@ namespace StorageWars
             base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime) // Aktif olan sahnedeki tüm nesnelerin ekrana (Canvas) çizilmesini sağlar
+        protected override void Draw(GameTime gameTime) // Aktif olan sahnedeki tüm nesnelerin ekrana çizilmesini sağlar
         {
             GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin();

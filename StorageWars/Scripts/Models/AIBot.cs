@@ -61,7 +61,7 @@ namespace StorageWars
                 {
                     if (auctionManager.PlaceBid(BidderType.AI, newBid, Money))
                     {
-                        audioManager.PlayBid(); // Teklif sesi
+                        audioManager.PlayBid();
                     }
                 }
                 else 

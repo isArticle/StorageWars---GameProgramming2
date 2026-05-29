@@ -27,7 +27,7 @@ namespace StorageWars
             }
         }
 
-        private Item GenerateRandomItem(int currentRound) // Tura bağlı artan şans (RNG) faktörüyle veritabanından uygun kalitede eşyayı çeker ve değerini Constants'tan atar
+        private Item GenerateRandomItem(int currentRound) // Tura bağlı artan şans RNG faktörüyle veritabanından uygun kalitede eşyayı çeker ve değerini Constants'tan atar
         {
             int roll = _rnd.Next(1, 101) + (currentRound * GameConstants.LootRoundBonusMultiplier); 
             ItemTier tier;

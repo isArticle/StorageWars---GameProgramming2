@@ -27,7 +27,7 @@ namespace StorageWars
             }
         }
 
-        public void Draw(SpriteBatch sb) // UIManager tarafından çağrıldığında, hayatta olan tüm yazıları siyah bir dış çerçeve (Outline) ile neon tabela gibi belirgin şekilde ekrana basar
+        public void Draw(SpriteBatch sb) // UIManager tarafından çağrıldığında, hayatta olan tüm yazıları Outline ile neon tabela gibi belirgin şekilde ekrana basar
         {
             foreach (var ft in _floatingTexts)
             {

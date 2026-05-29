@@ -13,7 +13,7 @@ namespace StorageWars
             DrawPlayerSkills(sb, p2, UIConfig.P2AuctionSkillSlots, deltaTime);
         }
 
-        private void DrawPlayerSkills(SpriteBatch sb, Player player, Vector2[] slotCoords, float dt) // Oyuncunun yeteneklerini tek tek tarar; boşsa kutu, doluysa ikon, kullanıldıysa kararmış (DarkGray) şekilde çizer
+        private void DrawPlayerSkills(SpriteBatch sb, Player player, Vector2[] slotCoords, float dt) // Oyuncunun yeteneklerini tek tek tarar; boşsa kutu, doluysa ikon, kullanıldıysa kararmış şekilde çizer
         {
             for (int i = 0; i < player.EquippedSkills.Length; i++)
             {

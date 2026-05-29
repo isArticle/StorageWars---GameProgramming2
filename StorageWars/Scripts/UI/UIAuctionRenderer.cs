@@ -14,7 +14,7 @@ namespace StorageWars
 
         private UIAuctionSkillRenderer _auctionSkillRenderer = new UIAuctionSkillRenderer();
 
-        public void Update(GameTime gameTime, AuctionManager auctionManager) // İhaledeki anlık teklifin (örn: 100'den 500'e çıkması) anında değil, akıcı bir animasyonla (Lerp) artmasını sağlar
+        public void Update(GameTime gameTime, AuctionManager auctionManager) // İhaledeki anlık teklifin (örn: 100'den 500'e çıkması) anında değil, akıcı bir animasyonla artmasını sağlar
         {
             _currentDeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -85,7 +85,7 @@ namespace StorageWars
             DrawAuctionStatusMessages(spriteBatch, auctionManager);
         }
 
-        private void DrawP1AuctionInfo(SpriteBatch sb, AuctionManager am, Player p, UIAnimator anim) // Player 1'in portresini alfa (saydamlık) geçişleriyle animasyonlu çizer
+        private void DrawP1AuctionInfo(SpriteBatch sb, AuctionManager am, Player p, UIAnimator anim) // Player 1'in portresini alfa geçişleriyle animasyonlu çizer
         {
             AssetManager.DrawTextBottomCenter(sb, "PLAYER 1", UIConfig.P1TitlePos, Color.Black);
             AssetManager.DrawTextBottomCenter(sb, $"Money: ${p.Money}", UIConfig.P1MoneyPos, Color.DarkGreen);
@@ -112,7 +112,7 @@ namespace StorageWars
             else AssetManager.DrawTextBottomCenter(sb, "...", UIConfig.P1ThinkPos, Color.Gray);
         }
 
-        private void DrawP2AuctionInfo(SpriteBatch sb, AuctionManager am, Player p, UIAnimator anim) // Player 2'nin portresini aynalayarak (FlipHorizontally) ve animasyonlu çizer
+        private void DrawP2AuctionInfo(SpriteBatch sb, AuctionManager am, Player p, UIAnimator anim) // Player 2'nin portresini aynalayarak ve animasyonlu çizer
         {
             AssetManager.DrawTextBottomCenter(sb, "PLAYER 2", UIConfig.P2TitlePos, Color.Black);
             AssetManager.DrawTextBottomCenter(sb, $"Money: ${p.Money}", UIConfig.P2MoneyPos, Color.DarkGreen);

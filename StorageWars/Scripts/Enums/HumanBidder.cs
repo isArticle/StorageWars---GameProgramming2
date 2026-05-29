@@ -1,6 +1,6 @@
 namespace StorageWars
 {
-    public enum HumanBidder     // Boss Phase'de Shift tuşlarına basılırken spamı (hileyi) engellemek için son teklif veren insanı takip eden filtredir
+    public enum HumanBidder     // Boss Phase'de Shift tuşlarına basılırken spamı engellemek için son teklif veren insanı takip eden filtredir
     { 
         None, 
         Player1, 

@@ -36,13 +36,13 @@ namespace StorageWars
                 if (validSlots.Count > 0)
                 {
                     Point target = validSlots[new Random().Next(validSlots.Count)];
-                    _burnVictim.SetInventoryItem(target.X, target.Y, null); // Eşyayı anında siler
+                    _burnVictim.SetInventoryItem(target.X, target.Y, null);
                     
                     Vector2 startPos = am.P1ItemBurner ? UIConfig.P2GridStart : UIConfig.P1GridStart;
                     _burnPos = new Vector2(startPos.X + (target.X * (UIConfig.GridCellSize + UIConfig.GapX)), startPos.Y + (target.Y * (UIConfig.GridCellSize + UIConfig.GapY)));
                     
                     _isBurning = true;
-                    _burnTimer = 2.0f; // Ekranda 2 saniye alev şovu yapar
+                    _burnTimer = 2.0f;
                     _game.AudioManager.PlayBurn();
                 }
             }

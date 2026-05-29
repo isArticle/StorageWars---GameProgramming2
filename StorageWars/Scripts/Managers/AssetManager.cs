@@ -88,7 +88,7 @@ namespace StorageWars
             sb.DrawString(GameFont, text, position, color, 0f, origin, 1.0f, SpriteEffects.None, 0f);
         }
 
-        public static void DrawTextBottomCenterWithOutline(SpriteBatch sb, string text, Vector2 position, Color color) // Sadece Eşyalar (Itemlar) İçin Kalın Dış Çizgili (Outline) Çizici
+        public static void DrawTextBottomCenterWithOutline(SpriteBatch sb, string text, Vector2 position, Color color) // Sadece Eşyalar İçin Outline Çizici
         {
             if (string.IsNullOrEmpty(text)) return;
             Vector2 textSize = GameFont.MeasureString(text);
@@ -103,7 +103,7 @@ namespace StorageWars
             sb.DrawString(GameFont, text, position, color, 0f, origin, 1.0f, SpriteEffects.None, 0f);
         }
 
-        public static Texture2D GetItemTexture(string textureName) // İstenen eşyanın görselini sözlükten (Dictionary) O(1) hızında bulur, yoksa Content'ten okur ve RAM'e kaydeder (Lazy Loading)
+        public static Texture2D GetItemTexture(string textureName) // İstenen eşyanın görselini sözlükten (Dictionary) O(1) hızında bulur, yoksa Content'ten okur ve RAM'e kaydeder
         {
             if (_itemTextures.ContainsKey(textureName))
                 return _itemTextures[textureName];
@@ -121,7 +121,7 @@ namespace StorageWars
             }
         }
 
-        public static Texture2D GetSkillTexture(string textureName) // İstenen yetenek görselini RAM'den çeker, Texture eksikse hatayı yutarak (Pixel dönerek) oyunun çökmesini engeller
+        public static Texture2D GetSkillTexture(string textureName) // İstenen yetenek görselini RAM'den çeker, Texture eksikse hatayı yutarak oyunun çökmesini engeller
         {
             if (string.IsNullOrEmpty(textureName)) return Pixel;
 

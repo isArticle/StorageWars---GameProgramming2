@@ -59,7 +59,7 @@ namespace StorageWars
             return false;
         }
 
-        public Item GetSelectedItem(Player player, int playerIndex) // İmlecin o an üzerinde durduğu eşyanın (Item) veri modelini döndürür
+        public Item GetSelectedItem(Player player, int playerIndex) // İmlecin o an üzerinde durduğu eşyanın veri modelini döndürür
         {
             int cx = (playerIndex == 1) ? P1CursorX : P2CursorX;
             int cy = (playerIndex == 1) ? P1CursorY : P2CursorY;

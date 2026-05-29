@@ -13,12 +13,12 @@ namespace StorageWars
             _currentKeyState = Keyboard.GetState();
         }
         
-        private bool IsKeyPressed(Keys key) // Basılı tutmayı engeller, sadece tuşa ilk basıldığı (aşağı indiği) anı yakalar
+        private bool IsKeyPressed(Keys key) // Basılı tutmayı engeller, sadece tuşa ilk basıldığı anı yakalar
         {
             return _currentKeyState.IsKeyDown(key) && _oldKeyState.IsKeyUp(key);
         }
         
-        private bool IsKeyDown(Keys key) // Tuşun anlık olarak basılı olup olmadığını (spam) kontrol eder
+        private bool IsKeyDown(Keys key) // Tuşun anlık olarak basılı olup olmadığını kontrol eder
         {
             return _currentKeyState.IsKeyDown(key);
         }
@@ -57,13 +57,13 @@ namespace StorageWars
 
 
         // --- P1 SKILL KONTROLLERİ ---
-        public bool IsP1Skill1() => IsKeyPressed(Keys.Q); // Slot 1 Yeteneğini ateşler
-        public bool IsP1Skill2() => IsKeyPressed(Keys.W); // Slot 2 Yeteneğini ateşler
-        public bool IsP1Skill3() => IsKeyPressed(Keys.E); // Slot 3 Yeteneğini ateşler
+        public bool IsP1Skill1() => IsKeyPressed(Keys.Q);
+        public bool IsP1Skill2() => IsKeyPressed(Keys.W); 
+        public bool IsP1Skill3() => IsKeyPressed(Keys.E);
 
         // --- P2 SKILL KONTROLLERİ ---
-        public bool IsP2Skill1() => IsKeyPressed(Keys.J); // Slot 1 Yeteneğini ateşler
-        public bool IsP2Skill2() => IsKeyPressed(Keys.K); // Slot 2 Yeteneğini ateşler
-        public bool IsP2Skill3() => IsKeyPressed(Keys.L); // Slot 3 Yeteneğini ateşler              
+        public bool IsP2Skill1() => IsKeyPressed(Keys.J);
+        public bool IsP2Skill2() => IsKeyPressed(Keys.K); 
+        public bool IsP2Skill3() => IsKeyPressed(Keys.L);            
     }
 }

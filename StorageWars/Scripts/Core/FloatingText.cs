@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace StorageWars
 {
-    public class FloatingText // Ekranda kısa süreliğine beliren hasar, para veya yetenek yazılarını temsil eden hafif (lightweight) veri nesnesidir
+    public class FloatingText // Ekranda kısa süreliğine beliren hasar, para veya yetenek yazılarını temsil eden lightweight veri nesnesidir
     {
         public string Text { get; private set; }
         public Vector2 Position { get; private set; }
@@ -10,7 +10,7 @@ namespace StorageWars
         public float LifeTime { get; private set; }
         public float MaxLifeTime { get; private set; }
 
-        public FloatingText(string text, Vector2 startPos, Color color, float lifeTime) // Sınıf türetilirken (Constructor) başlangıç değerlerini atar ve yazıyı canlandırır
+        public FloatingText(string text, Vector2 startPos, Color color, float lifeTime) // Sınıf türetilirken Constructor başlangıç değerlerini atar ve yazıyı canlandırır
         {
             Text = text;
             Position = startPos;
@@ -21,7 +21,7 @@ namespace StorageWars
 
         public void Update(float deltaTime) // Frame-rate bağımsız (deltaTime ile çarpılarak) yazıyı her saniye yukarı kaydırır ve ömrünü tüketir
         {
-            Position = new Vector2(Position.X, Position.Y - (GameConstants.FloatingTextRiseSpeed * deltaTime)); // Sabit sayı (60f) yerine GameConstants kancası eklendi!
+            Position = new Vector2(Position.X, Position.Y - (GameConstants.FloatingTextRiseSpeed * deltaTime));
             LifeTime -= deltaTime;
         }
 

@@ -5,7 +5,7 @@ namespace StorageWars
 {
     public class UIInventoryRenderer
     {
-        private Color GetTierColor(ItemTier tier) => tier switch // Eşyanın kalitesine (Tier) göre renk paleti atar
+        private Color GetTierColor(ItemTier tier) => tier switch // Tier göre renk paleti atar
         {
             ItemTier.S => Color.MediumPurple,
             ItemTier.A => Color.Orange,       
@@ -73,10 +73,10 @@ namespace StorageWars
         private void DrawSelectionBorder(SpriteBatch sb, Vector2 pos, Color c) // İmlecin etrafına 4 adet dikdörtgen çizerek seçili Hover efekti verir
         {
             Rectangle rect = new Rectangle((int)pos.X, (int)pos.Y, UIConfig.GridCellSize, UIConfig.GridCellSize);
-            int t = 5; // Kalınlık
-            sb.Draw(AssetManager.Pixel, new Rectangle(rect.X, rect.Y, rect.Width, t), c); // Üst çizgi
+            int t = 5;                                                                                      // Kalınlık
+            sb.Draw(AssetManager.Pixel, new Rectangle(rect.X, rect.Y, rect.Width, t), c);                   // Üst çizgi
             sb.Draw(AssetManager.Pixel, new Rectangle(rect.X, rect.Y + rect.Height - t, rect.Width, t), c); // Alt çizgi
-            sb.Draw(AssetManager.Pixel, new Rectangle(rect.X, rect.Y, t, rect.Height), c); // Sol çizgi
+            sb.Draw(AssetManager.Pixel, new Rectangle(rect.X, rect.Y, t, rect.Height), c);                  // Sol çizgi
             sb.Draw(AssetManager.Pixel, new Rectangle(rect.X + rect.Width - t, rect.Y, t, rect.Height), c); // Sağ çizgi
         }
     }

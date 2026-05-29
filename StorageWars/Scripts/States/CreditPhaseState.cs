@@ -7,6 +7,6 @@ namespace StorageWars
     {
         public CreditPhaseState(Game1 game) : base(game) { }
         public override void Update(GameTime gameTime) { if (_game.InputManager.IsBack()) { _game.AudioManager.PlayClick(); _game.ChangeState(new MainMenuPhaseState(_game)); } } // Geri tuşunu dinler ve ana menüye dönüşü sağlar
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { _game.UIManager.DrawCredits(spriteBatch); } // Emeği geçenler (Credits) ekranını çizer
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { _game.UIManager.DrawCredits(spriteBatch); } // Credits ekranını çizer
     }
 }

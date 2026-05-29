@@ -84,11 +84,11 @@ namespace StorageWars
                     {
                         CalculateWinner(p1, p2, _game.RoundManager); 
                         bool isVictory = (_phaseState == BossState.Defeated); 
-                        _game.ChangeState(new GameOverPhaseState(_game, _winner, _winnerNetWorth, isVictory)); // Savaş bittiğinde doğrudan Game Over'a atlar
+                        _game.ChangeState(new GameOverPhaseState(_game, _winner, _winnerNetWorth, isVictory));
                         return; 
                     }
                     
-                    _resultTimer = 4.0f; // Hala hayattalarsa sonucu 4 saniye asılı bırakır
+                    _resultTimer = 4.0f;
                     if (_playersTotalBid > _boss.CurrentBid) audio.PlayCash(); else audio.PlayError();
                 }
             }

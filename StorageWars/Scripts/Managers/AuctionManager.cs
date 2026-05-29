@@ -57,7 +57,7 @@ namespace StorageWars
             IsBluffActive = false;
         }
 
-        public void ActivateSkill(BidderType user, SkillType type, RoundManager rm) // Müzayede esnasında klavyeden basılan yeteneğin arka plan (Backend) etki mantığını çalıştırır
+        public void ActivateSkill(BidderType user, SkillType type, RoundManager rm) // Müzayede esnasında klavyeden basılan yeteneğin arka plan etki mantığını çalıştırır
         {
             if (type == SkillType.BidLock)
             {
@@ -180,7 +180,7 @@ namespace StorageWars
                     if (CurrentState == AuctionState.GoingOnce || CurrentState == AuctionState.GoingTwice)
                         audioManager.PlayTick();
                     else if (CurrentState == AuctionState.Sold)
-                        audioManager.PlayGavel();
+                        audioManager.PlayCash();
                 }
             }
         }

@@ -7,8 +7,8 @@ namespace StorageWars
     public class AudioManager
     {
         private SoundEffect _sfxClick, _sfxBid, _sfxError, _sfxTick, _sfxGavel, _sfxCash, _sfxPass; // Auction
-        private SoundEffect _sfxNav, _sfxSell, _sfxBuy, _sfxDebt, _sfxHeal; // Inventory ve Shop
-        private SoundEffect _sfxBluff, _sfxLock, _sfxMirror, _sfxBurn, _sfxCashback, _sfxTax; // Skiller
+        private SoundEffect _sfxNav, _sfxSell, _sfxBuy, _sfxDebt, _sfxHeal;                         // Inventory ve Shop
+        private SoundEffect _sfxBluff, _sfxLock, _sfxMirror, _sfxBurn, _sfxCashback, _sfxTax;       // Skiller
 
         private Song _bgMusic; // ArkaPlan Müziği
         
@@ -19,7 +19,7 @@ namespace StorageWars
             catch { return null; }
         }
 
-        public void LoadContent(ContentManager content) // Tüm oyun ses efektlerini (SFX) oyun başında hafızaya (RAM) alır
+        public void LoadContent(ContentManager content) // Tüm SFX leri oyun başında hafızaya alır
         {
             _sfxClick = LoadSound(content, "sfx_click");
             _sfxBid   = LoadSound(content, "sfx_bid");
@@ -47,7 +47,7 @@ namespace StorageWars
             catch { _bgMusic = null; }
         }
 
-        public void PlayBGM(float volume = 0.3f) // Müziği başlatır, ses seviyesini ayarlar ve loop'a (döngü) sokar
+        public void PlayBGM(float volume = 0.3f) // Müziği başlatır, ses seviyesini ayarlar ve loop'a sokar
         {
             if (_bgMusic == null) return;
             MediaPlayer.IsRepeating = true;
