@@ -16,7 +16,6 @@ namespace StorageWars
                 SetProcessDPIAware();
             }
 
-            // Oyunun normal başlama döngüsü
             using var game = new Game1();
             game.Run();
         }
