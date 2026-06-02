@@ -6,7 +6,7 @@ namespace StorageWars
     public static class Program
     {
         [DllImport("user32.dll")]
-        private static extern bool SetProcessDPIAware(); // Windows'un oyunu zorla büyütmesini (DPI Scaling) engelleyen sihirli komut
+        private static extern bool SetProcessDPIAware(); // DPI Scaling
 
         [STAThread]
         static void Main()

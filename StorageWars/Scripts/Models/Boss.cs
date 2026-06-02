@@ -60,16 +60,17 @@ namespace StorageWars
 
         public void ResolveRound(int playersTotalBid, Player p1, Player p2) // 15 saniyelik sayaç sıfırlandığında teklifleri çarpıştırıp hasarları dağıtır
         {
+            int roundDamage = GameConstants.BossDamagePerRound[CurrentRound - 1];
+            
             if (playersTotalBid > CurrentBid)
             {
-                HP -= playersTotalBid;
+                HP -= roundDamage;
                 if (HP < 0) HP = 0;
             }
             else
             {
-                int damage = GameConstants.BossDamagePerRound[CurrentRound - 1]; 
-                if (p1.MaxHP > 0) p1.TakeDamage(damage);
-                if (p2.MaxHP > 0) p2.TakeDamage(damage);
+                if (p1.MaxHP > 0) p1.TakeDamage(roundDamage);
+                if (p2.MaxHP > 0) p2.TakeDamage(roundDamage);
             }
         }
 
@@ -77,7 +78,11 @@ namespace StorageWars
         {
             if (HP <= 0) return BossState.Defeated;
             if (p1.MaxHP <= 0 && p2.MaxHP <= 0) return BossState.PlayersDead;
-            if (CurrentRound >= GameConstants.BossTotalRounds) return (HP <= 0) ? BossState.Defeated : BossState.PlayersDead;
+            if (CurrentRound >= GameConstants.BossTotalRounds) 
+            {
+                if (p1.MaxHP > 0 || p2.MaxHP > 0) return BossState.Defeated;
+                else return BossState.PlayersDead;
+            }
             return BossState.Resolving;
         }
 

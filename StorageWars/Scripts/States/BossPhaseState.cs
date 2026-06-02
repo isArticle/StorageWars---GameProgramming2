@@ -16,7 +16,7 @@ namespace StorageWars
         private float _p2Cooldown = 0f; 
 
         private Player _winner; 
-        private int _winnerNetWorth; 
+        private int _winnerNetWorth;
         private KeyboardState _oldKeyState; 
         private BossState _phaseState = BossState.Bidding; 
 
@@ -29,7 +29,7 @@ namespace StorageWars
             _oldKeyState = Keyboard.GetState(); 
         }
 
-        public override void Update(GameTime gameTime) // Sırayla teklif verme kuralını (Anti-Spam) denetler ve ortak havuzu hesaplar
+        public override void Update(GameTime gameTime) // Sırayla Anti-Spamı denetler ve ortak havuzu hesaplar
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var audio = _game.AudioManager; 
@@ -73,7 +73,11 @@ namespace StorageWars
 
                 int oldBossBid = _boss.CurrentBid; 
                 _boss.UpdateAI(dt, _playersTotalBid, _timer); 
-                if (_boss.CurrentBid > oldBossBid) audio.PlayBid();
+                if (_boss.CurrentBid > oldBossBid)
+                {
+                  audio.PlayBid();
+                  _lastHumanBidder = HumanBidder.None;
+                }
 
                 if (_timer <= 0) 
                 {
@@ -111,14 +115,26 @@ namespace StorageWars
 
         private void CalculateWinner(Player p1, Player p2, RoundManager rm) // Hayatta kalan en zengin oyuncuyu tesciller
         {
-            if (p1.MaxHP > 0 && p2.MaxHP <= 0) { _winner = p1; _winnerNetWorth = p1.Money + p1.CalculateInventoryNetWorth(rm); return; } 
-            if (p2.MaxHP > 0 && p1.MaxHP <= 0) { _winner = p2; _winnerNetWorth = p2.Money + p2.CalculateInventoryNetWorth(rm); return; } 
+            int p1Worth = p1.Money + p1.CalculateInventoryNetWorth(rm) - p1.Debt; 
+            int p2Worth = p2.Money + p2.CalculateInventoryNetWorth(rm) - p2.Debt;
+            
+            for (int y = 0; y < GameConstants.InventoryRows; y++)
+            {
+                for (int x = 0; x < GameConstants.InventoryCols; x++)
+                {
+                    if (p1.InventoryGrid[x, y] != null && p1.InventoryGrid[x, y].Value >= GameConstants.TierB_MinValue)
+                        p1Worth += 1000;
 
-            int p1Worth = p1.Money + p1.CalculateInventoryNetWorth(rm); 
-            int p2Worth = p2.Money + p2.CalculateInventoryNetWorth(rm); 
+                    if (p2.InventoryGrid[x, y] != null && p2.InventoryGrid[x, y].Value >= GameConstants.TierB_MinValue)
+                        p2Worth += 1000;
+                }
+            }
+
+            if (p1.MaxHP > 0 && p2.MaxHP <= 0) { _winner = p1; _winnerNetWorth = p1Worth; return; } 
+            if (p2.MaxHP > 0 && p1.MaxHP <= 0) { _winner = p2; _winnerNetWorth = p2Worth; return; } 
 
             if (p1Worth > p2Worth) { _winner = p1; _winnerNetWorth = p1Worth; } 
-            else { _winner = p2; _winnerNetWorth = p2Worth; } 
+            else { _winner = p2; _winnerNetWorth = p2Worth; }
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) { _game.UIManager.DrawBossPhase(spriteBatch, _boss, _game.Player1, _game.Player2, _playersTotalBid, _timer, gameTime, _winner, _winnerNetWorth, _phaseState); } // Çizimi delege eder

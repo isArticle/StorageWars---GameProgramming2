@@ -14,7 +14,7 @@ namespace StorageWars
 
         private UIAuctionSkillRenderer _auctionSkillRenderer = new UIAuctionSkillRenderer();
 
-        public void Update(GameTime gameTime, AuctionManager auctionManager) // İhaledeki anlık teklifin (örn: 100'den 500'e çıkması) anında değil, akıcı bir animasyonla artmasını sağlar
+        public void Update(GameTime gameTime, AuctionManager auctionManager) // İhaledeki anlık teklifin 100'den 500'e çıkması anında değil, akıcı bir animasyonla artmasını sağlar
         {
             _currentDeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 

@@ -25,7 +25,7 @@ namespace StorageWars
             }
         }
 
-        public Skill GetRandomActiveSkill() // "Mirror" yeteneği tetiklendiğinde rakibin çantasından henüz kullanılmamış rastgele bir yetenek seçer
+        public Skill GetRandomActiveSkill() // Mirror yeteneği tetiklendiğinde rakibin çantasından henüz kullanılmamış rastgele bir yetenek seçer
         {
             var activeSkills = Array.FindAll(EquippedSkills, s => s != null && !s.IsUsed);
             if (activeSkills.Length > 0) return activeSkills[new Random().Next(activeSkills.Length)];
@@ -40,7 +40,7 @@ namespace StorageWars
             }
         }
 
-        public bool AddSkill(Skill skill) // Yeteneği çantadaki ilk boş slota (1, 2 veya 3) güvenle ekler
+        public bool AddSkill(Skill skill) // Yeteneği çantadaki ilk boş slota 1, 2 veya 3 güvenle ekler
         {
             for (int i = 0; i < EquippedSkills.Length; i++)
             {

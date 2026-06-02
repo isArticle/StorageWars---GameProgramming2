@@ -47,7 +47,7 @@ namespace StorageWars
             catch { _bgMusic = null; }
         }
 
-        public void PlayBGM(float volume = 0.3f) // Müziği başlatır, ses seviyesini ayarlar ve loop'a sokar
+        public void PlayBGM(float volume = 0.5f) // Müziği başlatır, ses seviyesini ayarlar ve loop'a sokar
         {
             if (_bgMusic == null) return;
             MediaPlayer.IsRepeating = true;
@@ -56,25 +56,25 @@ namespace StorageWars
         }
 
         // Volume, Pitch ve Pan
-        public void PlayClick() { _sfxClick?.Play(0.8f, 0f, 0f); }      
+        public void PlayClick() { _sfxClick?.Play(1.0f, 0f, 0f); }      
         public void PlayBid()   { _sfxBid?.Play(1.0f, 0f, 0f); }        
-        public void PlayError() { _sfxError?.Play(0.3f, 0f, 0f); }      
-        public void PlayTick()  { _sfxTick?.Play(0.7f, 0f, 0f); }       
-        public void PlayGavel() { _sfxGavel?.Play(1.0f, 0f, 0f); }      
-        public void PlayCash()  { _sfxCash?.Play(0.5f, 0f, 0f); }       
-        public void PlayPass()  { _sfxPass?.Play(0.6f, 0f, 0f); }       
+        public void PlayError() { _sfxError?.Play(0.6f, 0f, 0f); }      
+        public void PlayTick()  { _sfxTick?.Play(0.9f, 0f, 0f); }       
+        public void PlayGavel() { _sfxGavel?.Play(1.2f, 0f, 0f); }      
+        public void PlayCash()  { _sfxCash?.Play(0.7f, 0f, 0f); }       
+        public void PlayPass()  { _sfxPass?.Play(1.0f, 0f, 0f); }       
         
-        public void PlayNav()   { _sfxNav?.Play(0.5f, 0f, 0f); }       
-        public void PlaySell()  { _sfxSell?.Play(0.9f, 0f, 0f); }      
-        public void PlayBuy()   { _sfxBuy?.Play(0.9f, 0f, 0f); }       
-        public void PlayDebt()  { _sfxDebt?.Play(1.0f, -0.2f, 0f); }    
-        public void PlayHeal()  { _sfxHeal?.Play(0.4f, 0f, 0f); }       
+        public void PlayNav()   { _sfxNav?.Play(0.7f, 0f, 0f); }       
+        public void PlaySell()  { _sfxSell?.Play(1.1f, 0f, 0f); }      
+        public void PlayBuy()   { _sfxBuy?.Play(1.1f, 0f, 0f); }       
+        public void PlayDebt()  { _sfxDebt?.Play(1.2f, -0.2f, 0f); }    
+        public void PlayHeal()  { _sfxHeal?.Play(0.6f, 0f, 0f); }       
         
-        public void PlayBluff() { _sfxBluff?.Play(0.2f, -0.5f, 0f); }
-        public void PlayLock()  { _sfxLock?.Play(0.2f, 0f, 0f); } 
-        public void PlayMirror(){ _sfxMirror?.Play(0.2f, 0.0f, 0f); } 
-        public void PlayBurn()  { _sfxBurn?.Play(0.2f, 0f, 0f); } 
-        public void PlayCashback() { _sfxCashback?.Play(0.2f, 0f, 0f); } 
-        public void PlayTax()  { _sfxTax?.Play(0.2f, -0.2f, 0f); }
+        public void PlayBluff() { _sfxBluff?.Play(0.4f, -0.5f, 0f); }
+        public void PlayLock()  { _sfxLock?.Play(0.4f, 0f, 0f); } 
+        public void PlayMirror(){ _sfxMirror?.Play(0.4f, 0.0f, 0f); } 
+        public void PlayBurn()  { _sfxBurn?.Play(0.4f, 0f, 0f); } 
+        public void PlayCashback() { _sfxCashback?.Play(0.4f, 0f, 0f); } 
+        public void PlayTax()  { _sfxTax?.Play(0.4f, -0.2f, 0f); }
     }
 }

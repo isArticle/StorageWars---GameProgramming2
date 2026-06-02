@@ -61,7 +61,7 @@ namespace StorageWars
             AssetManager.LoadContent(Content, GraphicsDevice); 
             AudioManager.LoadContent(Content);
 
-            AudioManager.PlayBGM(0.05f);
+            AudioManager.PlayBGM(0.4f);
 
             ChangeState(new MainMenuPhaseState(this));
         }
@@ -97,6 +97,20 @@ namespace StorageWars
             
             _spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        public void RestartGame() // Değerleri sıfırlar
+        {
+            RoundManager = new RoundManager();
+            AuctionManager = new AuctionManager();
+            ShopManager = new ShopManager();
+            LootManager = new LootManager(); 
+            InventoryManager = new InventoryManager(); 
+
+            Player1 = new Player();
+            Player2 = new Player();
+            AiBot = new AIBot(GameConstants.BotStartingMoney);
+            Boss = new Boss();
         }
     }
 }

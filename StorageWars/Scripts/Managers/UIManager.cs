@@ -21,7 +21,7 @@ namespace StorageWars
             FloatingTexts = new FloatingTextManager();
         }
 
-        public void Update(GameTime gameTime, AuctionManager auctionManager) // Fiyat yumuşatma (Lerp) gibi zamana bağlı arayüz animasyonlarını günceller
+        public void Update(GameTime gameTime, AuctionManager auctionManager) // Fiyat Lerp gibi zamana bağlı arayüz animasyonlarını günceller
         {
             _auctionRenderer.Update(gameTime, auctionManager);
             FloatingTexts.Update(gameTime);

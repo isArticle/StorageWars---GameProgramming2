@@ -43,10 +43,13 @@ namespace StorageWars
         {
             int slot = (playerIndex == 1) ? P1SelectedSlot : P2SelectedSlot;
             var currentPool = (playerIndex == 1) ? _p1DailySkills : _p2DailySkills;
+            var purchasedHistory = (playerIndex == 1) ? _p1PurchasedThisRound : _p2PurchasedThisRound;
 
             if (currentPool.Count <= slot) return false;
 
             Skill skillToBuy = currentPool[slot];
+
+            if (purchasedHistory.Contains(skillToBuy)) return false;
 
             if (player.Money < skillToBuy.Price) return false;
 
@@ -54,8 +57,7 @@ namespace StorageWars
             {
                 player.SpendMoney(skillToBuy.Price);
                 
-                if (playerIndex == 1) _p1PurchasedThisRound.Add(skillToBuy);
-                else _p2PurchasedThisRound.Add(skillToBuy);
+                purchasedHistory.Add(skillToBuy);
                 
                 return true;
             }

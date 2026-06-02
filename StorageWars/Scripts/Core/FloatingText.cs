@@ -19,12 +19,12 @@ namespace StorageWars
             MaxLifeTime = lifeTime;
         }
 
-        public void Update(float deltaTime) // Frame-rate bağımsız (deltaTime ile çarpılarak) yazıyı her saniye yukarı kaydırır ve ömrünü tüketir
+        public void Update(float deltaTime) // Frame-rate yazıyı her saniye yukarı kaydırır ve ömrünü tüketir
         {
             Position = new Vector2(Position.X, Position.Y - (GameConstants.FloatingTextRiseSpeed * deltaTime));
             LifeTime -= deltaTime;
         }
 
-        public float GetOpacity() => MathHelper.Clamp(LifeTime / MaxLifeTime, 0f, 1f); // Kalan ömrü yüzdelik (0.0 ile 1.0 arası) değere çevirerek yumuşak silinme (Fade-out) oranı döndürür
+        public float GetOpacity() => MathHelper.Clamp(LifeTime / MaxLifeTime, 0f, 1f); // Kalan ömrü yüzdelik 0.0 ile 1.0 arası değere çevirerek Fade-out oranı döndürür
     }
 }
