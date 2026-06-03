@@ -64,10 +64,11 @@ namespace StorageWars
         public void PlayCash()  { _sfxCash?.Play(0.7f, 0f, 0f); }       
         public void PlayPass()  { _sfxPass?.Play(1.0f, 0f, 0f); }       
         
+
         public void PlayNav()   { _sfxNav?.Play(0.7f, 0f, 0f); }       
-        public void PlaySell()  { _sfxSell?.Play(1.1f, 0f, 0f); }      
-        public void PlayBuy()   { _sfxBuy?.Play(1.1f, 0f, 0f); }       
-        public void PlayDebt()  { _sfxDebt?.Play(1.2f, -0.2f, 0f); }    
+        public void PlaySell()  { _sfxSell?.Play(1.0f, 0f, 0f); }      
+        public void PlayBuy()   { _sfxBuy?.Play(1.0f, 0f, 0f); }       
+        public void PlayDebt()  { _sfxDebt?.Play(1.0f, -0.2f, 0f); }    
         public void PlayHeal()  { _sfxHeal?.Play(0.6f, 0f, 0f); }       
         
         public void PlayBluff() { _sfxBluff?.Play(0.4f, -0.5f, 0f); }
