@@ -6,6 +6,10 @@
 * **Arda Erenerdi (2305041074):** Lead Programmer, 2D Art & Architecture
 * **Kuzey İbrahim Amaç (2305041037):** Game Designer & UI Integration
 
+**IMPORTANT
+Dear Selam Hocam, we fix the bugs. Bugs because the sound quality should be a maximum of 1.0f, but since we set it to 1.2f, the game was crashing.
+The build and code we sent you has this bug, but the GitHub version is up-to-date.
+
 ---
 
 ## Game Objective
